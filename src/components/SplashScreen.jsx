@@ -19,7 +19,7 @@ export default function SplashScreen({ onDone }) {
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center"
       style={{
-        background: 'linear-gradient(135deg,#F4F9FF 0%,#EAF3FE 45%,#F0FDF6 100%)',
+        background: 'linear-gradient(135deg,#F0FDF6 0%,#E8F9F0 45%,#EAF3FE 100%)',
         opacity: phase === 'out' ? 0 : 1,
         transition: phase === 'out' ? 'opacity 0.45s ease' : 'none',
       }}
