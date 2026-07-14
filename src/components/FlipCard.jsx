@@ -5,7 +5,7 @@ import BackCard from './BackCard.jsx'
 import { BUSINESS } from '../data/siteData.js'
 
 // One fixed height shared by both faces so the flip never jumps or clips.
-const CARD_HEIGHT = 782
+const CARD_HEIGHT = 800
 
 export default function FlipCard({ onInstall, installed }) {
   const [flipped, setFlipped] = useState(false)
@@ -63,7 +63,7 @@ function LogoPopup({ onClose }) {
         </div>
         <div className="text-center">
           <p className="font-display text-xl font-bold text-white drop-shadow">{BUSINESS.fullName}</p>
-          <p className="mt-1 text-sm font-medium text-accent">{BUSINESS.tagline}</p>
+          <p className="mt-1 text-sm font-medium text-emerald-300">{BUSINESS.tagline}</p>
         </div>
       </div>
     </div>

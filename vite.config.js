@@ -24,8 +24,8 @@ export default defineConfig({
         scope: '/',
         display: 'standalone',
         orientation: 'portrait',
-        theme_color: '#1D4ED8',
-        background_color: '#071B3F',
+        theme_color: '#2563EB',
+        background_color: '#E3F0F9',
         lang: 'en',
         categories: ['medical', 'health', 'business'],
         icons: [

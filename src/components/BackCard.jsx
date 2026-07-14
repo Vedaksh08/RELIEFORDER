@@ -45,8 +45,8 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       onClick={onFlip}
       className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6 text-ink"
     >
-      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary-2/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-accent/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary-2/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-accent/10 blur-3xl" />
 
       {/* ---------- HEADER ---------- */}
       <div className="relative flex items-center justify-between">
@@ -106,7 +106,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
               as="a"
               href={CONTACT.tel}
               aria-label={`Call ${OWNER.name}`}
-              className="btn-primary btn-orb h-9 w-9"
+              className="btn-primary btn-orb h-10 w-10"
             >
               <Phone size={16} />
             </RippleButton>
@@ -116,7 +116,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`WhatsApp ${OWNER.name}`}
-              className="btn-whatsapp btn-orb h-9 w-9"
+              className="btn-whatsapp btn-orb h-10 w-10"
             >
               <MessageCircle size={16} />
             </RippleButton>
@@ -262,27 +262,30 @@ function BottomActions({ shareUrl, stop, onInstall, installed }) {
 
   return (
     <>
-      <div className="relative mt-3.5 flex items-center justify-end gap-2.5" onClick={stop}>
+      <div
+        className={`relative mt-4 grid gap-3 ${UPI_QR ? 'grid-cols-3' : installed ? 'grid-cols-1' : 'grid-cols-2'}`}
+        onClick={stop}
+      >
         {UPI_QR && (
           <RippleButton
             onClick={() => setUpiOpen(true)}
-            className="btn-secondary flex items-center gap-1.5 px-4 py-2.5 text-[12px] font-semibold"
+            className="btn-secondary flex items-center justify-center gap-1.5 py-3 text-[12.5px] font-semibold"
           >
-            <IndianRupee size={14} /> UPI
+            <IndianRupee size={15} /> UPI
           </RippleButton>
         )}
         <RippleButton
           onClick={() => setShareOpen(true)}
-          className="btn-secondary flex items-center gap-1.5 px-4 py-2.5 text-[12px] font-semibold"
+          className="btn-secondary flex items-center justify-center gap-2 py-3 text-[12.5px] font-semibold"
         >
-          <Share2 size={14} /> Share This Card
+          <Share2 size={15} /> Share This Card
         </RippleButton>
         {!installed && (
           <RippleButton
             onClick={onInstall}
-            className="btn-accent flex items-center gap-1.5 px-4 py-2.5 text-[12px] font-semibold"
+            className="btn-accent flex items-center justify-center gap-2 py-3 text-[12.5px] font-semibold"
           >
-            <Download size={14} /> Install Card
+            <Download size={15} /> Install Card
           </RippleButton>
         )}
       </div>

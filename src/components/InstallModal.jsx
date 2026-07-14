@@ -53,7 +53,7 @@ export default function InstallModal({ isIosSafari, canInstall, onInstall, onDis
             </div>
           </div>
 
-          <h2 className="font-display text-xl font-bold text-white">
+          <h2 className="font-display text-xl font-bold text-ink">
             📲 Save this Digital Business Card
           </h2>
           <p className="mt-2 max-w-[20rem] text-[13px] leading-relaxed text-muted">
@@ -63,9 +63,9 @@ export default function InstallModal({ isIosSafari, canInstall, onInstall, onDis
 
           {/* iOS instructions */}
           {isIosSafari && !canInstall && (
-            <div className="mt-5 w-full rounded-2xl border border-white/12 bg-white/5 p-4 text-left">
+            <div className="mt-5 w-full rounded-2xl border border-primary/10 bg-primary/5 p-4 text-left">
               <p className="mb-3 text-[11px] uppercase tracking-[0.18em] text-muted">How to install</p>
-              <ol className="flex flex-col gap-3 text-[13px] text-white/90">
+              <ol className="flex flex-col gap-3 text-[13px] text-ink/90">
                 <li className="flex items-center gap-3">
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary to-primary-2 text-white">
                     <ShareIcon size={16} />

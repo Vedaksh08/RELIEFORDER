@@ -1,30 +1,29 @@
 @import 'tailwindcss';
 
 /* ============================================================
-   RELIEF MEDICAL — PREMIUM MEDICAL DESIGN SYSTEM
-   Royal blue · crisp white · emerald green accent.
-   Same structural language as the reference cards:
-   glass surfaces, bevelled buttons, 3D flip, soft shadows.
+   RELIEF MEDICAL — LIGHT MEDICAL DESIGN SYSTEM
+   Crisp white canvas · royal blue · fresh emerald green.
+   Bright, clinical and premium — like a modern pharmacy.
    ============================================================ */
 
 @theme {
   /* surfaces */
-  --color-canvas: #f4f9ff;
-  --color-card: rgba(13, 36, 90, 0.38);
-  --color-hairline: rgba(255, 255, 255, 0.18);
+  --color-canvas: #eef6fc;
+  --color-card: rgba(255, 255, 255, 0.75);
+  --color-hairline: rgba(13, 60, 130, 0.12);
 
   /* brand — royal blue · sky blue · emerald (modern healthcare) */
-  --color-primary: #1e3a8a;
-  --color-primary-2: #3b82f6;
-  --color-accent: #10b981;
-  --color-accent-2: #6ee7b7;
+  --color-primary: #1e40af;
+  --color-primary-2: #2563eb;
+  --color-accent: #059669;
+  --color-accent-2: #10b981;
 
-  /* text */
-  --color-ink: #ffffff;
-  --color-muted: rgba(226, 238, 255, 0.8);
+  /* text (dark ink on light surfaces) */
+  --color-ink: #0e2a5a;
+  --color-muted: rgba(20, 55, 110, 0.62);
 
   /* status */
-  --color-ok: #10b981;
+  --color-ok: #059669;
   --color-err: #ef4444;
   --color-wa: #25d366;
 
@@ -36,12 +35,12 @@
   --radius-card: 1.6rem;
   --radius-xl: 2rem;
 
-  --shadow-sm: 0 8px 24px rgba(7, 22, 58, 0.14);
-  --shadow-md: 0 16px 40px rgba(7, 22, 58, 0.2);
-  --shadow-lg: 0 20px 60px rgba(7, 22, 58, 0.22);
-  --shadow-royal: 0 12px 30px rgba(29, 78, 216, 0.42);
-  --shadow-accent: 0 10px 25px rgba(16, 185, 129, 0.38);
-  --shadow-wa: 0 12px 28px rgba(18, 140, 126, 0.36);
+  --shadow-sm: 0 8px 24px rgba(30, 64, 150, 0.1);
+  --shadow-md: 0 16px 40px rgba(30, 64, 150, 0.14);
+  --shadow-lg: 0 20px 60px rgba(30, 64, 150, 0.16);
+  --shadow-royal: 0 12px 30px rgba(37, 99, 235, 0.32);
+  --shadow-accent: 0 10px 25px rgba(5, 150, 105, 0.3);
+  --shadow-wa: 0 12px 28px rgba(18, 140, 126, 0.3);
 }
 
 * {
@@ -58,7 +57,7 @@ body,
 body {
   font-family: var(--font-sans);
   color: var(--color-ink);
-  background: #071b3f;
+  background: #e3f0f9;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -70,17 +69,17 @@ body {
 
 /* ---- gradient text helper (premium brand title) ------------ */
 .text-brand {
-  background: linear-gradient(120deg, #1e3a8a 0%, #2563eb 50%, #059669 100%);
+  background: linear-gradient(120deg, #1e40af 0%, #2563eb 50%, #059669 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 .text-accent {
-  color: var(--color-accent-2);
+  color: var(--color-accent);
 }
 
 /* ============================================================
-   BACKGROUND — deep royal-blue wash + soft emerald glows
+   BACKGROUND — bright clinical wash: sky blue + soft mint
    ============================================================ */
 .aurora {
   position: fixed;
@@ -88,11 +87,11 @@ body {
   z-index: -3;
   overflow: hidden;
   background:
-    radial-gradient(1200px 780px at 50% -14%, rgba(59, 130, 246, 0.3), transparent 60%),
-    radial-gradient(950px 640px at 4% 10%, rgba(30, 58, 138, 0.65), transparent 62%),
-    radial-gradient(900px 600px at 98% 26%, rgba(16, 185, 129, 0.14), transparent 58%),
-    radial-gradient(1400px 760px at 50% 116%, rgba(5, 150, 105, 0.24), transparent 64%),
-    linear-gradient(175deg, #081c42 0%, #0c2a63 42%, #123a86 78%, #0d3c5e 100%);
+    radial-gradient(1200px 780px at 50% -14%, rgba(147, 197, 253, 0.5), transparent 60%),
+    radial-gradient(950px 640px at 4% 10%, rgba(191, 219, 254, 0.55), transparent 62%),
+    radial-gradient(900px 600px at 98% 26%, rgba(167, 243, 208, 0.42), transparent 58%),
+    radial-gradient(1400px 760px at 50% 116%, rgba(110, 231, 183, 0.35), transparent 64%),
+    linear-gradient(175deg, #f4fafe 0%, #e9f4fb 42%, #e3f2f4 78%, #e0f4ec 100%);
 }
 .aurora::before,
 .aurora::after {
@@ -102,19 +101,18 @@ body {
   height: 56vmax;
   border-radius: 50%;
   filter: blur(90px);
-  opacity: 0.5;
-  mix-blend-mode: screen;
+  opacity: 0.45;
   animation: drift 24s ease-in-out infinite alternate;
 }
 .aurora::before {
   top: -22%;
   left: -12%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.42), transparent 60%);
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.35), transparent 60%);
 }
 .aurora::after {
   bottom: -26%;
   right: -12%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.3), transparent 60%);
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.32), transparent 60%);
   animation-delay: -9s;
 }
 @keyframes drift {
@@ -123,7 +121,7 @@ body {
   100% { transform: translate3d(-4vw, -3vh, 0) scale(1.04); }
 }
 
-/* subtle medical-plus grid — reinforces the pharmacy theme */
+/* subtle clinical grid — barely-there structure */
 .plus-grid {
   position: fixed;
   inset: 0;
@@ -131,8 +129,8 @@ body {
   pointer-events: none;
   opacity: 0.05;
   background-image:
-    linear-gradient(rgba(226, 240, 255, 0.9) 1.5px, transparent 1.5px),
-    linear-gradient(90deg, rgba(226, 240, 255, 0.9) 1.5px, transparent 1.5px);
+    linear-gradient(rgba(30, 64, 175, 0.7) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(30, 64, 175, 0.7) 1.5px, transparent 1.5px);
   background-size: 46px 46px;
   background-position: center;
   mask-image: radial-gradient(90% 80% at 50% 45%, black 0%, transparent 100%);
@@ -149,8 +147,8 @@ body {
 }
 .med-float {
   position: absolute;
-  color: rgba(214, 236, 255, 0.4);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+  color: rgba(37, 99, 235, 0.22);
+  filter: drop-shadow(0 4px 8px rgba(30, 64, 150, 0.12));
 }
 .med-float-a {
   top: 12%;
@@ -160,7 +158,7 @@ body {
 .med-float-b {
   top: 68%;
   right: 6%;
-  color: rgba(140, 245, 200, 0.35);
+  color: rgba(5, 150, 105, 0.24);
   animation: bob 13s ease-in-out infinite reverse;
   animation-delay: -4s;
 }
@@ -177,38 +175,47 @@ body {
 
 /* ============================================================
    SURFACES
-   Card shell = royal blue gradient framed in icy hairline.
-   Content cards (.glass) = crisp frosted WHITE with dark text.
+   Card shell = airy white glass with blue/green whispers.
+   Content cards (.glass) = clean white with soft blue rims.
    ============================================================ */
 .glass {
-  background: linear-gradient(180deg, #ffffff 0%, #f2f8ff 100%);
-  border: 1px solid rgba(96, 165, 250, 0.22);
+  background: linear-gradient(180deg, #ffffff 0%, #f5faff 100%);
+  border: 1px solid rgba(37, 99, 235, 0.16);
   border-radius: 18px;
-  box-shadow: 0 8px 22px rgba(4, 14, 40, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 18px rgba(30, 64, 150, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   color: #12305e;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .glass:hover {
-  box-shadow: 0 12px 28px rgba(4, 14, 40, 0.26);
-  border-color: rgba(96, 165, 250, 0.42);
+  box-shadow: 0 10px 26px rgba(30, 64, 150, 0.16);
+  border-color: rgba(37, 99, 235, 0.3);
 }
 
-/* main card shell — deep royal blue with an emerald whisper */
+/* main card shell — bright glassmorphism with a mint whisper */
 .glass-strong {
   background:
-    radial-gradient(600px 400px at 92% -6%, rgba(59, 130, 246, 0.4), transparent 62%),
-    radial-gradient(560px 340px at 6% 108%, rgba(16, 185, 129, 0.22), transparent 60%),
-    linear-gradient(165deg, #0a1f52 0%, #123577 46%, #1d4ed8 130%);
-  border: 1px solid rgba(147, 197, 253, 0.34);
+    radial-gradient(600px 400px at 92% -6%, rgba(191, 219, 254, 0.55), transparent 62%),
+    radial-gradient(560px 340px at 6% 108%, rgba(167, 243, 208, 0.5), transparent 60%),
+    linear-gradient(165deg, #ffffff 0%, #f4faff 46%, #eefaf4 100%);
+  border: 1px solid rgba(37, 99, 235, 0.18);
   box-shadow:
-    0 26px 70px rgba(4, 12, 34, 0.55),
-    0 0 0 1px rgba(147, 197, 253, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    0 26px 70px rgba(30, 64, 150, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 /* white logo tile */
 .logo-surface {
   background: #ffffff;
+}
+
+/* brand logo tile in the carousel */
+.brand-tile {
+  background: #ffffff;
+  border: 1px solid rgba(13, 60, 130, 0.12);
+  box-shadow: 0 6px 16px rgba(30, 64, 150, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* section wrapper is just spacing — no nested tinted box */
@@ -239,7 +246,7 @@ body {
   position: absolute;
   inset: -22%;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.28) 0%, rgba(16, 185, 129, 0.18) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(16, 185, 129, 0.16) 45%, transparent 70%);
   filter: blur(7px);
   z-index: -1;
   pointer-events: none;
@@ -288,8 +295,8 @@ body {
   flex-shrink: 0;
   border-radius: 999px;
   color: #ffffff;
-  background: linear-gradient(135deg, #3b82f6, #10b981);
-  box-shadow: 0 4px 10px rgba(16, 120, 190, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #2563eb, #059669);
+  box-shadow: 0 4px 10px rgba(16, 120, 190, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 /* ============================================================
@@ -303,7 +310,7 @@ body {
   user-select: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  /* chips genuinely fade at the edges — works on any backdrop */
+  /* logos genuinely fade at the edges — works on any backdrop */
   mask-image: linear-gradient(90deg, transparent 0, black 26px, black calc(100% - 26px), transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0, black 26px, black calc(100% - 26px), transparent 100%);
 }
@@ -312,11 +319,10 @@ body {
 
 .brand-chip {
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
-  box-shadow: 0 6px 16px rgba(6, 18, 45, 0.22);
 }
 .brand-chip:hover {
   transform: translateY(-4px) scale(1.04);
-  box-shadow: 0 12px 26px rgba(6, 18, 45, 0.3);
+  box-shadow: 0 12px 26px rgba(30, 64, 150, 0.18);
 }
 
 /* ---- review stars ------------------------------------------ */
@@ -355,38 +361,37 @@ body {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow:
-    0 10px 22px rgba(10, 30, 80, 0.45),
+    0 10px 22px rgba(37, 99, 235, 0.35),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.28);
+    inset 0 -3px 6px rgba(0, 0, 0, 0.24);
 }
 .btn-primary:hover {
   filter: brightness(1.08);
   box-shadow:
-    0 14px 30px rgba(10, 30, 80, 0.55),
+    0 14px 30px rgba(37, 99, 235, 0.42),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.28);
+    inset 0 -3px 6px rgba(0, 0, 0, 0.24);
 }
 .btn-primary:active {
-  box-shadow: 0 4px 10px rgba(10, 30, 80, 0.4), inset 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.26);
 }
 
-/* secondary — frosted glass with a crisp rim */
+/* secondary — clean white with a blue rim (for light surfaces) */
 .btn-secondary {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: linear-gradient(180deg, #ffffff 0%, #eef5ff 100%);
+  color: #1e40af;
+  border: 1px solid rgba(37, 99, 235, 0.3);
   box-shadow:
-    0 8px 18px rgba(6, 18, 45, 0.3),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -2px 5px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(6px);
+    0 8px 18px rgba(30, 64, 150, 0.12),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -2px 5px rgba(30, 64, 150, 0.06);
 }
 .btn-secondary:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.16));
-  border-color: rgba(110, 231, 183, 0.65);
+  background: linear-gradient(180deg, #ffffff 0%, #e4f0ff 100%);
+  border-color: rgba(37, 99, 235, 0.5);
 }
 .btn-secondary:active {
-  box-shadow: 0 3px 8px rgba(6, 18, 45, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 3px 8px rgba(30, 64, 150, 0.12), inset 0 2px 5px rgba(30, 64, 150, 0.1);
 }
 
 /* accent — emerald green, the signature healthcare CTA */
@@ -395,19 +400,19 @@ body {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.24);
   box-shadow:
-    0 10px 22px rgba(6, 120, 86, 0.4),
+    0 10px 22px rgba(6, 120, 86, 0.32),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -3px 6px rgba(3, 70, 50, 0.3);
+    inset 0 -3px 6px rgba(3, 70, 50, 0.26);
 }
 .btn-accent:hover {
   filter: brightness(1.06);
   box-shadow:
-    0 14px 30px rgba(6, 120, 86, 0.5),
+    0 14px 30px rgba(6, 120, 86, 0.4),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -3px 6px rgba(3, 70, 50, 0.3);
+    inset 0 -3px 6px rgba(3, 70, 50, 0.26);
 }
 .btn-accent:active {
-  box-shadow: 0 4px 10px rgba(6, 120, 86, 0.35), inset 0 2px 6px rgba(3, 70, 50, 0.32);
+  box-shadow: 0 4px 10px rgba(6, 120, 86, 0.3), inset 0 2px 6px rgba(3, 70, 50, 0.28);
 }
 
 /* whatsapp — official green, same bevel language */
@@ -416,13 +421,13 @@ body {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow:
-    0 10px 22px rgba(18, 140, 126, 0.42),
+    0 10px 22px rgba(18, 140, 126, 0.32),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -3px 6px rgba(6, 80, 60, 0.3);
+    inset 0 -3px 6px rgba(6, 80, 60, 0.26);
 }
 .btn-whatsapp:hover { filter: brightness(1.06); }
 .btn-whatsapp:active {
-  box-shadow: 0 4px 10px rgba(18, 140, 126, 0.35), inset 0 2px 6px rgba(6, 80, 60, 0.32);
+  box-shadow: 0 4px 10px rgba(18, 140, 126, 0.3), inset 0 2px 6px rgba(6, 80, 60, 0.28);
 }
 
 /* icon-orb circular action */
@@ -437,7 +442,7 @@ body {
   background: rgba(255, 255, 255, 0.95);
   color: #12305e !important;
   border: 1px solid rgba(15, 41, 71, 0.12);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(0, 0, 0, 0.14);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -452,7 +457,7 @@ body {
 }
 .modal-close:hover {
   background: #ffffff;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(110, 231, 183, 0.5);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(16, 185, 129, 0.45);
 }
 
 .ripple {
@@ -470,7 +475,7 @@ body {
    MODAL — cinematic open
    ============================================================ */
 .modal-overlay {
-  background: rgba(4, 12, 32, 0.66);
+  background: rgba(9, 30, 66, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   animation: fade-in 0.4s ease both;
@@ -508,9 +513,9 @@ body {
 
 /* ---- rotating trust-line crossfade -------------------------- */
 .quote-box {
-  background: linear-gradient(180deg, rgba(8, 24, 60, 0.55), rgba(14, 40, 92, 0.45));
-  border: 1px solid rgba(110, 231, 183, 0.32);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 20px rgba(4, 12, 32, 0.3);
+  background: linear-gradient(135deg, rgba(219, 234, 254, 0.65), rgba(209, 250, 229, 0.6));
+  border: 1px solid rgba(5, 150, 105, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 8px 20px rgba(30, 64, 150, 0.08);
 }
 .quote-fade { animation: quote 0.7s ease both; }
 @keyframes quote {
@@ -526,12 +531,12 @@ body {
 
 .nice-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.45) transparent;
+  scrollbar-color: rgba(37, 99, 235, 0.45) transparent;
 }
 .nice-scroll::-webkit-scrollbar { width: 7px; }
 .nice-scroll::-webkit-scrollbar-track { background: transparent; }
 .nice-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #3b82f6, #10b981);
+  background: linear-gradient(180deg, #2563eb, #059669);
   border-radius: 99px;
 }
 

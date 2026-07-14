@@ -62,32 +62,33 @@ export const SERVICES = [
 ]
 
 // ------------------------------------------------------------
-//  BRANDS (back-side auto-scrolling carousel)
+//  BRANDS (back-side auto-scrolling logo carousel)
+//  Logos live in /public/brands — replace any file to update.
 // ------------------------------------------------------------
 export const BRANDS = [
-  { name: "L'Oréal Professionnel", color: '#C8A24B' },
-  { name: 'Schwarzkopf Professional', color: '#1F2937' },
-  { name: 'Wella Professionals', color: '#B91C1C' },
-  { name: 'Lakmé', color: '#7C3AED' },
-  { name: 'Maybelline', color: '#111827' },
-  { name: 'Lotus Professional', color: '#15803D' },
-  { name: 'Elle 18', color: '#DB2777' },
-  { name: 'Revlon', color: '#DC2626' },
-  { name: 'Biotique', color: '#166534' },
-  { name: 'Mamaearth', color: '#0891B2' },
-  { name: 'Pigeon', color: '#2563EB' },
-  { name: 'Chicco', color: '#0284C7' },
-  { name: 'Philips Avent', color: '#0EA5E9' },
-  { name: 'Beardo', color: '#374151' },
-  { name: 'Richfeel', color: '#0D9488' },
-  { name: 'Ustraa', color: '#4B5563' },
-  { name: 'Oriflame', color: '#BE185D' },
-  { name: 'Jovees', color: '#65A30D' },
-  { name: 'Bio Age', color: '#059669' },
-  { name: 'Sebamed', color: '#0369A1' },
-  { name: 'The Body Shop', color: '#14532D' },
-  { name: 'Bed Head', color: '#EA580C' },
-  { name: "Cherryl's Cosmeceuticals", color: '#9333EA' },
+  { name: "L'Oréal Professionnel", src: '/brands/loreal-professionnel.svg' },
+  { name: 'Schwarzkopf Professional', src: '/brands/schwarzkopf.png' },
+  { name: 'Wella Professionals', src: '/brands/wella.jpg' },
+  { name: 'Lakmé', src: '/brands/lakme.jpg' },
+  { name: 'Maybelline', src: '/brands/maybelline.svg' },
+  { name: 'Lotus Professional', src: '/brands/lotus-professional.png' },
+  { name: 'Elle 18', src: '/brands/elle18.png' },
+  { name: 'Revlon', src: '/brands/revlon.svg' },
+  { name: 'Biotique', src: '/brands/biotique.png' },
+  { name: 'Mamaearth', src: '/brands/mamaearth.png' },
+  { name: 'Pigeon', src: '/brands/pigeon.png' },
+  { name: 'Chicco', src: '/brands/chicco.svg' },
+  { name: 'Philips Avent', src: '/brands/philips-avent.svg' },
+  { name: 'Beardo', src: '/brands/beardo.png' },
+  { name: 'Richfeel', src: '/brands/richfeel.png' },
+  { name: 'Ustraa', src: '/brands/ustraa.png' },
+  { name: 'Oriflame', src: '/brands/oriflame.svg' },
+  { name: 'Jovees', src: '/brands/jovees.png' },
+  { name: 'Bio Age', src: '/brands/bio-age.png' },
+  { name: 'Sebamed', src: '/brands/sebamed.svg' },
+  { name: 'The Body Shop', src: '/brands/the-body-shop.svg' },
+  { name: 'Bed Head', src: '/brands/bed-head.png' },
+  { name: "Cherryl's Cosmeceuticals", src: '/brands/cheryls.png' },
 ]
 
 // ------------------------------------------------------------

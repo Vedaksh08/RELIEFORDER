@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import {
-  Phone,
-  MessageCircle,
   UserPlus,
   Copy,
   Check,
@@ -61,11 +59,11 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-7"
     >
       {/* soft brand glows */}
-      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary-2/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-accent/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary-2/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-accent/10 blur-3xl" />
 
       {/* ---------- HERO HEADER ---------- */}
-      <header className="relative flex flex-col items-center px-2 pb-1 pt-1 text-center text-white">
+      <header className="relative flex flex-col items-center px-2 pb-1 pt-1 text-center text-ink">
         <button
           onClick={(e) => {
             stop(e)
@@ -85,22 +83,22 @@ export default function FrontCard({ onFlip, onLogoClick }) {
         </button>
 
         <h1
-          className="font-display mt-4 font-bold leading-tight tracking-tight text-white drop-shadow-sm"
+          className="font-display mt-4 font-bold leading-tight tracking-tight text-ink"
           style={{ fontSize: 'clamp(1.4rem, 7.4vw, 1.9rem)' }}
         >
           {BUSINESS.name}
         </h1>
-        <p className="font-display text-[15px] font-semibold tracking-wide text-sky-200">
+        <p className="font-display text-[15px] font-semibold tracking-wide text-primary-2">
           {BUSINESS.nameSuffix}
         </p>
 
         {/* elegant divider + tagline */}
         <div className="mt-2.5 flex items-center gap-2.5">
-          <span className="h-px w-8 bg-gradient-to-r from-transparent to-emerald-300/85" />
-          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
+          <span className="h-px w-8 bg-gradient-to-r from-transparent to-emerald-500/70" />
+          <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.15em] text-accent">
             {BUSINESS.tagline}
           </span>
-          <span className="h-px w-8 bg-gradient-to-l from-transparent to-emerald-300/85" />
+          <span className="h-px w-8 bg-gradient-to-l from-transparent to-emerald-500/70" />
         </div>
 
         <p className="mt-2.5 max-w-[19rem] text-[11.5px] font-medium leading-relaxed text-muted">
@@ -156,18 +154,8 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       </div>
 
       {/* ---------- MAIN ACTIONS ---------- */}
-      <section className="grid grid-cols-2 gap-2.5" onClick={stop}>
-        <ActionButton as="a" href={CONTACT.tel} icon={Phone} label="Call" variant="primary" />
-        <ActionButton
-          as="a"
-          href={CONTACT.whatsapp}
-          target="_blank"
-          rel="noopener noreferrer"
-          icon={MessageCircle}
-          label="WhatsApp"
-          variant="whatsapp"
-        />
-        <ActionButton icon={UserPlus} label="Save Contact" onClick={saveContact} variant="accent" />
+      <section className="grid grid-cols-2 gap-3" onClick={stop}>
+        <ActionButton icon={UserPlus} label="Save Contact" onClick={saveContact} variant="primary" />
         <ActionButton
           icon={copied ? Check : Copy}
           label={copied ? 'Copied!' : 'Copy Contact'}
@@ -194,10 +182,10 @@ function ActionButton({ icon: Icon, label, variant, ...rest }) {
   }
   return (
     <RippleButton
-      className={`${cls[variant]} flex items-center justify-center gap-1.5 py-3 text-[12.5px] font-semibold`}
+      className={`${cls[variant]} flex items-center justify-center gap-2 py-3.5 text-[13px] font-semibold`}
       {...rest}
     >
-      <Icon size={15} />
+      <Icon size={16} />
       {label}
     </RippleButton>
   )

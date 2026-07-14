@@ -92,15 +92,18 @@ export default function BrandMarquee() {
         {loop.map((brand, i) => (
           <div
             key={`${brand.name}-${i}`}
-            className="brand-chip glass flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5"
+            className="brand-chip brand-tile flex h-[4.25rem] w-[8.5rem] shrink-0 items-center justify-center rounded-2xl px-3 py-2"
+            aria-hidden={i >= BRANDS.length}
           >
-            <span
-              className="h-1.5 w-1.5 shrink-0 rounded-full"
-              style={{ background: brand.color }}
+            <img
+              src={brand.src}
+              alt={brand.name}
+              title={brand.name}
+              className="max-h-full max-w-full object-contain"
+              draggable={false}
+              loading="lazy"
+              decoding="async"
             />
-            <span className="whitespace-nowrap text-[10.5px] font-bold tracking-wide text-[#12305E]">
-              {brand.name}
-            </span>
           </div>
         ))}
       </div>

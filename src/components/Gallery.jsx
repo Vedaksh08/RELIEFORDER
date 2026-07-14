@@ -21,7 +21,7 @@ export default function Gallery({ className = '', onClick }) {
             alt={g.alt}
             loading="lazy"
             decoding="async"
-            className="h-24 w-36 shrink-0 rounded-xl object-cover shadow-md ring-1 ring-white/20"
+            className="h-24 w-36 shrink-0 rounded-xl object-cover shadow-md ring-1 ring-black/5"
           />
         ))}
       </div>
