@@ -195,18 +195,20 @@ body {
   border-color: rgba(255, 255, 255, 1);
 }
 
-/* main card shell — premium healthcare mesh: teal → blue */
+/* main card shell — premium healthcare mesh: teal → blue,
+   framed by a crisp white outline + soft halo ring */
 .glass-strong {
   background:
     radial-gradient(640px 420px at 88% -8%, rgba(56, 189, 248, 0.28), transparent 60%),
     radial-gradient(560px 380px at -6% 30%, rgba(45, 212, 191, 0.3), transparent 58%),
     radial-gradient(700px 480px at 50% 118%, rgba(8, 74, 158, 0.5), transparent 64%),
     linear-gradient(163deg, #0c8b7a 0%, #0f9d8a 30%, #0d84b8 68%, #0a6fc4 100%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.75);
   box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.35),
+    0 0 0 6.5px rgba(15, 157, 138, 0.28),
     0 30px 80px rgba(8, 74, 100, 0.4),
     0 4px 18px rgba(8, 74, 100, 0.22),
-    0 0 0 1px rgba(255, 255, 255, 0.12),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
 }
 

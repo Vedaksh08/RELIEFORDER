@@ -31,24 +31,60 @@ await make(180, 0.12, 'apple-touch-icon.png')
 // favicon
 await make(48, 0.06, 'favicon-48.png')
 
-// OpenGraph image — logo on a royal-blue → emerald gradient banner
+// OpenGraph / social banner — styled like the storefront sign board:
+// deep pharmacy green field, big brand lettering with an ECG heartbeat
+// line and heart, clean strip for the trade line. Neat, no glare.
 const ogLogo = await sharp(SRC, { density: 300 })
-  .resize(360, 360, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+  .resize(300, 130, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
   .toBuffer()
 const ogBg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0A1F52"/>
-      <stop offset="0.55" stop-color="#1D4ED8"/>
-      <stop offset="1" stop-color="#0D9488"/>
+    <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0C7A4E"/>
+      <stop offset="0.55" stop-color="#0A6B45"/>
+      <stop offset="1" stop-color="#075C3B"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F7C948"/>
+      <stop offset="1" stop-color="#F4B63C"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="url(#g)"/>
-  <text x="600" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="#FFFFFF">Relief Medical &amp; General Store</text>
-  <text x="600" y="540" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" fill="#A7F3D0">Chemist • Druggist • General Store — Nigdi, Pune</text>
+
+  <rect width="1200" height="630" fill="url(#field)"/>
+  <!-- subtle field depth -->
+  <ellipse cx="600" cy="-80" rx="900" ry="330" fill="#FFFFFF" opacity="0.05"/>
+  <ellipse cx="600" cy="720" rx="900" ry="300" fill="#000000" opacity="0.1"/>
+  <!-- signboard edge strips -->
+  <rect x="0" y="0" width="1200" height="12" fill="url(#edge)"/>
+  <rect x="0" y="618" width="1200" height="12" fill="url(#edge)"/>
+
+  <!-- ECG heartbeat line running behind the title -->
+  <polyline points="40,300 300,300 330,300 350,252 378,352 404,272 424,316 438,300 700,300 1160,300"
+    fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="7"
+    stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- red heart resting on the line, like the sign -->
+  <path transform="translate(1064 274) scale(1.15)" fill="#E23744"
+    d="M23 42 C10 31 0 22 0 12 C0 4 6 0 12 0 C17 0 21 3 23 7 C25 3 29 0 34 0 C40 0 46 4 46 12 C46 22 36 31 23 42 Z"/>
+
+  <!-- title with a soft drop shadow -->
+  <text x="602" y="316" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+    font-size="104" font-weight="bold" fill="#043D27" opacity="0.55">Relief Medical</text>
+  <text x="598" y="312" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+    font-size="104" font-weight="bold" fill="#FFFFFF">Relief Medical</text>
+  <text x="600" y="372" text-anchor="middle" font-family="Arial, sans-serif"
+    font-size="38" font-weight="600" fill="#CFF5E2">&amp; General Store</text>
+
+  <!-- trade strip -->
+  <rect x="270" y="424" width="660" height="62" rx="31" fill="#FFFFFF"/>
+  <text x="600" y="465" text-anchor="middle" font-family="Arial, sans-serif"
+    font-size="25" font-weight="bold" letter-spacing="4" fill="#0A6B45">CHEMIST • DRUGGIST • GENERAL STORE</text>
+
+  <!-- footer line -->
+  <text x="600" y="560" text-anchor="middle" font-family="Arial, sans-serif"
+    font-size="27" font-weight="600" fill="#EAF9F1" opacity="0.92">Nigdi, Pune  •  Free Home Delivery  •  +91 93736 24688</text>
 </svg>`)
 await sharp(ogBg)
-  .composite([{ input: ogLogo, top: 60, left: 420 }])
+  .composite([{ input: ogLogo, top: 52, left: 450 }])
   .png()
   .toFile('public/og-image.png')
 console.log('wrote og-image.png 1200x630')
