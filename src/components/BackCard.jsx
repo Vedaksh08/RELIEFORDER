@@ -1,4 +1,4 @@
-import { QRCodeSVG } from 'qrcode.react'
+﻿import { QRCodeSVG } from 'qrcode.react'
 import { useState } from 'react'
 import {
   Phone,
@@ -43,19 +43,19 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
   return (
     <div
       onClick={onFlip}
-      className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6 text-ink"
+      className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6 text-white"
     >
-      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-sky-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-200/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-emerald-300/20 blur-3xl" />
 
       {/* ---------- HEADER ---------- */}
-      <div className="relative flex items-center justify-between">
+      <div className="rise relative flex items-center justify-between" style={{ animationDelay: '0.05s' }}>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-200">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-100">
             {BUSINESS.fullName}
           </p>
           <h2 className="font-display text-2xl font-bold leading-tight text-white">Get in Touch</h2>
-          <span className="mt-1.5 block h-[2px] w-14 rounded-full bg-gradient-to-r from-emerald-300 via-sky-300 to-transparent" />
+          <span className="mt-1.5 block h-[2px] w-14 rounded-full bg-gradient-to-r from-white/80 via-cyan-200/70 to-transparent" />
         </div>
         <button
           onClick={(e) => {
@@ -63,50 +63,54 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             onLogoClick()
           }}
           aria-label="View logo"
-          className="logo-glow logo-surface relative grid h-12 w-12 place-items-center overflow-hidden rounded-xl p-1 shadow-md ring-1 ring-emerald-300/30"
+          className="logo-glow logo-surface relative grid h-12 w-12 place-items-center overflow-hidden rounded-xl p-1 shadow-md ring-1 ring-white/40"
         >
           <img src={BUSINESS.logo} alt={BUSINESS.fullName} className="h-full w-full object-contain" />
         </button>
       </div>
 
-      {/* ---------- 1 · CONTACT DETAILS ---------- */}
-      <section className="section-surface relative mt-3.5" onClick={stop}>
+      {/* ---------- 1 Â· CONTACT DETAILS ---------- */}
+      <section
+        className="section-surface rise relative mt-3"
+        style={{ animationDelay: '0.12s' }}
+        onClick={stop}
+      >
         <SectionDivider icon={Users}>Contact Details</SectionDivider>
 
         {/* owner card — call + whatsapp orbs */}
-        <div className="glass mt-2.5 flex w-full min-w-0 items-center gap-2.5 rounded-2xl p-2.5">
+        <div className="glass mt-2.5 flex w-full min-w-0 items-center gap-3 rounded-2xl p-2.5">
           {OWNER.photo ? (
             <img
               src={OWNER.photo}
               alt={OWNER.name}
-              className="h-11 w-11 shrink-0 rounded-full object-cover shadow-md ring-2 ring-emerald-300/45 ring-offset-1 ring-offset-white"
+              className="h-11 w-11 shrink-0 rounded-full object-cover shadow-md ring-2 ring-teal-500/35 ring-offset-1 ring-offset-white"
             />
           ) : (
             <div
-              className="font-display grid h-11 w-11 shrink-0 place-items-center rounded-full text-[14px] font-bold text-white shadow-md ring-2 ring-emerald-300/45 ring-offset-1 ring-offset-white"
-              style={{ background: 'linear-gradient(135deg,#1E3A8A,#2563EB,#10B981)' }}
+              className="font-display grid h-11 w-11 shrink-0 place-items-center rounded-full text-[14px] font-bold text-white shadow-md ring-2 ring-teal-500/35 ring-offset-1 ring-offset-white"
+              style={{ background: 'linear-gradient(135deg,#0F9D8A,#0A7BD8)' }}
             >
               {OWNER.initials}
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13.5px] font-bold leading-tight text-[#12305E]">
+            <p className="truncate text-[13.5px] font-bold leading-tight text-[#123040]">
               {OWNER.name}
             </p>
-            <p className="truncate text-[9.5px] font-bold uppercase tracking-[0.08em] text-emerald-700">
+            <p className="truncate text-[9px] font-bold uppercase tracking-[0.1em] text-teal-700">
               {OWNER.role}
             </p>
-            <p className="mt-0.5 flex items-center gap-1 truncate text-[11.5px] font-medium text-[#48618C]">
-              <Phone size={11} className="shrink-0 text-[#2563EB]" />
+            <p className="mt-0.5 flex items-center gap-1 truncate text-[11.5px] font-medium text-[#3E6478]">
+              <Phone size={11} className="shrink-0 text-[#0A7BD8]" />
               <span className="truncate">{CONTACT.phone}</span>
             </p>
           </div>
-          <div className="flex shrink-0 gap-1.5">
+          <div className="flex shrink-0 gap-2">
             <RippleButton
               as="a"
               href={CONTACT.tel}
               aria-label={`Call ${OWNER.name}`}
-              className="btn-primary btn-orb h-10 w-10"
+              className="btn-blue btn-orb h-10 w-10"
             >
               <Phone size={16} />
             </RippleButton>
@@ -124,7 +128,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
         </div>
 
         {/* secondary phone + email */}
-        <div className="mt-2 grid grid-cols-2 gap-2">
+        <div className="mt-2 grid grid-cols-2 gap-2.5">
           <ContactChip
             href={CONTACT.telSecondary}
             icon={PhoneCall}
@@ -134,24 +138,12 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
           <ContactChip href={CONTACT.mailto} icon={Mail} label="Email" value="Write to us" />
         </div>
 
-        {/* store timings — auto-hides while unset */}
-        {TIMINGS && (
-          <div className="glass mt-2 flex items-center gap-2.5 rounded-xl px-3 py-2">
-            <span className="service-icon">
-              <Clock size={14} strokeWidth={2.2} />
-            </span>
-            <span className="text-[11px] font-semibold text-[#12305E]">
-              {TIMINGS.days} · {TIMINGS.hours}
-            </span>
-          </div>
-        )}
-
         {/* address + maps */}
-        <div className="glass mt-2 flex items-center gap-2.5 rounded-2xl p-2.5">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#1E3A8A] to-[#10B981] text-white shadow-sm ring-1 ring-emerald-300/30">
+        <div className="glass mt-2 flex items-center gap-3 rounded-2xl p-2.5">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#0F9D8A] to-[#0A7BD8] text-white shadow-sm ring-1 ring-white/40">
             <MapPin size={17} />
           </div>
-          <p className="min-w-0 flex-1 text-[10.5px] font-semibold leading-snug text-[#12305E]">
+          <p className="min-w-0 flex-1 text-[10.5px] font-semibold leading-snug text-[#123040]">
             {LOCATION.lines.join(', ')}
           </p>
           <RippleButton
@@ -159,36 +151,44 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             href={LOCATION.mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-accent flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-2 text-[10px] font-bold"
+            className="btn-accent flex shrink-0 items-center gap-1 rounded-xl px-3 py-2 text-[10.5px] font-bold"
           >
-            <Navigation size={11} /> Maps
+            <Navigation size={12} /> Maps
           </RippleButton>
         </div>
       </section>
 
-      {/* ---------- 2 · BRAND CAROUSEL ---------- */}
-      <section className="section-surface relative mt-3.5" onClick={stop}>
+      {/* ---------- 2 Â· BRAND CAROUSEL ---------- */}
+      <section
+        className="section-surface rise relative mt-3"
+        style={{ animationDelay: '0.19s' }}
+        onClick={stop}
+      >
         <SectionDivider icon={Tags}>Brands Available</SectionDivider>
         <div className="mt-2">
           <BrandMarquee />
         </div>
       </section>
 
-      {/* ---------- 3 · GOOGLE REVIEWS ---------- */}
-      <section className="section-surface relative mt-3.5" onClick={stop}>
+      {/* ---------- 3 Â· CUSTOMER REVIEWS ---------- */}
+      <section
+        className="section-surface rise relative mt-3"
+        style={{ animationDelay: '0.26s' }}
+        onClick={stop}
+      >
         <SectionDivider icon={Star}>{REVIEWS.title}</SectionDivider>
-        <div className="glass mt-2.5 rounded-2xl p-3.5">
-          <div className="flex items-center justify-center gap-1">
+        <div className="glass mt-3 rounded-2xl px-4 py-3.5">
+          <div className="flex items-center justify-center gap-1.5">
             {[0, 1, 2, 3, 4].map((i) => (
               <Star
                 key={i}
-                size={17}
-                className="star-pop fill-amber-400 text-amber-400"
-                style={{ animationDelay: `${i * 0.09}s` }}
+                size={18}
+                className="star-pop fill-amber-400 text-amber-400 drop-shadow-sm"
+                style={{ animationDelay: `${0.3 + i * 0.09}s` }}
               />
             ))}
           </div>
-          <p className="mt-2 text-center text-[11px] font-medium leading-relaxed text-[#48618C]">
+          <p className="font-display mt-2 text-center text-[12.5px] font-semibold text-[#123040]">
             {REVIEWS.line}
           </p>
           {REVIEWS.qr && (
@@ -204,20 +204,50 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             href={REVIEWS.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary mt-3 flex w-full items-center justify-center gap-1.5 py-2.5 text-[12px] font-semibold"
+            className="btn-blue mt-3 flex w-full items-center justify-center gap-1.5 py-2.5 text-[12px] font-semibold"
           >
             <Star size={14} /> Leave us a Google Review <ExternalLink size={12} />
           </RippleButton>
         </div>
       </section>
 
-      {/* ---------- 4 · TRUST SECTION ---------- */}
-      <section className="section-surface relative mt-3.5">
+      {/* ---------- 4 Â· STORE TIMINGS ---------- */}
+      {TIMINGS && (
+        <section
+          className="section-surface rise relative mt-3"
+          style={{ animationDelay: '0.33s' }}
+          onClick={stop}
+        >
+          <SectionDivider icon={Clock}>Store Timings</SectionDivider>
+          <div className="glass mt-3 flex items-center gap-3 rounded-2xl p-3">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#0F9D8A] to-[#0A7BD8] text-white shadow-sm ring-1 ring-white/40">
+              <Clock size={17} />
+            </div>
+            <div className="min-w-0 flex-1">
+              {TIMINGS.rows.map((row) => (
+                <div key={row.days} className="flex items-baseline justify-between gap-3">
+                  <span className="text-[11px] font-semibold text-[#3E6478]">{row.days}</span>
+                  <span
+                    className={`font-display text-[11.5px] font-bold ${
+                      /closed/i.test(row.hours) ? 'text-rose-500' : 'text-[#123040]'
+                    }`}
+                  >
+                    {row.hours}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ---------- 5 Â· WHY CUSTOMERS TRUST US ---------- */}
+      <section className="section-surface rise relative mt-3" style={{ animationDelay: '0.4s' }}>
         <SectionDivider icon={ShieldCheck}>{TRUST_TITLE}</SectionDivider>
-        <TrustRotator className="mt-2.5" />
+        <TrustRotator className="mt-3" />
       </section>
 
-      {/* ---------- 5 · BOTTOM ACTIONS (right aligned) ---------- */}
+      {/* ---------- 6 Â· BOTTOM ACTIONS ---------- */}
       <BottomActions
         shareUrl={shareUrl}
         stop={stop}
@@ -241,16 +271,16 @@ function ContactChip({ href, icon: Icon, label, value }) {
     <RippleButton
       as="a"
       href={href}
-      className="glass flex items-center gap-2 rounded-xl px-2.5 py-2 text-left"
+      className="glass flex items-center gap-2.5 rounded-2xl px-3 py-2.5 text-left"
     >
       <span className="service-icon">
-        <Icon size={13} strokeWidth={2.2} />
+        <Icon size={14} strokeWidth={2.2} />
       </span>
       <span className="min-w-0">
-        <span className="block text-[8.5px] font-bold uppercase tracking-[0.14em] text-emerald-700">
+        <span className="block text-[8.5px] font-bold uppercase tracking-[0.14em] text-teal-700">
           {label}
         </span>
-        <span className="block truncate text-[11px] font-semibold text-[#12305E]">{value}</span>
+        <span className="block truncate text-[11px] font-semibold text-[#123040]">{value}</span>
       </span>
     </RippleButton>
   )
@@ -263,7 +293,8 @@ function BottomActions({ shareUrl, stop, onInstall, installed }) {
   return (
     <>
       <div
-        className={`relative mt-4 grid gap-3 ${UPI_QR ? 'grid-cols-3' : installed ? 'grid-cols-1' : 'grid-cols-2'}`}
+        className={`rise relative mt-4 grid gap-3 ${UPI_QR ? 'grid-cols-3' : installed ? 'grid-cols-1' : 'grid-cols-2'}`}
+        style={{ animationDelay: '0.47s' }}
         onClick={stop}
       >
         {UPI_QR && (
@@ -353,13 +384,13 @@ function SharePopup({ shareUrl, onClose }) {
         style={{ animation: 'logo-popup 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards' }}
       >
         <div className="relative">
-          <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-primary via-primary-2 to-accent opacity-55 blur-md" />
+          <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-[#0F9D8A] via-[#0A7BD8] to-[#22C55E] opacity-55 blur-md" />
           <div className="glass logo-surface relative rounded-3xl p-4 shadow-2xl">
             <QRCodeSVG
               value={shareUrl}
               size={200}
               level="M"
-              fgColor="#0A1F52"
+              fgColor="#0A3D50"
               bgColor="#ffffff"
               imageSettings={{ src: BUSINESS.logo, height: 42, width: 42, excavate: true }}
             />

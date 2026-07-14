@@ -45,9 +45,13 @@ export const LOCATION = {
     encodeURIComponent('Relief Medical & General Store, Nigdi, Pune'),
 }
 
-// Store timings — set to null to hide the row entirely.
-// e.g. { days: 'Mon – Sun', hours: '9:00 AM – 10:30 PM' }
-export const TIMINGS = null
+// Store timings — set to null to hide the section entirely.
+export const TIMINGS = {
+  rows: [
+    { days: 'Monday – Saturday', hours: '8:00 AM – 10:45 PM' },
+    { days: 'Sunday', hours: 'Closed' },
+  ],
+}
 
 // ------------------------------------------------------------
 //  SERVICES (front-side chips)
@@ -96,7 +100,7 @@ export const BRANDS = [
 // ------------------------------------------------------------
 export const REVIEWS = {
   title: 'Customer Reviews',
-  line: 'Loved by families across Nigdi for genuine medicines & caring service.',
+  line: 'Trusted by families across Nigdi.',
   url: 'https://www.google.com/search?sxsrf=APpeQnttC-jdCHzyuDASomQmmvqIUBtU-A:1784007098948&si=APenkKn5T4YN59srr511wD6k6Pufj9DEzRUvB1XJSwUeeT5afhB513XBoaHTpitrMLoFgcH-gQPbI4iDURanWKFsR8B_lNeCWnefxQrLAWGtR3sY0M5g52RUw5vi0lmT4wtaJwz51Mg9bZ_OdItcW1fasCWDCmYNFg%3D%3D&q=Relief+Medical+And+General+Stores+Reviews',
   qr: null, // e.g. '/qr/google-review.png' — shows a QR tile when provided
 }
@@ -110,21 +114,11 @@ export const UPI_QR = null // e.g. '/qr/upi.png'
 export const TRUST_TITLE = 'Why Customers Trust Us'
 export const TRUST_LINES = [
   '✔ Genuine Medicines',
-  '✔ Trusted Healthcare Partner',
   '✔ Fast & Free Home Delivery',
-  '✔ Quality You Can Trust',
+  '✔ Trusted Healthcare Partner',
+  '✔ Premium Healthcare Products',
   '✔ Caring Beyond Medicines',
-  '✔ Health First, Always',
   "✔ Your Family's Neighborhood Pharmacy",
-]
-
-// ------------------------------------------------------------
-//  GALLERY — storefront / interior photos (auto-hides while empty)
-//  Drop images in /public/gallery and list them here.
-// ------------------------------------------------------------
-export const GALLERY = [
-  // { src: '/gallery/storefront.jpg', alt: 'Relief Medical storefront' },
-  // { src: '/gallery/interior-1.jpg', alt: 'Store interior' },
 ]
 
 // ------------------------------------------------------------

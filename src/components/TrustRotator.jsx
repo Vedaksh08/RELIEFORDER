@@ -5,7 +5,7 @@ import { TRUST_LINES } from '../data/siteData.js'
 export default function TrustRotator({ className = '' }) {
   const [i, setI] = useState(0)
   useEffect(() => {
-    const t = setInterval(() => setI((p) => (p + 1) % TRUST_LINES.length), 3800)
+    const t = setInterval(() => setI((p) => (p + 1) % TRUST_LINES.length), 3000)
     return () => clearInterval(t)
   }, [])
   return (

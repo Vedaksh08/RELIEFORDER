@@ -1,29 +1,30 @@
 @import 'tailwindcss';
 
 /* ============================================================
-   RELIEF MEDICAL — LIGHT MEDICAL DESIGN SYSTEM
-   Crisp white canvas · royal blue · fresh emerald green.
-   Bright, clinical and premium — like a modern pharmacy.
+   RELIEF MEDICAL — PREMIUM HEALTHCARE DESIGN SYSTEM
+   Teal #0F9D8A · Blue #0A7BD8 · Green #22C55E · Cyan #E8FFFB
+   Premium SaaS polish + modern healthcare branding.
    ============================================================ */
 
 @theme {
   /* surfaces */
-  --color-canvas: #eef6fc;
-  --color-card: rgba(255, 255, 255, 0.75);
-  --color-hairline: rgba(13, 60, 130, 0.12);
+  --color-canvas: #e8fffb;
+  --color-card: rgba(255, 255, 255, 0.9);
+  --color-hairline: rgba(18, 48, 64, 0.1);
 
-  /* brand — royal blue · sky blue · emerald (modern healthcare) */
-  --color-primary: #1e40af;
-  --color-primary-2: #2563eb;
-  --color-accent: #059669;
-  --color-accent-2: #10b981;
+  /* brand */
+  --color-primary: #0f9d8a;
+  --color-secondary: #0a7bd8;
+  --color-accent: #22c55e;
+  --color-cyan-soft: #e8fffb;
 
-  /* text (dark ink on light surfaces) */
-  --color-ink: #0e2a5a;
-  --color-muted: rgba(20, 55, 110, 0.62);
+  /* text */
+  --color-ink: #123040;
+  --color-ink-soft: rgba(18, 48, 64, 0.66);
+  --color-light: rgba(255, 255, 255, 0.88);
 
   /* status */
-  --color-ok: #059669;
+  --color-ok: #22c55e;
   --color-err: #ef4444;
   --color-wa: #25d366;
 
@@ -35,12 +36,9 @@
   --radius-card: 1.6rem;
   --radius-xl: 2rem;
 
-  --shadow-sm: 0 8px 24px rgba(30, 64, 150, 0.1);
-  --shadow-md: 0 16px 40px rgba(30, 64, 150, 0.14);
-  --shadow-lg: 0 20px 60px rgba(30, 64, 150, 0.16);
-  --shadow-royal: 0 12px 30px rgba(37, 99, 235, 0.32);
-  --shadow-accent: 0 10px 25px rgba(5, 150, 105, 0.3);
-  --shadow-wa: 0 12px 28px rgba(18, 140, 126, 0.3);
+  --shadow-sm: 0 8px 24px rgba(10, 80, 100, 0.1);
+  --shadow-md: 0 16px 40px rgba(10, 80, 100, 0.14);
+  --shadow-lg: 0 24px 64px rgba(10, 80, 100, 0.18);
 }
 
 * {
@@ -57,7 +55,7 @@ body,
 body {
   font-family: var(--font-sans);
   color: var(--color-ink);
-  background: #e0f5ea;
+  background: #e2f7f2;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -69,7 +67,7 @@ body {
 
 /* ---- gradient text helper (premium brand title) ------------ */
 .text-brand {
-  background: linear-gradient(120deg, #1e40af 0%, #2563eb 50%, #059669 100%);
+  background: linear-gradient(120deg, #0f9d8a 0%, #0a7bd8 60%, #22c55e 120%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -79,7 +77,7 @@ body {
 }
 
 /* ============================================================
-   BACKGROUND — bright pharmacy wash: soft mint green + sky blue
+   BACKGROUND — premium mesh: mint → teal → blue → light cyan
    ============================================================ */
 .aurora {
   position: fixed;
@@ -87,54 +85,56 @@ body {
   z-index: -3;
   overflow: hidden;
   background:
-    radial-gradient(1200px 780px at 50% -14%, rgba(134, 239, 195, 0.5), transparent 60%),
-    radial-gradient(950px 640px at 4% 10%, rgba(167, 243, 208, 0.6), transparent 62%),
-    radial-gradient(900px 600px at 98% 26%, rgba(147, 197, 253, 0.4), transparent 58%),
-    radial-gradient(1400px 760px at 50% 116%, rgba(110, 231, 183, 0.45), transparent 64%),
-    linear-gradient(175deg, #f2fdf7 0%, #e7f8ef 42%, #e2f6ec 78%, #e0f2f6 100%);
+    radial-gradient(1100px 720px at 18% -8%, rgba(167, 243, 223, 0.75), transparent 58%),
+    radial-gradient(920px 620px at 88% 12%, rgba(15, 157, 138, 0.16), transparent 60%),
+    radial-gradient(1000px 680px at 8% 62%, rgba(10, 123, 216, 0.12), transparent 62%),
+    radial-gradient(1200px 780px at 82% 96%, rgba(232, 255, 251, 0.9), transparent 66%),
+    radial-gradient(760px 520px at 50% 48%, rgba(134, 239, 210, 0.22), transparent 60%),
+    linear-gradient(178deg, #ecfdf7 0%, #e2f7f2 34%, #e0f2f9 68%, #e8fffb 100%);
 }
 .aurora::before,
 .aurora::after {
   content: '';
   position: absolute;
-  width: 56vmax;
-  height: 56vmax;
+  width: 54vmax;
+  height: 54vmax;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.45;
-  animation: drift 24s ease-in-out infinite alternate;
+  filter: blur(96px);
+  opacity: 0.4;
+  animation: drift 26s ease-in-out infinite alternate;
 }
 .aurora::before {
-  top: -22%;
-  left: -12%;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.38), transparent 60%);
+  top: -20%;
+  left: -14%;
+  background: radial-gradient(circle, rgba(15, 157, 138, 0.3), transparent 60%);
 }
 .aurora::after {
-  bottom: -26%;
+  bottom: -24%;
   right: -12%;
-  background: radial-gradient(circle, rgba(96, 165, 250, 0.3), transparent 60%);
-  animation-delay: -9s;
+  background: radial-gradient(circle, rgba(10, 123, 216, 0.24), transparent 60%);
+  animation-delay: -10s;
 }
 @keyframes drift {
   0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(5vw, 4vh, 0) scale(1.12); }
+  50% { transform: translate3d(5vw, 4vh, 0) scale(1.1); }
   100% { transform: translate3d(-4vw, -3vh, 0) scale(1.04); }
 }
 
-/* subtle clinical grid — barely-there structure */
+/* whisper-quiet medical plus pattern (~4% opacity) */
 .plus-grid {
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.04;
   background-image:
-    linear-gradient(rgba(4, 120, 87, 0.7) 1.5px, transparent 1.5px),
-    linear-gradient(90deg, rgba(4, 120, 87, 0.7) 1.5px, transparent 1.5px);
-  background-size: 46px 46px;
+    radial-gradient(circle at center, transparent 0, transparent 100%),
+    linear-gradient(rgba(15, 125, 110, 0.9) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(15, 125, 110, 0.9) 1.5px, transparent 1.5px);
+  background-size: 100% 100%, 44px 44px, 44px 44px;
   background-position: center;
-  mask-image: radial-gradient(90% 80% at 50% 45%, black 0%, transparent 100%);
-  -webkit-mask-image: radial-gradient(90% 80% at 50% 45%, black 0%, transparent 100%);
+  mask-image: radial-gradient(88% 78% at 50% 44%, black 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(88% 78% at 50% 44%, black 0%, transparent 100%);
 }
 
 /* ---- floating medical motifs OVER the card ------------------ */
@@ -147,8 +147,8 @@ body {
 }
 .med-float {
   position: absolute;
-  color: rgba(5, 150, 105, 0.26);
-  filter: drop-shadow(0 4px 8px rgba(6, 95, 70, 0.12));
+  color: rgba(15, 157, 138, 0.24);
+  filter: drop-shadow(0 4px 8px rgba(10, 80, 100, 0.1));
 }
 .med-float-a {
   top: 12%;
@@ -158,7 +158,7 @@ body {
 .med-float-b {
   top: 68%;
   right: 6%;
-  color: rgba(37, 99, 235, 0.2);
+  color: rgba(10, 123, 216, 0.2);
   animation: bob 13s ease-in-out infinite reverse;
   animation-delay: -4s;
 }
@@ -175,33 +175,39 @@ body {
 
 /* ============================================================
    SURFACES
-   Card shell = airy white glass with blue/green whispers.
-   Content cards (.glass) = clean white with soft blue rims.
+   Card shell = deep premium teal → blue mesh, white text.
+   Content cards (.glass) = luminous frosted white, dark text.
    ============================================================ */
 .glass {
-  background: linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(244, 253, 251, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(6, 95, 70, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  color: #12305e;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow:
+    0 10px 28px rgba(6, 60, 75, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  color: var(--color-ink);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .glass:hover {
-  box-shadow: 0 10px 26px rgba(6, 95, 70, 0.15);
-  border-color: rgba(16, 185, 129, 0.36);
+  box-shadow: 0 16px 38px rgba(6, 60, 75, 0.22);
+  border-color: rgba(255, 255, 255, 1);
 }
 
-/* main card shell — classic medical-store green → royal blue */
+/* main card shell — premium healthcare mesh: teal → blue */
 .glass-strong {
   background:
-    radial-gradient(600px 400px at 92% -6%, rgba(96, 165, 250, 0.4), transparent 62%),
-    radial-gradient(560px 340px at 6% 108%, rgba(110, 231, 183, 0.35), transparent 60%),
-    linear-gradient(165deg, #047857 0%, #059669 36%, #0891b2 72%, #1d4ed8 118%);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+    radial-gradient(640px 420px at 88% -8%, rgba(56, 189, 248, 0.28), transparent 60%),
+    radial-gradient(560px 380px at -6% 30%, rgba(45, 212, 191, 0.3), transparent 58%),
+    radial-gradient(700px 480px at 50% 118%, rgba(8, 74, 158, 0.5), transparent 64%),
+    linear-gradient(163deg, #0c8b7a 0%, #0f9d8a 30%, #0d84b8 68%, #0a6fc4 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow:
-    0 26px 70px rgba(6, 95, 70, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    0 30px 80px rgba(8, 74, 100, 0.4),
+    0 4px 18px rgba(8, 74, 100, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
 }
 
 /* white logo tile */
@@ -209,15 +215,29 @@ body {
   background: #ffffff;
 }
 
+/* gentle levitation for the hero logo */
+.logo-float {
+  animation: logo-float 5.5s ease-in-out infinite;
+}
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
 /* brand logo tile in the carousel */
 .brand-tile {
   background: #ffffff;
-  border: 1px solid rgba(16, 185, 129, 0.18);
-  box-shadow: 0 6px 16px rgba(6, 95, 70, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 20px rgba(6, 60, 75, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* section wrapper is just spacing — no nested tinted box */
 .section-surface { background: transparent; border: 0; box-shadow: none; }
+
+/* staggered upward entrance for card sections */
+.rise {
+  animation: rise-fade 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
 /* ============================================================
    3D FLIP CARD
@@ -244,14 +264,14 @@ body {
   position: absolute;
   inset: -22%;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(16, 185, 129, 0.16) 45%, transparent 70%);
-  filter: blur(7px);
+  background: radial-gradient(circle, rgba(232, 255, 251, 0.4) 0%, rgba(34, 197, 94, 0.14) 45%, transparent 70%);
+  filter: blur(8px);
   z-index: -1;
   pointer-events: none;
 }
-.pulse-ring { animation: pulse-ring 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.pulse-ring { animation: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 @keyframes pulse-ring {
-  0% { transform: scale(0.92); opacity: 0.55; }
+  0% { transform: scale(0.92); opacity: 0.5; }
   100% { transform: scale(1.5); opacity: 0; }
 }
 
@@ -282,19 +302,41 @@ body {
    SERVICE CHIPS (front)
    ============================================================ */
 .service-chip {
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+  transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.32s ease;
 }
-.service-chip:hover { transform: translateY(-3px); }
+.service-chip:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(6, 60, 75, 0.24);
+}
 .service-icon {
   display: grid;
   place-items: center;
-  width: 1.9rem;
-  height: 1.9rem;
+  width: 2rem;
+  height: 2rem;
   flex-shrink: 0;
   border-radius: 999px;
   color: #ffffff;
-  background: linear-gradient(135deg, #10b981, #2563eb);
-  box-shadow: 0 4px 10px rgba(6, 120, 86, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #0f9d8a 0%, #0a7bd8 100%);
+  box-shadow: 0 5px 12px rgba(10, 100, 140, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* premium delivery CTA — rich layered green */
+.delivery-cta {
+  background:
+    radial-gradient(360px 130px at 88% -20%, rgba(232, 255, 251, 0.35), transparent 60%),
+    linear-gradient(170deg, #34d97b 0%, #22c55e 42%, #15945f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 14px 32px rgba(21, 148, 95, 0.42),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -4px 8px rgba(6, 78, 48, 0.28);
+}
+.delivery-cta:hover {
+  filter: brightness(1.05);
+  box-shadow:
+    0 18px 40px rgba(21, 148, 95, 0.5),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -4px 8px rgba(6, 78, 48, 0.28);
 }
 
 /* ============================================================
@@ -309,8 +351,8 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   /* logos genuinely fade at the edges — works on any backdrop */
-  mask-image: linear-gradient(90deg, transparent 0, black 26px, black calc(100% - 26px), transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, black 26px, black calc(100% - 26px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
 }
 .brand-scroll:active { cursor: grabbing; }
 .brand-scroll::-webkit-scrollbar { display: none; }
@@ -320,7 +362,7 @@ body {
 }
 .brand-chip:hover {
   transform: translateY(-4px) scale(1.04);
-  box-shadow: 0 12px 26px rgba(30, 64, 150, 0.18);
+  box-shadow: 0 14px 30px rgba(6, 60, 75, 0.26);
 }
 
 /* ---- review stars ------------------------------------------ */
@@ -345,88 +387,112 @@ body {
 }
 .btn:hover { transform: translateY(-2px); }
 .btn:active {
-  transform: translateY(1px) scale(0.985);
-  filter: brightness(0.96);
+  transform: translateY(1px) scale(0.98);
+  filter: brightness(0.95);
 }
 .btn:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-/* primary action — royal blue, raised */
+/* primary action — signature teal → blue, raised */
 .btn-primary {
-  background: linear-gradient(180deg, #4f8ef7 0%, #2563eb 55%, #1e3a8a 100%);
+  background: linear-gradient(160deg, #13b89f 0%, #0f9d8a 34%, #0a7bd8 110%);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow:
-    0 10px 22px rgba(37, 99, 235, 0.35),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.24);
+    0 12px 26px rgba(10, 110, 150, 0.42),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -3px 7px rgba(4, 48, 66, 0.3);
 }
 .btn-primary:hover {
   filter: brightness(1.08);
   box-shadow:
-    0 14px 30px rgba(37, 99, 235, 0.42),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.24);
+    0 16px 36px rgba(10, 110, 150, 0.52),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -3px 7px rgba(4, 48, 66, 0.3);
 }
 .btn-primary:active {
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 4px 12px rgba(10, 110, 150, 0.35), inset 0 2px 6px rgba(4, 48, 66, 0.32);
 }
 
-/* secondary — frosted glass with a crisp rim (sits on the colored shell) */
-.btn-secondary {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.12));
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+/* blue — deep secondary actions (review, call orb) */
+.btn-blue {
+  background: linear-gradient(180deg, #2f97e8 0%, #0a7bd8 55%, #0857a5 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.32);
   box-shadow:
-    0 8px 18px rgba(4, 60, 45, 0.25),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -2px 5px rgba(0, 0, 0, 0.14);
-  backdrop-filter: blur(6px);
+    0 12px 26px rgba(8, 87, 165, 0.4),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -3px 7px rgba(3, 40, 78, 0.3);
+}
+.btn-blue:hover { filter: brightness(1.08); }
+.btn-blue:active {
+  box-shadow: 0 4px 12px rgba(8, 87, 165, 0.32), inset 0 2px 6px rgba(3, 40, 78, 0.32);
+}
+
+/* secondary — luminous frosted glass with a soft glow rim */
+.btn-secondary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.14));
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 10px 24px rgba(4, 48, 66, 0.28),
+    0 0 18px rgba(232, 255, 251, 0.12),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .btn-secondary:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.18));
-  border-color: rgba(255, 255, 255, 0.7);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2));
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 14px 30px rgba(4, 48, 66, 0.34),
+    0 0 24px rgba(232, 255, 251, 0.2),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.12);
 }
 .btn-secondary:active {
-  box-shadow: 0 3px 8px rgba(4, 60, 45, 0.25), inset 0 2px 5px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 3px 10px rgba(4, 48, 66, 0.28), inset 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 
-/* accent — emerald green, the signature healthcare CTA */
+/* accent — vibrant healthcare green with a soft glow */
 .btn-accent {
-  background: linear-gradient(180deg, #4ade9d 0%, #10b981 55%, #047857 100%);
+  background: linear-gradient(180deg, #3ede82 0%, #22c55e 52%, #148f4b 100%);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow:
-    0 10px 22px rgba(6, 120, 86, 0.32),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -3px 6px rgba(3, 70, 50, 0.26);
+    0 12px 26px rgba(20, 143, 75, 0.42),
+    0 0 20px rgba(34, 197, 94, 0.2),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -3px 7px rgba(7, 72, 39, 0.3);
 }
 .btn-accent:hover {
   filter: brightness(1.06);
   box-shadow:
-    0 14px 30px rgba(6, 120, 86, 0.4),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -3px 6px rgba(3, 70, 50, 0.26);
+    0 16px 36px rgba(20, 143, 75, 0.5),
+    0 0 28px rgba(34, 197, 94, 0.3),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -3px 7px rgba(7, 72, 39, 0.3);
 }
 .btn-accent:active {
-  box-shadow: 0 4px 10px rgba(6, 120, 86, 0.3), inset 0 2px 6px rgba(3, 70, 50, 0.28);
+  box-shadow: 0 4px 12px rgba(20, 143, 75, 0.34), inset 0 2px 6px rgba(7, 72, 39, 0.32);
 }
 
 /* whatsapp — official green, same bevel language */
 .btn-whatsapp {
   background: linear-gradient(180deg, #34e27a 0%, #1dae60 55%, #128c7e 100%);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow:
-    0 10px 22px rgba(18, 140, 126, 0.32),
+    0 12px 26px rgba(18, 140, 126, 0.36),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -3px 6px rgba(6, 80, 60, 0.26);
+    inset 0 -3px 7px rgba(6, 80, 60, 0.28);
 }
 .btn-whatsapp:hover { filter: brightness(1.06); }
 .btn-whatsapp:active {
-  box-shadow: 0 4px 10px rgba(18, 140, 126, 0.3), inset 0 2px 6px rgba(6, 80, 60, 0.28);
+  box-shadow: 0 4px 12px rgba(18, 140, 126, 0.3), inset 0 2px 6px rgba(6, 80, 60, 0.3);
 }
 
 /* icon-orb circular action */
@@ -439,8 +505,8 @@ body {
 
 .modal-close {
   background: rgba(255, 255, 255, 0.95);
-  color: #12305e !important;
-  border: 1px solid rgba(15, 41, 71, 0.12);
+  color: #123040 !important;
+  border: 1px solid rgba(18, 48, 64, 0.12);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(0, 0, 0, 0.14);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -456,7 +522,7 @@ body {
 }
 .modal-close:hover {
   background: #ffffff;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(16, 185, 129, 0.45);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(34, 197, 94, 0.45);
 }
 
 .ripple {
@@ -474,7 +540,7 @@ body {
    MODAL — cinematic open
    ============================================================ */
 .modal-overlay {
-  background: rgba(9, 30, 66, 0.55);
+  background: rgba(6, 40, 56, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   animation: fade-in 0.4s ease both;
@@ -499,7 +565,7 @@ body {
 .stagger > *:nth-child(5) { animation-delay: 0.32s; }
 .stagger > *:nth-child(6) { animation-delay: 0.38s; }
 @keyframes rise-fade {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -512,10 +578,14 @@ body {
 
 /* ---- rotating trust-line crossfade -------------------------- */
 .quote-box {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.1));
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 20px rgba(4, 60, 45, 0.18);
-  backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 10px 24px rgba(4, 48, 66, 0.2),
+    0 0 20px rgba(232, 255, 251, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .quote-fade { animation: quote 0.7s ease both; }
 @keyframes quote {
@@ -531,12 +601,12 @@ body {
 
 .nice-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(37, 99, 235, 0.45) transparent;
+  scrollbar-color: rgba(15, 157, 138, 0.45) transparent;
 }
 .nice-scroll::-webkit-scrollbar { width: 7px; }
 .nice-scroll::-webkit-scrollbar-track { background: transparent; }
 .nice-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #2563eb, #059669);
+  background: linear-gradient(180deg, #0f9d8a, #0a7bd8);
   border-radius: 99px;
 }
 
@@ -545,9 +615,14 @@ body {
   .aurora::before,
   .aurora::after,
   .pulse-ring,
-  .bounce-arrow {
+  .bounce-arrow,
+  .logo-float {
     animation: none !important;
   }
   .float-layer { display: none; }
   .flip-inner { transition: none; }
+  .reveal,
+  .rise {
+    animation: none !important;
+  }
 }

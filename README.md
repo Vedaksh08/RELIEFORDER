@@ -30,10 +30,10 @@ review link, trust lines, gallery, timings. Nothing is hardcoded in components.
 | Asset            | Where to put it              | How to activate                                  |
 | ---------------- | ---------------------------- | ------------------------------------------------ |
 | HD logo          | `public/` (e.g. `logo.png`)  | update `BUSINESS.logo`, run `npm run icons`      |
-| Store photos     | `public/gallery/`            | list them in `GALLERY`                           |
+| Brand logos      | `public/brands/`             | replace files / edit `BRANDS`                    |
 | Owner photo      | `public/` (e.g. `owner.jpg`) | set `OWNER.photo`                                |
 | Google review QR | `public/qr/`                 | set `REVIEWS.qr`                                 |
 | UPI QR           | `public/qr/`                 | set `UPI_QR`                                     |
-| Store timings    | —                            | set `TIMINGS` (e.g. `{ days, hours }`)           |
+| Store timings    | —                            | edit `TIMINGS.rows` (set `TIMINGS` null to hide) |
 
 Sections tied to these assets render nothing while the value is `null` / empty.

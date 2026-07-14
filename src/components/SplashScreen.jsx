@@ -19,7 +19,7 @@ export default function SplashScreen({ onDone }) {
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center"
       style={{
-        background: 'linear-gradient(135deg,#F0FDF6 0%,#E8F9F0 45%,#EAF3FE 100%)',
+        background: 'linear-gradient(135deg,#ECFDF7 0%,#E2F7F2 45%,#E8FFFB 100%)',
         opacity: phase === 'out' ? 0 : 1,
         transition: phase === 'out' ? 'opacity 0.45s ease' : 'none',
       }}
@@ -42,7 +42,7 @@ export default function SplashScreen({ onDone }) {
 
         <div className="text-center">
           <p className="font-display text-brand text-2xl font-bold">{BUSINESS.fullName}</p>
-          <p className="mt-1.5 text-[13px] font-semibold tracking-wide text-emerald-600">
+          <p className="mt-1.5 text-[13px] font-semibold tracking-wide text-teal-600">
             {BUSINESS.tagline}
           </p>
         </div>

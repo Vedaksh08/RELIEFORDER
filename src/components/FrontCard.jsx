@@ -11,10 +11,10 @@ import {
   Sparkles,
   Truck,
   Stethoscope,
+  ArrowRight,
 } from 'lucide-react'
 import RippleButton from './RippleButton.jsx'
 import SectionDivider from './SectionDivider.jsx'
-import Gallery from './Gallery.jsx'
 import { BUSINESS, CONTACT, SERVICES, buildVCard, buildContactText } from '../data/siteData.js'
 
 const SERVICE_ICONS = {
@@ -56,24 +56,27 @@ export default function FrontCard({ onFlip, onLogoClick }) {
   return (
     <div
       onClick={onFlip}
-      className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-7"
+      className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-6 pt-8"
     >
       {/* soft brand glows */}
-      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-sky-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-200/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-emerald-300/20 blur-3xl" />
 
       {/* ---------- HERO HEADER ---------- */}
-      <header className="relative flex flex-col items-center px-2 pb-1 pt-1 text-center text-white">
+      <header
+        className="rise relative flex flex-col items-center px-2 pb-1 pt-1 text-center text-white"
+        style={{ animationDelay: '0.05s' }}
+      >
         <button
           onClick={(e) => {
             stop(e)
             onLogoClick()
           }}
           aria-label="View logo"
-          className="logo-glow relative transition-transform hover:scale-105 active:scale-95"
+          className="logo-glow logo-float relative transition-transform hover:scale-105 active:scale-95"
         >
-          <span className="pulse-ring absolute inset-0 rounded-3xl bg-primary-2/25" />
-          <div className="logo-surface relative grid h-20 w-20 place-items-center overflow-hidden rounded-3xl p-2 shadow-lg ring-1 ring-black/5">
+          <span className="pulse-ring absolute inset-0 rounded-[1.75rem] bg-white/20" />
+          <div className="logo-surface relative grid h-24 w-24 place-items-center overflow-hidden rounded-[1.75rem] p-2.5 shadow-xl ring-1 ring-black/5">
             <img
               src={BUSINESS.logo}
               alt={`${BUSINESS.fullName} logo`}
@@ -83,44 +86,48 @@ export default function FrontCard({ onFlip, onLogoClick }) {
         </button>
 
         <h1
-          className="font-display mt-4 font-bold leading-tight tracking-tight text-white drop-shadow-sm"
-          style={{ fontSize: 'clamp(1.4rem, 7.4vw, 1.9rem)' }}
+          className="font-display mt-5 font-bold leading-tight tracking-tight text-white drop-shadow-sm"
+          style={{ fontSize: 'clamp(1.55rem, 8vw, 2.05rem)' }}
         >
           {BUSINESS.name}
         </h1>
-        <p className="font-display text-[15px] font-semibold tracking-wide text-sky-200">
+        <p className="font-display mt-0.5 text-[16px] font-semibold tracking-wide text-cyan-100">
           {BUSINESS.nameSuffix}
         </p>
 
         {/* elegant divider + tagline */}
-        <div className="mt-2.5 flex items-center gap-2.5">
-          <span className="h-px w-8 bg-gradient-to-r from-transparent to-emerald-200/85" />
-          <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.15em] text-emerald-200">
+        <div className="mt-3 flex items-center gap-2.5">
+          <span className="h-px w-9 bg-gradient-to-r from-transparent to-white/70" />
+          <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.16em] text-emerald-100">
             {BUSINESS.tagline}
           </span>
-          <span className="h-px w-8 bg-gradient-to-l from-transparent to-emerald-200/85" />
+          <span className="h-px w-9 bg-gradient-to-l from-transparent to-white/70" />
         </div>
 
-        <p className="mt-2.5 max-w-[19rem] text-[11.5px] font-medium leading-relaxed text-white/85">
+        <p className="mt-3 max-w-[19.5rem] text-[11.5px] font-medium leading-relaxed text-white/85">
           {BUSINESS.blurb}
         </p>
       </header>
 
       {/* ---------- SERVICES ---------- */}
-      <section className="section-surface relative mt-4" onClick={stop}>
+      <section
+        className="section-surface rise relative mt-5"
+        style={{ animationDelay: '0.16s' }}
+        onClick={stop}
+      >
         <SectionDivider icon={Stethoscope}>Our Services</SectionDivider>
-        <div className="mt-2.5 grid grid-cols-2 gap-2">
+        <div className="mt-3 grid grid-cols-2 gap-2.5">
           {SERVICES.map((s) => {
             const Icon = SERVICE_ICONS[s.icon] ?? Cross
             return (
               <div
                 key={s.label}
-                className="glass service-chip flex items-center gap-2 rounded-xl px-2.5 py-2"
+                className="glass service-chip flex items-center gap-2.5 rounded-2xl px-3 py-2.5"
               >
                 <span className="service-icon">
-                  <Icon size={14} strokeWidth={2.2} />
+                  <Icon size={15} strokeWidth={2.2} />
                 </span>
-                <span className="text-[10.5px] font-semibold leading-tight text-[#12305E]">
+                <span className="text-[10.5px] font-semibold leading-tight text-[#123040]">
                   {s.label}
                 </span>
               </div>
@@ -129,32 +136,40 @@ export default function FrontCard({ onFlip, onLogoClick }) {
         </div>
       </section>
 
-      {/* ---------- STORE GALLERY (auto-hides while no photos) ---------- */}
-      <Gallery className="mt-4" onClick={stop} />
-
       {/* ---------- FREE DELIVERY CTA ---------- */}
-      <div className="relative my-auto py-4" onClick={stop}>
+      <div
+        className="rise relative my-auto py-4"
+        style={{ animationDelay: '0.27s' }}
+        onClick={stop}
+      >
         <RippleButton
           as="a"
           href={CONTACT.whatsappText}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-accent flex w-full items-center justify-center gap-3 rounded-2xl px-4 py-3"
+          className="delivery-cta flex w-full items-center gap-3.5 rounded-2xl px-4.5 py-4"
         >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/40">
-            <Truck size={18} />
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/22 ring-1 ring-white/50">
+            <Truck size={21} />
           </span>
-          <span className="text-left">
-            <span className="block text-[13px] font-bold leading-tight">Free Home Delivery</span>
-            <span className="block text-[10.5px] font-medium text-white/85">
+          <span className="min-w-0 flex-1 text-left text-white">
+            <span className="block text-[14px] font-bold leading-tight drop-shadow-sm">
+              Free Home Delivery
+            </span>
+            <span className="mt-0.5 block text-[10.5px] font-medium text-white/90">
               Order on WhatsApp — quick doorstep service
             </span>
           </span>
+          <ArrowRight size={17} className="shrink-0 text-white/85" />
         </RippleButton>
       </div>
 
       {/* ---------- MAIN ACTIONS ---------- */}
-      <section className="grid grid-cols-2 gap-3" onClick={stop}>
+      <section
+        className="rise grid grid-cols-2 gap-3"
+        style={{ animationDelay: '0.38s' }}
+        onClick={stop}
+      >
         <ActionButton icon={UserPlus} label="Save Contact" onClick={saveContact} variant="primary" />
         <ActionButton
           icon={copied ? Check : Copy}
@@ -165,7 +180,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       </section>
 
       {/* ---------- FLIP HINT ---------- */}
-      <div className="mt-3.5 flex flex-col items-center gap-0.5 text-white/70">
+      <div className="mt-4 flex flex-col items-center gap-0.5 text-white/70">
         <span className="text-[8px] font-bold uppercase tracking-[0.28em]">Tap Card to Flip</span>
         <ChevronDown size={13} className="bounce-arrow" />
       </div>
