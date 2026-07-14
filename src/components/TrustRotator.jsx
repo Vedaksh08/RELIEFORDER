@@ -14,7 +14,7 @@ export default function TrustRotator({ className = '' }) {
     >
       <p
         key={i}
-        className="quote-fade font-display text-[13.5px] font-semibold leading-normal text-emerald-800"
+        className="quote-fade font-display text-[13.5px] font-semibold leading-normal text-white"
       >
         {TRUST_LINES[i]}
       </p>

@@ -53,19 +53,19 @@ export default function InstallModal({ isIosSafari, canInstall, onInstall, onDis
             </div>
           </div>
 
-          <h2 className="font-display text-xl font-bold text-ink">
+          <h2 className="font-display text-xl font-bold text-white">
             📲 Save this Digital Business Card
           </h2>
-          <p className="mt-2 max-w-[20rem] text-[13px] leading-relaxed text-muted">
+          <p className="mt-2 max-w-[20rem] text-[13px] leading-relaxed text-white/80">
             Keep {BUSINESS.fullName} one tap away. Save it to your Home Screen for
             quick orders and faster home delivery.
           </p>
 
           {/* iOS instructions */}
           {isIosSafari && !canInstall && (
-            <div className="mt-5 w-full rounded-2xl border border-primary/10 bg-primary/5 p-4 text-left">
-              <p className="mb-3 text-[11px] uppercase tracking-[0.18em] text-muted">How to install</p>
-              <ol className="flex flex-col gap-3 text-[13px] text-ink/90">
+            <div className="mt-5 w-full rounded-2xl border border-white/15 bg-white/10 p-4 text-left">
+              <p className="mb-3 text-[11px] uppercase tracking-[0.18em] text-white/70">How to install</p>
+              <ol className="flex flex-col gap-3 text-[13px] text-white/90">
                 <li className="flex items-center gap-3">
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-primary to-primary-2 text-white">
                     <ShareIcon size={16} />
@@ -102,7 +102,7 @@ export default function InstallModal({ isIosSafari, canInstall, onInstall, onDis
               Maybe Later
             </RippleButton>
             {!isIosSafari && !canInstall && (
-              <p className="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-muted">
+              <p className="mt-1 flex items-center justify-center gap-1.5 text-[11px] text-white/70">
                 <Smartphone size={12} /> Use your browser menu → “Install app / Add to Home Screen”.
               </p>
             )}

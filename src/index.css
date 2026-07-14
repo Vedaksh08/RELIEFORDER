@@ -191,19 +191,17 @@ body {
   border-color: rgba(16, 185, 129, 0.36);
 }
 
-/* main card shell — bright glassmorphism, fresh mint-green first */
+/* main card shell — classic medical-store green → royal blue */
 .glass-strong {
   background:
-    radial-gradient(600px 400px at 92% -6%, rgba(167, 243, 208, 0.6), transparent 62%),
-    radial-gradient(560px 340px at 6% 108%, rgba(191, 219, 254, 0.45), transparent 60%),
-    linear-gradient(165deg, #ffffff 0%, #f1fbf5 46%, #eaf9f1 100%);
-  border: 1px solid rgba(16, 185, 129, 0.24);
+    radial-gradient(600px 400px at 92% -6%, rgba(96, 165, 250, 0.4), transparent 62%),
+    radial-gradient(560px 340px at 6% 108%, rgba(110, 231, 183, 0.35), transparent 60%),
+    linear-gradient(165deg, #047857 0%, #059669 36%, #0891b2 72%, #1d4ed8 118%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow:
-    0 26px 70px rgba(6, 95, 70, 0.16),
-    0 0 0 1px rgba(255, 255, 255, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+    0 26px 70px rgba(6, 95, 70, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 /* white logo tile */
@@ -376,22 +374,23 @@ body {
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.26);
 }
 
-/* secondary — clean white with a blue rim (for light surfaces) */
+/* secondary — frosted glass with a crisp rim (sits on the colored shell) */
 .btn-secondary {
-  background: linear-gradient(180deg, #ffffff 0%, #eef5ff 100%);
-  color: #1e40af;
-  border: 1px solid rgba(37, 99, 235, 0.3);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.12));
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow:
-    0 8px 18px rgba(30, 64, 150, 0.12),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -2px 5px rgba(30, 64, 150, 0.06);
+    0 8px 18px rgba(4, 60, 45, 0.25),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(6px);
 }
 .btn-secondary:hover {
-  background: linear-gradient(180deg, #ffffff 0%, #e4f0ff 100%);
-  border-color: rgba(37, 99, 235, 0.5);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.18));
+  border-color: rgba(255, 255, 255, 0.7);
 }
 .btn-secondary:active {
-  box-shadow: 0 3px 8px rgba(30, 64, 150, 0.12), inset 0 2px 5px rgba(30, 64, 150, 0.1);
+  box-shadow: 0 3px 8px rgba(4, 60, 45, 0.25), inset 0 2px 5px rgba(0, 0, 0, 0.18);
 }
 
 /* accent — emerald green, the signature healthcare CTA */
@@ -513,9 +512,10 @@ body {
 
 /* ---- rotating trust-line crossfade -------------------------- */
 .quote-box {
-  background: linear-gradient(135deg, rgba(219, 234, 254, 0.65), rgba(209, 250, 229, 0.6));
-  border: 1px solid rgba(5, 150, 105, 0.24);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 8px 20px rgba(30, 64, 150, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 20px rgba(4, 60, 45, 0.18);
+  backdrop-filter: blur(6px);
 }
 .quote-fade { animation: quote 0.7s ease both; }
 @keyframes quote {

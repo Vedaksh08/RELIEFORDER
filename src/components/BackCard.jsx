@@ -45,17 +45,17 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       onClick={onFlip}
       className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6 text-ink"
     >
-      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary-2/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-accent/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-sky-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-emerald-300/20 blur-3xl" />
 
       {/* ---------- HEADER ---------- */}
       <div className="relative flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-200">
             {BUSINESS.fullName}
           </p>
-          <h2 className="font-display text-2xl font-bold leading-tight text-ink">Get in Touch</h2>
-          <span className="mt-1.5 block h-[2px] w-14 rounded-full bg-gradient-to-r from-sky-400 via-emerald-300 to-transparent" />
+          <h2 className="font-display text-2xl font-bold leading-tight text-white">Get in Touch</h2>
+          <span className="mt-1.5 block h-[2px] w-14 rounded-full bg-gradient-to-r from-emerald-300 via-sky-300 to-transparent" />
         </div>
         <button
           onClick={(e) => {
@@ -226,7 +226,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       />
 
       {/* flip hint */}
-      <div className="relative mt-auto flex items-center justify-center gap-1.5 pt-3 text-muted/70">
+      <div className="relative mt-auto flex items-center justify-center gap-1.5 pt-3 text-white/70">
         <RotateCcw size={11} />
         <span className="text-[8px] font-bold uppercase tracking-[0.28em]">Tap Card to Flip Back</span>
       </div>

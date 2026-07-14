@@ -22,7 +22,7 @@ export function ToastProvider({ children }) {
       {toast && (
         <div className="pointer-events-none fixed inset-x-0 top-6 z-[300] flex justify-center px-4">
           <div
-            className="glass-strong flex items-center gap-2.5 rounded-full px-5 py-3 text-sm font-semibold text-ink shadow-2xl"
+            className="glass-strong flex items-center gap-2.5 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-2xl"
             style={{ animation: 'toast-in 0.35s cubic-bezier(0.22,1,0.36,1) both' }}
           >
             {toast.icon ?? <Sparkles size={16} className="text-accent" />}

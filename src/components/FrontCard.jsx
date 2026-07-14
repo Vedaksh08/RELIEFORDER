@@ -59,11 +59,11 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-7"
     >
       {/* soft brand glows */}
-      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary-2/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-accent/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-sky-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-emerald-300/20 blur-3xl" />
 
       {/* ---------- HERO HEADER ---------- */}
-      <header className="relative flex flex-col items-center px-2 pb-1 pt-1 text-center text-ink">
+      <header className="relative flex flex-col items-center px-2 pb-1 pt-1 text-center text-white">
         <button
           onClick={(e) => {
             stop(e)
@@ -83,25 +83,25 @@ export default function FrontCard({ onFlip, onLogoClick }) {
         </button>
 
         <h1
-          className="font-display mt-4 font-bold leading-tight tracking-tight text-ink"
+          className="font-display mt-4 font-bold leading-tight tracking-tight text-white drop-shadow-sm"
           style={{ fontSize: 'clamp(1.4rem, 7.4vw, 1.9rem)' }}
         >
           {BUSINESS.name}
         </h1>
-        <p className="font-display text-[15px] font-semibold tracking-wide text-primary-2">
+        <p className="font-display text-[15px] font-semibold tracking-wide text-sky-200">
           {BUSINESS.nameSuffix}
         </p>
 
         {/* elegant divider + tagline */}
         <div className="mt-2.5 flex items-center gap-2.5">
-          <span className="h-px w-8 bg-gradient-to-r from-transparent to-emerald-500/70" />
-          <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.15em] text-accent">
+          <span className="h-px w-8 bg-gradient-to-r from-transparent to-emerald-200/85" />
+          <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.15em] text-emerald-200">
             {BUSINESS.tagline}
           </span>
-          <span className="h-px w-8 bg-gradient-to-l from-transparent to-emerald-500/70" />
+          <span className="h-px w-8 bg-gradient-to-l from-transparent to-emerald-200/85" />
         </div>
 
-        <p className="mt-2.5 max-w-[19rem] text-[11.5px] font-medium leading-relaxed text-muted">
+        <p className="mt-2.5 max-w-[19rem] text-[11.5px] font-medium leading-relaxed text-white/85">
           {BUSINESS.blurb}
         </p>
       </header>
@@ -165,7 +165,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       </section>
 
       {/* ---------- FLIP HINT ---------- */}
-      <div className="mt-3.5 flex flex-col items-center gap-0.5 text-muted/70">
+      <div className="mt-3.5 flex flex-col items-center gap-0.5 text-white/70">
         <span className="text-[8px] font-bold uppercase tracking-[0.28em]">Tap Card to Flip</span>
         <ChevronDown size={13} className="bounce-arrow" />
       </div>
