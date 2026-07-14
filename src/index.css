@@ -179,11 +179,11 @@ body {
    Content cards (.glass) = luminous frosted white, dark text.
    ============================================================ */
 .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(244, 253, 251, 0.94) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: linear-gradient(160deg, #eefcf6 0%, #dcf4f2 52%, #d5ebfa 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 18px;
   box-shadow:
-    0 10px 28px rgba(6, 60, 75, 0.16),
+    0 10px 28px rgba(6, 60, 75, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
   color: var(--color-ink);
   backdrop-filter: blur(8px);
@@ -191,7 +191,7 @@ body {
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .glass:hover {
-  box-shadow: 0 16px 38px rgba(6, 60, 75, 0.22);
+  box-shadow: 0 16px 38px rgba(6, 60, 75, 0.24);
   border-color: rgba(255, 255, 255, 1);
 }
 
@@ -224,11 +224,11 @@ body {
   50% { transform: translateY(-6px); }
 }
 
-/* brand logo tile in the carousel */
+/* brand logo tile in the carousel — faint tint keeps logos readable */
 .brand-tile {
-  background: #ffffff;
+  background: linear-gradient(165deg, #f3fdf9 0%, #e6f4f6 100%);
   border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 8px 20px rgba(6, 60, 75, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 20px rgba(6, 60, 75, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* section wrapper is just spacing — no nested tinted box */

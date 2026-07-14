@@ -11,11 +11,22 @@ import {
   Sparkles,
   Truck,
   Stethoscope,
+  ShieldCheck,
+  BadgeCheck,
   ArrowRight,
 } from 'lucide-react'
 import RippleButton from './RippleButton.jsx'
 import SectionDivider from './SectionDivider.jsx'
-import { BUSINESS, CONTACT, SERVICES, buildVCard, buildContactText } from '../data/siteData.js'
+import Rotator from './Rotator.jsx'
+import {
+  BUSINESS,
+  CONTACT,
+  SERVICES,
+  TRUST_TITLE,
+  TRUST_LINES,
+  buildVCard,
+  buildContactText,
+} from '../data/siteData.js'
 
 const SERVICE_ICONS = {
   pill: Pill,
@@ -137,37 +148,49 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       </section>
 
       {/* ---------- FREE DELIVERY CTA ---------- */}
-      <div
-        className="rise relative my-auto py-4"
-        style={{ animationDelay: '0.27s' }}
-        onClick={stop}
-      >
+      <div className="rise relative mt-4" style={{ animationDelay: '0.27s' }} onClick={stop}>
         <RippleButton
           as="a"
           href={CONTACT.whatsappText}
           target="_blank"
           rel="noopener noreferrer"
-          className="delivery-cta flex w-full items-center gap-3.5 rounded-2xl px-4.5 py-4"
+          className="delivery-cta flex w-full items-center gap-3 rounded-2xl px-4 py-3"
         >
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/22 ring-1 ring-white/50">
-            <Truck size={21} />
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/22 ring-1 ring-white/50">
+            <Truck size={19} />
           </span>
           <span className="min-w-0 flex-1 text-left text-white">
-            <span className="block text-[14px] font-bold leading-tight drop-shadow-sm">
+            <span className="block text-[13.5px] font-bold leading-tight drop-shadow-sm">
               Free Home Delivery
             </span>
-            <span className="mt-0.5 block text-[10.5px] font-medium text-white/90">
-              Order on WhatsApp — quick doorstep service
+            <span className="mt-0.5 block truncate text-[10.5px] font-medium text-white/90">
+              Order on WhatsApp — quick service
             </span>
           </span>
           <ArrowRight size={17} className="shrink-0 text-white/85" />
         </RippleButton>
       </div>
 
+      {/* ---------- WHY CUSTOMERS TRUST US ---------- */}
+      <section className="section-surface rise relative mt-4" style={{ animationDelay: '0.36s' }}>
+        <SectionDivider icon={ShieldCheck}>{TRUST_TITLE}</SectionDivider>
+        <div className="quote-box mt-2.5 flex items-center gap-3 rounded-2xl px-3.5 py-3">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#22C55E] to-[#0F9D8A] text-white shadow-md ring-1 ring-white/45">
+            <BadgeCheck size={19} />
+          </span>
+          <Rotator
+            lines={TRUST_LINES}
+            interval={3000}
+            className="min-h-[2.25rem] flex-1 justify-start"
+            textClassName="font-display text-left text-[13px] font-semibold leading-snug text-white"
+          />
+        </div>
+      </section>
+
       {/* ---------- MAIN ACTIONS ---------- */}
       <section
-        className="rise grid grid-cols-2 gap-3"
-        style={{ animationDelay: '0.38s' }}
+        className="rise mt-auto grid grid-cols-2 gap-3 pt-4"
+        style={{ animationDelay: '0.45s' }}
         onClick={stop}
       >
         <ActionButton icon={UserPlus} label="Save Contact" onClick={saveContact} variant="primary" />

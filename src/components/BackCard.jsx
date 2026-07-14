@@ -1,4 +1,4 @@
-﻿import { QRCodeSVG } from 'qrcode.react'
+import { QRCodeSVG } from 'qrcode.react'
 import { useState } from 'react'
 import {
   Phone,
@@ -7,10 +7,8 @@ import {
   Mail,
   MapPin,
   Navigation,
-  Clock,
   Star,
   ExternalLink,
-  ShieldCheck,
   Users,
   Tags,
   Share2,
@@ -24,16 +22,14 @@ import {
 import RippleButton from './RippleButton.jsx'
 import SectionDivider from './SectionDivider.jsx'
 import BrandMarquee from './BrandMarquee.jsx'
-import TrustRotator from './TrustRotator.jsx'
+import Rotator from './Rotator.jsx'
 import {
   BUSINESS,
   OWNER,
   CONTACT,
   LOCATION,
-  TIMINGS,
   REVIEWS,
   UPI_QR,
-  TRUST_TITLE,
 } from '../data/siteData.js'
 
 export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) {
@@ -69,16 +65,16 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
         </button>
       </div>
 
-      {/* ---------- 1 Â· CONTACT DETAILS ---------- */}
+      {/* ---------- 1 · CONTACT DETAILS ---------- */}
       <section
-        className="section-surface rise relative mt-3"
+        className="section-surface rise relative mt-auto pt-2"
         style={{ animationDelay: '0.12s' }}
         onClick={stop}
       >
         <SectionDivider icon={Users}>Contact Details</SectionDivider>
 
         {/* owner card — call + whatsapp orbs */}
-        <div className="glass mt-2.5 flex w-full min-w-0 items-center gap-3 rounded-2xl p-2.5">
+        <div className="glass mt-3 flex w-full min-w-0 items-center gap-3 rounded-2xl p-3">
           {OWNER.photo ? (
             <img
               src={OWNER.photo}
@@ -128,7 +124,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
         </div>
 
         {/* secondary phone + email */}
-        <div className="mt-2 grid grid-cols-2 gap-2.5">
+        <div className="mt-2.5 grid grid-cols-2 gap-2.5">
           <ContactChip
             href={CONTACT.telSecondary}
             icon={PhoneCall}
@@ -139,7 +135,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
         </div>
 
         {/* address + maps */}
-        <div className="glass mt-2 flex items-center gap-3 rounded-2xl p-2.5">
+        <div className="glass mt-2.5 flex items-center gap-3 rounded-2xl p-3">
           <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#0F9D8A] to-[#0A7BD8] text-white shadow-sm ring-1 ring-white/40">
             <MapPin size={17} />
           </div>
@@ -158,9 +154,9 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
         </div>
       </section>
 
-      {/* ---------- 2 Â· BRAND CAROUSEL ---------- */}
+      {/* ---------- 2 · BRAND CAROUSEL ---------- */}
       <section
-        className="section-surface rise relative mt-3"
+        className="section-surface rise relative mt-auto pt-2"
         style={{ animationDelay: '0.19s' }}
         onClick={stop}
       >
@@ -170,14 +166,14 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
         </div>
       </section>
 
-      {/* ---------- 3 Â· CUSTOMER REVIEWS ---------- */}
+      {/* ---------- 3 · CUSTOMER REVIEWS (rotating real quotes) ---------- */}
       <section
-        className="section-surface rise relative mt-3"
+        className="section-surface rise relative mt-auto pt-2"
         style={{ animationDelay: '0.26s' }}
         onClick={stop}
       >
         <SectionDivider icon={Star}>{REVIEWS.title}</SectionDivider>
-        <div className="glass mt-3 rounded-2xl px-4 py-3.5">
+        <div className="glass mt-3 rounded-2xl px-4 py-4">
           <div className="flex items-center justify-center gap-1.5">
             {[0, 1, 2, 3, 4].map((i) => (
               <Star
@@ -188,9 +184,12 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
               />
             ))}
           </div>
-          <p className="font-display mt-2 text-center text-[12.5px] font-semibold text-[#123040]">
-            {REVIEWS.line}
-          </p>
+          <Rotator
+            lines={REVIEWS.items}
+            interval={3500}
+            className="mt-2.5 min-h-[4.25rem] justify-center"
+            textClassName="font-display text-center text-[12px] font-medium italic leading-relaxed text-[#123040]"
+          />
           {REVIEWS.qr && (
             <img
               src={REVIEWS.qr}
@@ -211,43 +210,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
         </div>
       </section>
 
-      {/* ---------- 4 Â· STORE TIMINGS ---------- */}
-      {TIMINGS && (
-        <section
-          className="section-surface rise relative mt-3"
-          style={{ animationDelay: '0.33s' }}
-          onClick={stop}
-        >
-          <SectionDivider icon={Clock}>Store Timings</SectionDivider>
-          <div className="glass mt-3 flex items-center gap-3 rounded-2xl p-3">
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#0F9D8A] to-[#0A7BD8] text-white shadow-sm ring-1 ring-white/40">
-              <Clock size={17} />
-            </div>
-            <div className="min-w-0 flex-1">
-              {TIMINGS.rows.map((row) => (
-                <div key={row.days} className="flex items-baseline justify-between gap-3">
-                  <span className="text-[11px] font-semibold text-[#3E6478]">{row.days}</span>
-                  <span
-                    className={`font-display text-[11.5px] font-bold ${
-                      /closed/i.test(row.hours) ? 'text-rose-500' : 'text-[#123040]'
-                    }`}
-                  >
-                    {row.hours}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ---------- 5 Â· WHY CUSTOMERS TRUST US ---------- */}
-      <section className="section-surface rise relative mt-3" style={{ animationDelay: '0.4s' }}>
-        <SectionDivider icon={ShieldCheck}>{TRUST_TITLE}</SectionDivider>
-        <TrustRotator className="mt-3" />
-      </section>
-
-      {/* ---------- 6 Â· BOTTOM ACTIONS ---------- */}
+      {/* ---------- 4 · BOTTOM ACTIONS ---------- */}
       <BottomActions
         shareUrl={shareUrl}
         stop={stop}
@@ -256,7 +219,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       />
 
       {/* flip hint */}
-      <div className="relative mt-auto flex items-center justify-center gap-1.5 pt-3 text-white/70">
+      <div className="relative flex items-center justify-center gap-1.5 pt-3.5 text-white/70">
         <RotateCcw size={11} />
         <span className="text-[8px] font-bold uppercase tracking-[0.28em]">Tap Card to Flip Back</span>
       </div>
@@ -293,8 +256,8 @@ function BottomActions({ shareUrl, stop, onInstall, installed }) {
   return (
     <>
       <div
-        className={`rise relative mt-4 grid gap-3 ${UPI_QR ? 'grid-cols-3' : installed ? 'grid-cols-1' : 'grid-cols-2'}`}
-        style={{ animationDelay: '0.47s' }}
+        className={`rise relative mt-auto grid gap-3 pt-4 ${UPI_QR ? 'grid-cols-3' : installed ? 'grid-cols-1' : 'grid-cols-2'}`}
+        style={{ animationDelay: '0.36s' }}
         onClick={stop}
       >
         {UPI_QR && (

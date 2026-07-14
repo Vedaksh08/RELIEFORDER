@@ -45,13 +45,6 @@ export const LOCATION = {
     encodeURIComponent('Relief Medical & General Store, Nigdi, Pune'),
 }
 
-// Store timings — set to null to hide the section entirely.
-export const TIMINGS = {
-  rows: [
-    { days: 'Monday – Saturday', hours: '8:00 AM – 10:45 PM' },
-    { days: 'Sunday', hours: 'Closed' },
-  ],
-}
 
 // ------------------------------------------------------------
 //  SERVICES (front-side chips)
@@ -100,7 +93,14 @@ export const BRANDS = [
 // ------------------------------------------------------------
 export const REVIEWS = {
   title: 'Customer Reviews',
-  line: 'Trusted by families across Nigdi.',
+  // Real Google review quotes (rotated on the card; names withheld)
+  items: [
+    '“I wanted some medicines, shared the details and received them the same day. Great shop!”',
+    '“You will find almost all medicines here — no need to visit two shops. Computerised printed billing too.”',
+    '“A big medical and general store. Medicines, hygiene products and cosmetics — they can even order stuff for you.”',
+    '“We get all our medicines here. Cash, card and Google Pay accepted.”',
+    '“Polite staff and good, friendly service.”',
+  ],
   url: 'https://www.google.com/search?sxsrf=APpeQnttC-jdCHzyuDASomQmmvqIUBtU-A:1784007098948&si=APenkKn5T4YN59srr511wD6k6Pufj9DEzRUvB1XJSwUeeT5afhB513XBoaHTpitrMLoFgcH-gQPbI4iDURanWKFsR8B_lNeCWnefxQrLAWGtR3sY0M5g52RUw5vi0lmT4wtaJwz51Mg9bZ_OdItcW1fasCWDCmYNFg%3D%3D&q=Relief+Medical+And+General+Stores+Reviews',
   qr: null, // e.g. '/qr/google-review.png' — shows a QR tile when provided
 }
@@ -113,12 +113,12 @@ export const UPI_QR = null // e.g. '/qr/upi.png'
 // ------------------------------------------------------------
 export const TRUST_TITLE = 'Why Customers Trust Us'
 export const TRUST_LINES = [
-  '✔ Genuine Medicines',
-  '✔ Fast & Free Home Delivery',
-  '✔ Trusted Healthcare Partner',
-  '✔ Premium Healthcare Products',
-  '✔ Caring Beyond Medicines',
-  "✔ Your Family's Neighborhood Pharmacy",
+  'Genuine Medicines',
+  'Fast & Free Home Delivery',
+  'Trusted Healthcare Partner',
+  'Premium Healthcare Products',
+  'Caring Beyond Medicines',
+  "Your Family's Neighborhood Pharmacy",
 ]
 
 // ------------------------------------------------------------

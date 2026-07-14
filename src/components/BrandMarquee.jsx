@@ -92,7 +92,7 @@ export default function BrandMarquee() {
         {loop.map((brand, i) => (
           <div
             key={`${brand.name}-${i}`}
-            className="brand-chip brand-tile flex h-[4.25rem] w-[8.5rem] shrink-0 items-center justify-center rounded-2xl px-3 py-2"
+            className="brand-chip brand-tile flex h-[4.75rem] w-[9.25rem] shrink-0 items-center justify-center rounded-2xl px-3.5 py-2.5"
             aria-hidden={i >= BRANDS.length}
           >
             <img

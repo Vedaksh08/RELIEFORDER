@@ -13,7 +13,7 @@ export default function FlipCard({ onInstall, installed }) {
 
   return (
     <>
-      <div className="perspective-card mx-auto w-full max-w-[23.5rem]">
+      <div className="perspective-card mx-auto w-full max-w-[25.5rem]">
         <div
           className={`flip-inner ${flipped ? 'is-flipped' : ''}`}
           style={{ height: CARD_HEIGHT }}
