@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="pill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#1E3A8A"/>
+    </linearGradient>
+    <linearGradient id="cross" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34D399"/>
+      <stop offset="1" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+
+  <!-- white rounded tile -->
+  <rect x="8" y="8" width="496" height="496" rx="112" fill="#FFFFFF"/>
+  <rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="#E2ECF9" stroke-width="6"/>
+
+  <!-- capsule: white top half, royal-blue bottom half -->
+  <g transform="rotate(32 256 256)">
+    <rect x="196" y="96" width="120" height="320" rx="60" fill="url(#pill)"/>
+    <path d="M196 156a60 60 0 0 1 120 0v100H196Z" fill="#F3F8FF"/>
+    <rect x="196" y="96" width="120" height="320" rx="60" fill="none" stroke="#12305E" stroke-opacity="0.18" stroke-width="6"/>
+    <!-- capsule shine -->
+    <rect x="214" y="118" width="18" height="120" rx="9" fill="#FFFFFF" opacity="0.55"/>
+  </g>
+
+  <!-- green medical cross, top-left -->
+  <g transform="translate(96 96)">
+    <path d="M52 0h56a12 12 0 0 1 12 12v40h40a12 12 0 0 1 12 12v56a12 12 0 0 1-12 12h-40v40a12 12 0 0 1-12 12H52a12 12 0 0 1-12-12v-40H0a0 0 0 0 1 0 0v-68a12 12 0 0 1 12-12h28V12A12 12 0 0 1 52 0Z" transform="translate(-20 -16) scale(0.92)" fill="url(#cross)"/>
+  </g>
+</svg>
