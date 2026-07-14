@@ -174,15 +174,15 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       {/* ---------- WHY CUSTOMERS TRUST US ---------- */}
       <section className="section-surface rise relative mt-4" style={{ animationDelay: '0.36s' }}>
         <SectionDivider icon={ShieldCheck}>{TRUST_TITLE}</SectionDivider>
-        <div className="quote-box mt-2.5 flex items-center gap-3 rounded-2xl px-3.5 py-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#22C55E] to-[#0F9D8A] text-white shadow-md ring-1 ring-white/45">
-            <BadgeCheck size={19} />
+        <div className="glass mt-2.5 flex items-center gap-2.5 rounded-2xl px-3 py-2.5">
+          <span className="service-icon">
+            <BadgeCheck size={15} strokeWidth={2.2} />
           </span>
           <Rotator
             lines={TRUST_LINES}
             interval={3000}
-            className="min-h-[2.25rem] flex-1 justify-start"
-            textClassName="font-display text-left text-[13px] font-semibold leading-snug text-white"
+            className="min-h-[2rem] flex-1 justify-start"
+            textClassName="font-display text-left text-[12.5px] font-semibold leading-snug text-[#123040]"
           />
         </div>
       </section>

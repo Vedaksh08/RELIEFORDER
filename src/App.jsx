@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Download } from 'lucide-react'
 import Background from './components/Background.jsx'
 import SplashScreen from './components/SplashScreen.jsx'
 import FlipCard from './components/FlipCard.jsx'
@@ -52,7 +53,17 @@ function AppInner() {
     <>
       <Background />
 
-      <main className="relative mx-auto flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-y-auto px-4 py-6 sm:py-8 [@media(max-height:880px)]:justify-start">
+      {/* slim always-on install hint — gone once the app is installed */}
+      {phase === 'card' && !pwa.installed && (
+        <button onClick={handleInstallClick} className="install-banner" aria-label="Install this card">
+          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#22C55E] to-[#0F9D8A] text-white">
+            <Download size={11} strokeWidth={2.5} />
+          </span>
+          Add this card to your Home Screen for 1-tap access
+        </button>
+      )}
+
+      <main className="relative mx-auto flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-y-auto px-4 pb-6 pt-14 sm:pb-8 [@media(max-height:880px)]:justify-start">
         {phase === 'splash' && <SplashScreen onDone={finishSplash} />}
 
         {phase === 'card' && (

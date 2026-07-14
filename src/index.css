@@ -234,6 +234,43 @@ body {
 /* section wrapper is just spacing — no nested tinted box */
 .section-surface { background: transparent; border: 0; box-shadow: none; }
 
+/* slim fixed "add to home screen" hint above the card */
+.install-banner {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100vw - 2rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #123040;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(15, 157, 138, 0.3);
+  box-shadow: 0 8px 22px rgba(6, 60, 75, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  animation: banner-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+}
+.install-banner:hover {
+  transform: translateX(-50%) translateY(2px);
+  box-shadow: 0 10px 26px rgba(6, 60, 75, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+@keyframes banner-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 /* staggered upward entrance for card sections */
 .rise {
   animation: rise-fade 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
