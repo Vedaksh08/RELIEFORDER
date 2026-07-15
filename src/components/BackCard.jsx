@@ -79,12 +79,12 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             <img
               src={OWNER.photo}
               alt={OWNER.name}
-              className="h-11 w-11 shrink-0 rounded-full object-cover shadow-md ring-2 ring-teal-500/35 ring-offset-1 ring-offset-white"
+              className="h-11 w-11 shrink-0 rounded-full object-cover shadow-md ring-2 ring-indigo-500/35 ring-offset-1 ring-offset-white"
             />
           ) : (
             <div
-              className="font-display grid h-11 w-11 shrink-0 place-items-center rounded-full text-[14px] font-bold text-white shadow-md ring-2 ring-teal-500/35 ring-offset-1 ring-offset-white"
-              style={{ background: 'linear-gradient(135deg,#0F9D8A,#0A7BD8)' }}
+              className="font-display grid h-11 w-11 shrink-0 place-items-center rounded-full text-[14px] font-bold text-white shadow-md ring-2 ring-indigo-500/35 ring-offset-1 ring-offset-white"
+              style={{ background: 'linear-gradient(135deg,#2E3192,#0A66D6)' }}
             >
               {OWNER.initials}
             </div>
@@ -93,11 +93,11 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             <p className="truncate text-[13.5px] font-bold leading-tight text-[#123040]">
               {OWNER.name}
             </p>
-            <p className="truncate text-[9px] font-bold uppercase tracking-[0.1em] text-teal-700">
+            <p className="truncate text-[9px] font-bold uppercase tracking-[0.1em] text-emerald-700">
               {OWNER.role}
             </p>
             <p className="mt-0.5 flex items-center gap-1 truncate text-[11.5px] font-medium text-[#3E6478]">
-              <Phone size={11} className="shrink-0 text-[#0A7BD8]" />
+              <Phone size={11} className="shrink-0 text-[#0A66D6]" />
               <span className="truncate">{CONTACT.phone}</span>
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
 
         {/* address + maps */}
         <div className="glass mt-2.5 flex items-center gap-3 rounded-2xl p-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#0F9D8A] to-[#0A7BD8] text-white shadow-sm ring-1 ring-white/40">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2E3192] to-[#0A66D6] text-white shadow-sm ring-1 ring-white/40">
             <MapPin size={17} />
           </div>
           <p className="min-w-0 flex-1 text-[10.5px] font-semibold leading-snug text-[#123040]">
@@ -240,7 +240,7 @@ function ContactChip({ href, icon: Icon, label, value }) {
         <Icon size={14} strokeWidth={2.2} />
       </span>
       <span className="min-w-0">
-        <span className="block text-[8.5px] font-bold uppercase tracking-[0.14em] text-teal-700">
+        <span className="block text-[8.5px] font-bold uppercase tracking-[0.14em] text-emerald-700">
           {label}
         </span>
         <span className="block truncate text-[11px] font-semibold text-[#123040]">{value}</span>
@@ -347,13 +347,13 @@ function SharePopup({ shareUrl, onClose }) {
         style={{ animation: 'logo-popup 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards' }}
       >
         <div className="relative">
-          <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-[#0F9D8A] via-[#0A7BD8] to-[#22C55E] opacity-55 blur-md" />
+          <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-[#2E3192] via-[#0A66D6] to-[#22C55E] opacity-55 blur-md" />
           <div className="glass logo-surface relative rounded-3xl p-4 shadow-2xl">
             <QRCodeSVG
               value={shareUrl}
               size={200}
               level="M"
-              fgColor="#0A3D50"
+              fgColor="#232B6E"
               bgColor="#ffffff"
               imageSettings={{ src: BUSINESS.logo, height: 42, width: 42, excavate: true }}
             />

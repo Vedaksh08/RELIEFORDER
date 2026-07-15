@@ -56,7 +56,7 @@ function AppInner() {
       {/* slim always-on install hint — gone once the app is installed */}
       {phase === 'card' && !pwa.installed && (
         <button onClick={handleInstallClick} className="install-banner" aria-label="Install this card">
-          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#22C55E] to-[#0F9D8A] text-white">
+          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#22C55E] to-[#1F8A46] text-white">
             <Download size={11} strokeWidth={2.5} />
           </span>
           Add this card to your Home Screen for 1-tap access
