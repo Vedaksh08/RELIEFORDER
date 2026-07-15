@@ -8,7 +8,7 @@ import { BUSINESS } from '../data/siteData.js'
 // Fixed design size — the card always lays out at exactly this size and
 // App scales it uniformly to fit the viewport (no scrolling, ever).
 export const CARD_WIDTH = 408
-export const CARD_HEIGHT = 880
+export const CARD_HEIGHT = 820
 
 export default function FlipCard({ onInstall, installed }) {
   const [flipped, setFlipped] = useState(false)

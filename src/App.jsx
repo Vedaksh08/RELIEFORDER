@@ -9,7 +9,7 @@ import usePWA from './hooks/usePWA.js'
 import { BUSINESS } from './data/siteData.js'
 
 // vertical room kept for the install banner, footer line and breathing space
-const RESERVED_Y = 118
+const RESERVED_Y = 96
 
 /** Uniform scale so the fixed-size card always fits the viewport — no scrolling. */
 function useCardScale() {
@@ -18,7 +18,7 @@ function useCardScale() {
     const compute = () => {
       const vw = window.innerWidth
       const vh = window.visualViewport?.height ?? window.innerHeight
-      const s = Math.min((vw - 20) / CARD_WIDTH, (vh - RESERVED_Y) / CARD_HEIGHT, 1)
+      const s = Math.min((vw - 16) / CARD_WIDTH, (vh - RESERVED_Y) / CARD_HEIGHT, 1)
       setScale(Math.max(s, 0.4))
     }
     compute()
