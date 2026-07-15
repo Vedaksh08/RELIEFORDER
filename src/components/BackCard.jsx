@@ -66,11 +66,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       </div>
 
       {/* ---------- 1 · CONTACT DETAILS ---------- */}
-      <section
-        className="section-surface rise relative mt-auto pt-2"
-        style={{ animationDelay: '0.12s' }}
-        onClick={stop}
-      >
+      <section className="section-surface rise relative mt-auto pt-2" style={{ animationDelay: '0.12s' }}>
         <SectionDivider icon={Users}>Contact Details</SectionDivider>
 
         {/* owner card — call + whatsapp orbs */}
@@ -155,11 +151,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       </section>
 
       {/* ---------- 2 · BRAND CAROUSEL ---------- */}
-      <section
-        className="section-surface rise relative mt-auto pt-2"
-        style={{ animationDelay: '0.19s' }}
-        onClick={stop}
-      >
+      <section className="section-surface rise relative mt-auto pt-2" style={{ animationDelay: '0.19s' }}>
         <SectionDivider icon={Tags}>Brands Available</SectionDivider>
         <div className="mt-2">
           <BrandMarquee />
@@ -167,11 +159,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       </section>
 
       {/* ---------- 3 · CUSTOMER REVIEWS (rotating real quotes) ---------- */}
-      <section
-        className="section-surface rise relative mt-auto pt-2"
-        style={{ animationDelay: '0.26s' }}
-        onClick={stop}
-      >
+      <section className="section-surface rise relative mt-auto pt-2" style={{ animationDelay: '0.26s' }}>
         <SectionDivider icon={Star}>{REVIEWS.title}</SectionDivider>
         <div className="glass mt-3 rounded-2xl px-4 py-4">
           <div className="flex items-center justify-center gap-1.5">
@@ -213,7 +201,6 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       {/* ---------- 4 · BOTTOM ACTIONS ---------- */}
       <BottomActions
         shareUrl={shareUrl}
-        stop={stop}
         onInstall={onInstall}
         installed={installed}
       />
@@ -249,7 +236,7 @@ function ContactChip({ href, icon: Icon, label, value }) {
   )
 }
 
-function BottomActions({ shareUrl, stop, onInstall, installed }) {
+function BottomActions({ shareUrl, onInstall, installed }) {
   const [shareOpen, setShareOpen] = useState(false)
   const [upiOpen, setUpiOpen] = useState(false)
 
@@ -258,7 +245,6 @@ function BottomActions({ shareUrl, stop, onInstall, installed }) {
       <div
         className={`rise relative mt-auto grid gap-3 pt-4 ${UPI_QR ? 'grid-cols-3' : installed ? 'grid-cols-1' : 'grid-cols-2'}`}
         style={{ animationDelay: '0.36s' }}
-        onClick={stop}
       >
         {UPI_QR && (
           <RippleButton

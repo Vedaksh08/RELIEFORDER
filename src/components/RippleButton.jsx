@@ -15,6 +15,8 @@ export default function RippleButton({
 
   const handleClick = useCallback(
     (e) => {
+      // buttons/links act on their own — never bubble up to the card flip
+      e.stopPropagation()
       const el = e.currentTarget
       const circle = document.createElement('span')
       const rect = el.getBoundingClientRect()

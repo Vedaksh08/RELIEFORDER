@@ -82,6 +82,14 @@ export default function BrandMarquee() {
       <div
         ref={sliderRef}
         className="brand-scroll no-scrollbar flex gap-2.5 overflow-x-auto px-3 py-1.5"
+        onClickCapture={(e) => {
+          // a swipe through the carousel must never flip the card;
+          // a genuine tap (no movement) still bubbles up and flips
+          if (dragRef.current.moved) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

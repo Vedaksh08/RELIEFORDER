@@ -8,28 +8,35 @@ const OUT = 'public/icons'
 mkdirSync(OUT, { recursive: true })
 const WHITE = { r: 255, g: 255, b: 255, alpha: 1 }
 
-async function make(size, pad, name, bg = WHITE) {
+async function make(size, pad, name, { bg = WHITE, round = 0 } = {}) {
   const inner = Math.round(size * (1 - pad * 2))
   const logo = await sharp(SRC, { density: 300 })
     .resize(inner, inner, { fit: 'contain', background: WHITE })
     .toBuffer()
-  await sharp({ create: { width: size, height: size, channels: 4, background: bg } })
+  let img = sharp({ create: { width: size, height: size, channels: 4, background: bg } })
     .composite([{ input: logo, gravity: 'center' }])
-    .png()
-    .toFile(`${OUT}/${name}`)
+  if (round > 0) {
+    // clip to a rounded rect so the icon has soft corners
+    const flat = await img.png().toBuffer()
+    const mask = Buffer.from(
+      `<svg width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${round}" fill="#fff"/></svg>`
+    )
+    img = sharp(flat).composite([{ input: mask, blend: 'dest-in' }])
+  }
+  await img.png().toFile(`${OUT}/${name}`)
   console.log('wrote', name, `${size}x${size}`)
 }
 
-// standard "any purpose" icons — small padding
-await make(192, 0.1, 'icon-192.png')
-await make(512, 0.1, 'icon-512.png')
-// maskable — generous safe-zone padding (~20%)
+// standard "any purpose" icons — small padding, softly rounded corners
+await make(192, 0.1, 'icon-192.png', { round: 42 })
+await make(512, 0.1, 'icon-512.png', { round: 112 })
+// maskable — full-bleed square, the launcher applies its own mask
 await make(192, 0.2, 'maskable-192.png')
 await make(512, 0.2, 'maskable-512.png')
-// apple touch — white bg, modest padding (iOS rounds corners itself)
+// apple touch — square white bg (iOS rounds corners itself)
 await make(180, 0.12, 'apple-touch-icon.png')
-// favicon
-await make(48, 0.06, 'favicon-48.png')
+// favicon — rounded corners
+await make(48, 0.06, 'favicon-48.png', { round: 11 })
 
 // OpenGraph / social banner — styled like the storefront sign board:
 // deep pharmacy green field, big brand lettering with an ECG heartbeat

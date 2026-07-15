@@ -121,11 +121,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       </header>
 
       {/* ---------- SERVICES ---------- */}
-      <section
-        className="section-surface rise relative mt-5"
-        style={{ animationDelay: '0.16s' }}
-        onClick={stop}
-      >
+      <section className="section-surface rise relative mt-5" style={{ animationDelay: '0.16s' }}>
         <SectionDivider icon={Stethoscope}>Our Services</SectionDivider>
         <div className="mt-3 grid grid-cols-2 gap-2.5">
           {SERVICES.map((s) => {
@@ -148,7 +144,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       </section>
 
       {/* ---------- FREE DELIVERY CTA ---------- */}
-      <div className="rise relative mt-4" style={{ animationDelay: '0.27s' }} onClick={stop}>
+      <div className="rise relative mt-4" style={{ animationDelay: '0.27s' }}>
         <RippleButton
           as="a"
           href={CONTACT.whatsappText}
@@ -188,11 +184,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
       </section>
 
       {/* ---------- MAIN ACTIONS ---------- */}
-      <section
-        className="rise mt-auto grid grid-cols-2 gap-3 pt-4"
-        style={{ animationDelay: '0.45s' }}
-        onClick={stop}
-      >
+      <section className="rise mt-auto grid grid-cols-2 gap-3 pt-4" style={{ animationDelay: '0.45s' }}>
         <ActionButton icon={UserPlus} label="Save Contact" onClick={saveContact} variant="primary" />
         <ActionButton
           icon={copied ? Check : Copy}
