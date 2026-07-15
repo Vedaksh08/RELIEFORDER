@@ -1,11 +1,14 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import FrontCard from './FrontCard.jsx'
 import BackCard from './BackCard.jsx'
 import { BUSINESS } from '../data/siteData.js'
 
-// One fixed height shared by both faces so the flip never jumps or clips.
-const CARD_HEIGHT = 880
+// Fixed design size — the card always lays out at exactly this size and
+// App scales it uniformly to fit the viewport (no scrolling, ever).
+export const CARD_WIDTH = 408
+export const CARD_HEIGHT = 880
 
 export default function FlipCard({ onInstall, installed }) {
   const [flipped, setFlipped] = useState(false)
@@ -13,7 +16,7 @@ export default function FlipCard({ onInstall, installed }) {
 
   return (
     <>
-      <div className="perspective-card mx-auto w-full max-w-[25.5rem]">
+      <div className="perspective-card w-full">
         <div
           className={`flip-inner ${flipped ? 'is-flipped' : ''}`}
           style={{ height: CARD_HEIGHT }}
@@ -41,7 +44,9 @@ export default function FlipCard({ onInstall, installed }) {
 }
 
 function LogoPopup({ onClose }) {
-  return (
+  // portaled to <body> — the card lives inside a scaled container, and a
+  // transform would otherwise trap this fixed overlay inside the card box
+  return createPortal(
     <div
       className="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-6"
       onClick={onClose}
@@ -66,6 +71,7 @@ function LogoPopup({ onClose }) {
           <p className="mt-1 text-sm font-medium text-emerald-300">{BUSINESS.tagline}</p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

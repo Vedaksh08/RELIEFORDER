@@ -2,11 +2,35 @@ import { useCallback, useEffect, useState } from 'react'
 import { Download } from 'lucide-react'
 import Background from './components/Background.jsx'
 import SplashScreen from './components/SplashScreen.jsx'
-import FlipCard from './components/FlipCard.jsx'
+import FlipCard, { CARD_WIDTH, CARD_HEIGHT } from './components/FlipCard.jsx'
 import InstallModal from './components/InstallModal.jsx'
 import { ToastProvider, useToast } from './components/Toast.jsx'
 import usePWA from './hooks/usePWA.js'
 import { BUSINESS } from './data/siteData.js'
+
+// vertical room kept for the install banner, footer line and breathing space
+const RESERVED_Y = 118
+
+/** Uniform scale so the fixed-size card always fits the viewport — no scrolling. */
+function useCardScale() {
+  const [scale, setScale] = useState(1)
+  useEffect(() => {
+    const compute = () => {
+      const vw = window.innerWidth
+      const vh = window.visualViewport?.height ?? window.innerHeight
+      const s = Math.min((vw - 20) / CARD_WIDTH, (vh - RESERVED_Y) / CARD_HEIGHT, 1)
+      setScale(Math.max(s, 0.4))
+    }
+    compute()
+    window.addEventListener('resize', compute)
+    window.visualViewport?.addEventListener('resize', compute)
+    return () => {
+      window.removeEventListener('resize', compute)
+      window.visualViewport?.removeEventListener('resize', compute)
+    }
+  }, [])
+  return scale
+}
 
 export default function App() {
   return (
@@ -21,6 +45,7 @@ function AppInner() {
 
   const pwa = usePWA()
   const toast = useToast()
+  const scale = useCardScale()
 
   useEffect(() => {
     if (sessionStorage.getItem('rm_seen')) setPhase('card')
@@ -63,12 +88,23 @@ function AppInner() {
         </button>
       )}
 
-      <main className="relative mx-auto flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-y-auto px-4 pb-6 pt-14 sm:pb-8 [@media(max-height:880px)]:justify-start">
+      <main className="relative mx-auto flex h-[100dvh] w-full flex-col items-center justify-center overflow-hidden px-2 pb-2 pt-12">
         {phase === 'splash' && <SplashScreen onDone={finishSplash} />}
 
         {phase === 'card' && (
-          <div className="flex w-full flex-col items-center gap-4">
-            <FlipCard onInstall={handleInstallClick} installed={pwa.installed} />
+          <div className="flex w-full flex-col items-center gap-2">
+            {/* fixed-design card, scaled uniformly to always fit on screen */}
+            <div style={{ width: CARD_WIDTH * scale, height: CARD_HEIGHT * scale }}>
+              <div
+                style={{
+                  width: CARD_WIDTH,
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top left',
+                }}
+              >
+                <FlipCard onInstall={handleInstallClick} installed={pwa.installed} />
+              </div>
+            </div>
             <p className="flex items-center gap-2 text-center text-[11px] font-medium text-muted">
               <span>© {new Date().getFullYear()} {BUSINESS.fullName}</span>
               <span className="text-accent">•</span>

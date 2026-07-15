@@ -1,5 +1,6 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import {
   Phone,
   PhoneCall,
@@ -309,7 +310,8 @@ function SharePopup({ shareUrl, onClose }) {
     }
   }
 
-  return (
+  // portaled to <body> so the scaled card container can't trap the overlay
+  return createPortal(
     <div
       className="modal-overlay fixed inset-0 z-[120] flex items-center justify-center p-6"
       onClick={(e) => {
@@ -366,12 +368,13 @@ function SharePopup({ shareUrl, onClose }) {
           </RippleButton>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 
 function QrPopup({ title, subtitle, image, onClose }) {
-  return (
+  return createPortal(
     <div
       className="modal-overlay fixed inset-0 z-[120] flex items-center justify-center p-6"
       onClick={(e) => {
@@ -400,6 +403,7 @@ function QrPopup({ title, subtitle, image, onClose }) {
         <p className="text-sm font-semibold text-white drop-shadow">{title}</p>
         <p className="text-xs text-white/75">{subtitle}</p>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
