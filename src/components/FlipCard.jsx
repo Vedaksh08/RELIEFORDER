@@ -6,7 +6,7 @@ import BackCard from './BackCard.jsx'
 import { BUSINESS } from '../data/siteData.js'
 
 // One fixed height shared by both faces so the flip never jumps or clips.
-const CARD_HEIGHT = 820
+const CARD_HEIGHT = 780
 
 export default function FlipCard({ onInstall, installed }) {
   const [flipped, setFlipped] = useState(false)

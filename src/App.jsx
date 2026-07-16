@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Download } from 'lucide-react'
+import { Download, Globe, CreditCard, MessageCircle } from 'lucide-react'
 import Background from './components/Background.jsx'
 import SplashScreen from './components/SplashScreen.jsx'
 import FlipCard from './components/FlipCard.jsx'
@@ -74,6 +74,7 @@ function AppInner() {
               <span className="text-accent">•</span>
               <span>Nigdi, Pune</span>
             </p>
+            <DesignerCredit />
           </div>
         )}
       </main>
@@ -88,5 +89,54 @@ function AppInner() {
         />
       )}
     </>
+  )
+}
+
+/* Footer credit — tapping reveals quick links to reach the designer. */
+const DESIGNER = {
+  whatsapp: 'https://wa.me/919764112680',
+  website: 'https://vedantkshirsagar.netlify.app/',
+  card: 'https://vedantdigicard.vercel.app/',
+}
+
+function DesignerCredit() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="relative flex flex-col items-center">
+      {open && (
+        <div
+          className="absolute bottom-full mb-2 flex gap-2"
+          style={{ animation: 'toast-in 0.3s cubic-bezier(0.22,1,0.36,1) both' }}
+        >
+          <CreditLink href={DESIGNER.website} icon={Globe} label="Website" />
+          <CreditLink href={DESIGNER.card} icon={CreditCard} label="My Card" />
+          <CreditLink href={DESIGNER.whatsapp} icon={MessageCircle} label="WhatsApp" />
+        </div>
+      )}
+      <p className="flex items-center gap-1.5 text-center text-[10.5px] font-medium text-muted">
+        <span>Designed by Vedant K.</span>
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="font-semibold text-[#0A66D6] underline decoration-dotted underline-offset-2 hover:text-[#2E3192]"
+        >
+          Click here to contact
+        </button>
+      </p>
+    </div>
+  )
+}
+
+function CreditLink({ href, icon: Icon, label }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[#0A66D6]/25 bg-white/95 px-3 py-1.5 text-[10.5px] font-bold text-[#123040] shadow-md backdrop-blur transition hover:-translate-y-0.5 hover:shadow-lg"
+    >
+      <Icon size={12} className="text-[#0A66D6]" />
+      {label}
+    </a>
   )
 }

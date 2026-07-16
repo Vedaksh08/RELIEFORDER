@@ -74,22 +74,21 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             <img src={BUSINESS.logo} alt={BUSINESS.fullName} className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13.5px] font-bold leading-tight text-[#123040]">
+            <p className="truncate text-[13px] font-bold leading-tight text-[#123040]">
               {BUSINESS.name}
             </p>
-            <p className="mt-1 flex items-center gap-1.5 truncate text-[15px] font-bold text-[#123040]">
-              <Phone size={14} className="shrink-0 text-[#0A66D6]" />
-              <span className="truncate">{CONTACT.phone}</span>
+            <p className="mt-1 whitespace-nowrap pr-1 text-[14px] font-bold tracking-tight text-[#123040]">
+              <span>{CONTACT.phone}</span>
             </p>
           </div>
-          <div className="flex shrink-0 gap-2">
+          <div className="flex shrink-0 gap-1.5">
             <RippleButton
               as="a"
               href={CONTACT.tel}
               aria-label={`Call ${BUSINESS.fullName}`}
-              className="btn-blue btn-orb h-10 w-10"
+              className="btn-blue btn-orb h-9 w-9"
             >
-              <Phone size={16} />
+              <Phone size={15} />
             </RippleButton>
             <RippleButton
               as="a"
@@ -97,9 +96,9 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`WhatsApp ${BUSINESS.fullName}`}
-              className="btn-whatsapp btn-orb h-10 w-10"
+              className="btn-whatsapp btn-orb h-9 w-9"
             >
-              <MessageCircle size={16} />
+              <MessageCircle size={15} />
             </RippleButton>
           </div>
         </div>
