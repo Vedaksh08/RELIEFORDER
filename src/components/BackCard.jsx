@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
   Phone,
-  PhoneCall,
   MessageCircle,
   Mail,
   MapPin,
@@ -120,14 +119,8 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
           </div>
         </div>
 
-        {/* secondary phone + email */}
-        <div className="mt-2.5 grid grid-cols-2 gap-2.5">
-          <ContactChip
-            href={CONTACT.telSecondary}
-            icon={PhoneCall}
-            label="Secondary"
-            value={CONTACT.phoneSecondary}
-          />
+        {/* email */}
+        <div className="mt-2.5">
           <ContactChip href={CONTACT.mailto} icon={Mail} label="Email" value="Write to us" />
         </div>
 

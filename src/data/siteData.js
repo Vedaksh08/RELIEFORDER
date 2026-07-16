@@ -27,8 +27,6 @@ export const OWNER = {
 export const CONTACT = {
   phone: '+91 9373624688',
   tel: 'tel:+919373624688',
-  phoneSecondary: '09373624688',
-  telSecondary: 'tel:09373624688',
   whatsapp: 'https://wa.me/919373624688',
   whatsappText:
     'https://wa.me/919373624688?text=' +
@@ -131,7 +129,7 @@ export function buildVCard() {
     `FN:${BUSINESS.fullName}`,
     `ORG:${BUSINESS.fullName}`,
     `TITLE:${BUSINESS.tagline}`,
-    `NOTE:Owner: ${OWNER.name}. ${BUSINESS.blurb}`,
+    `NOTE:${BUSINESS.blurb}`,
     'TEL;TYPE=CELL:+919373624688',
     `EMAIL;TYPE=WORK:${CONTACT.email}`,
     `URL:${BUSINESS.shareUrl}`,
@@ -146,7 +144,6 @@ export function buildContactText() {
     '',
     `Owner: ${OWNER.name}`,
     `Phone: ${CONTACT.phone}`,
-    `Secondary: ${CONTACT.phoneSecondary}`,
     `WhatsApp: ${CONTACT.whatsapp}`,
     `Email: ${CONTACT.email}`,
     '',
