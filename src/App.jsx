@@ -115,7 +115,7 @@ function DesignerCredit() {
         </div>
       )}
       <p className="flex items-center gap-1.5 text-center text-[10.5px] font-medium text-muted">
-        <span>Designed by Vedant K.</span>
+        <span>Designed and developed by Vedant K.</span>
         <button
           onClick={() => setOpen((o) => !o)}
           className="font-semibold text-[#0A66D6] underline decoration-dotted underline-offset-2 hover:text-[#2E3192]"
