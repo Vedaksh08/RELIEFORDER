@@ -53,7 +53,7 @@ export const SERVICES = [
   { icon: 'heart', label: 'Healthcare Products' },
   { icon: 'baby', label: 'Baby Care' },
   { icon: 'sparkles', label: 'Cosmetics' },
-  { icon: 'truck', label: 'Free Home Delivery' },
+  { icon: 'leaf', label: 'Ayurvedic & Allopathy' },
 ]
 
 // ------------------------------------------------------------

@@ -5,10 +5,8 @@ import FrontCard from './FrontCard.jsx'
 import BackCard from './BackCard.jsx'
 import { BUSINESS } from '../data/siteData.js'
 
-// Fixed design size — the card always lays out at exactly this size and
-// App scales it uniformly to fit the viewport (no scrolling, ever).
-export const CARD_WIDTH = 408
-export const CARD_HEIGHT = 820
+// One fixed height shared by both faces so the flip never jumps or clips.
+const CARD_HEIGHT = 820
 
 export default function FlipCard({ onInstall, installed }) {
   const [flipped, setFlipped] = useState(false)
@@ -16,7 +14,7 @@ export default function FlipCard({ onInstall, installed }) {
 
   return (
     <>
-      <div className="perspective-card w-full">
+      <div className="perspective-card mx-auto w-full max-w-[25.5rem]">
         <div
           className={`flip-inner ${flipped ? 'is-flipped' : ''}`}
           style={{ height: CARD_HEIGHT }}

@@ -18,7 +18,7 @@ export default function BrandMarquee() {
     const slider = sliderRef.current
     if (!slider) return
 
-    const SPEED = 0.55 // px per frame (~33px/s at 60fps)
+    const SPEED = 1.05 // px per frame (~63px/s at 60fps)
     let frame = 0
     let last = performance.now()
 

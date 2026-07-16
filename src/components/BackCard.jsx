@@ -25,7 +25,6 @@ import BrandMarquee from './BrandMarquee.jsx'
 import Rotator from './Rotator.jsx'
 import {
   BUSINESS,
-  OWNER,
   CONTACT,
   LOCATION,
   REVIEWS,
@@ -69,31 +68,17 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
       <section className="section-surface rise relative mt-auto pt-2" style={{ animationDelay: '0.12s' }}>
         <SectionDivider icon={Users}>Contact Details</SectionDivider>
 
-        {/* owner card — call + whatsapp orbs */}
+        {/* store contact card — call + whatsapp orbs */}
         <div className="glass mt-3 flex w-full min-w-0 items-center gap-3 rounded-2xl p-3">
-          {OWNER.photo ? (
-            <img
-              src={OWNER.photo}
-              alt={OWNER.name}
-              className="h-11 w-11 shrink-0 rounded-full object-cover shadow-md ring-2 ring-indigo-500/35 ring-offset-1 ring-offset-white"
-            />
-          ) : (
-            <div
-              className="font-display grid h-11 w-11 shrink-0 place-items-center rounded-full text-[14px] font-bold text-white shadow-md ring-2 ring-indigo-500/35 ring-offset-1 ring-offset-white"
-              style={{ background: 'linear-gradient(135deg,#2E3192,#0A66D6)' }}
-            >
-              {OWNER.initials}
-            </div>
-          )}
+          <div className="logo-surface grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full p-1 shadow-md ring-2 ring-emerald-500/35 ring-offset-1 ring-offset-white">
+            <img src={BUSINESS.logo} alt={BUSINESS.fullName} className="h-full w-full object-contain" />
+          </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-[13.5px] font-bold leading-tight text-[#123040]">
-              {OWNER.name}
+              {BUSINESS.name}
             </p>
-            <p className="truncate text-[9px] font-bold uppercase tracking-[0.1em] text-emerald-700">
-              {OWNER.role}
-            </p>
-            <p className="mt-0.5 flex items-center gap-1 truncate text-[11.5px] font-medium text-[#3E6478]">
-              <Phone size={11} className="shrink-0 text-[#0A66D6]" />
+            <p className="mt-1 flex items-center gap-1.5 truncate text-[15px] font-bold text-[#123040]">
+              <Phone size={14} className="shrink-0 text-[#0A66D6]" />
               <span className="truncate">{CONTACT.phone}</span>
             </p>
           </div>
@@ -101,7 +86,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             <RippleButton
               as="a"
               href={CONTACT.tel}
-              aria-label={`Call ${OWNER.name}`}
+              aria-label={`Call ${BUSINESS.fullName}`}
               className="btn-blue btn-orb h-10 w-10"
             >
               <Phone size={16} />
@@ -111,7 +96,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
               href={CONTACT.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`WhatsApp ${OWNER.name}`}
+              aria-label={`WhatsApp ${BUSINESS.fullName}`}
               className="btn-whatsapp btn-orb h-10 w-10"
             >
               <MessageCircle size={16} />

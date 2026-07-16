@@ -10,6 +10,7 @@ import {
   Baby,
   Sparkles,
   Truck,
+  Leaf,
   Stethoscope,
   ShieldCheck,
   BadgeCheck,
@@ -35,6 +36,7 @@ const SERVICE_ICONS = {
   baby: Baby,
   sparkles: Sparkles,
   truck: Truck,
+  leaf: Leaf,
 }
 
 export default function FrontCard({ onFlip, onLogoClick }) {
@@ -98,7 +100,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
 
         <h1
           className="font-display mt-4 font-bold leading-tight tracking-tight text-white drop-shadow-sm"
-          style={{ fontSize: 'clamp(1.5rem, 7.6vw, 1.95rem)' }}
+          style={{ fontSize: 'clamp(1.7rem, 8.6vw, 2.2rem)' }}
         >
           {BUSINESS.name}
         </h1>
@@ -160,7 +162,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
               Free Home Delivery
             </span>
             <span className="mt-0.5 block truncate text-[10.5px] font-medium text-white/90">
-              Order on WhatsApp — quick service
+              Order Medicines on WhatsApp
             </span>
           </span>
           <ArrowRight size={17} className="shrink-0 text-white/85" />
