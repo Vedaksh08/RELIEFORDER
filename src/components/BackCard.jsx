@@ -73,7 +73,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             <img src={BUSINESS.logo} alt={BUSINESS.fullName} className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-bold leading-tight text-[#123040]">
+            <p className="truncate text-[13px] font-bold uppercase leading-tight text-[#123040]">
               {BUSINESS.name}
             </p>
             <p className="mt-1 whitespace-nowrap pr-1 text-[14px] font-bold tracking-tight text-[#123040]">

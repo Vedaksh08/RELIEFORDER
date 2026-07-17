@@ -101,7 +101,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
         </button>
 
         <h1
-          className="font-display mt-4 font-bold leading-tight tracking-tight text-white drop-shadow-sm"
+          className="font-display mt-4 font-bold uppercase leading-tight tracking-tight text-white drop-shadow-sm"
           style={{ fontSize: 'clamp(1.7rem, 8.6vw, 2.2rem)' }}
         >
           {BUSINESS.name}

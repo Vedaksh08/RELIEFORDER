@@ -11,7 +11,8 @@ export const BUSINESS = {
   blurb:
     'Your trusted neighbourhood pharmacy in Nigdi — genuine medicines, healthcare essentials and free home delivery.',
   logo: '/logo.svg', // drop a client HD logo into /public and update this path
-  shareUrl: typeof window !== 'undefined' ? window.location.href : 'https://reliefmedical.in',
+  shareUrl:
+    typeof window !== 'undefined' ? window.location.href : 'https://reliefmedicalbusinesscard.com/',
 }
 
 // ------------------------------------------------------------
