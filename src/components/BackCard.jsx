@@ -217,10 +217,17 @@ function BottomActions({ shareUrl, onInstall, installed }) {
   const [shareOpen, setShareOpen] = useState(false)
   const [upiOpen, setUpiOpen] = useState(false)
 
+  // column count must match how many buttons actually render, otherwise a
+  // lone button (e.g. just "Share" once the card is installed) stretches
+  // lopsided across an empty grid cell instead of sitting centered.
+  // Tailwind needs literal class names (not interpolated), so map to them.
+  const visibleButtons = (UPI_QR ? 1 : 0) + 1 + (installed ? 0 : 1)
+  const gridColsClass = { 1: 'grid-cols-1', 2: 'grid-cols-2', 3: 'grid-cols-3' }[visibleButtons]
+
   return (
     <>
       <div
-        className={`rise relative mt-auto grid gap-3 pt-4 ${UPI_QR ? 'grid-cols-3' : 'grid-cols-2'}`}
+        className={`rise relative mt-auto grid gap-3 pt-4 ${gridColsClass}`}
         style={{ animationDelay: '0.36s' }}
       >
         {UPI_QR && (
