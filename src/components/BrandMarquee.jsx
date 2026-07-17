@@ -61,6 +61,8 @@ export default function BrandMarquee() {
       slider.setPointerCapture?.(drag.pointerId)
     }
     if (drag.moved) {
+      // this is a carousel drag, not a card-flip swipe — keep it local
+      e.stopPropagation()
       slider.scrollLeft = drag.startLeft - delta * 1.6
       posRef.current = slider.scrollLeft
     }

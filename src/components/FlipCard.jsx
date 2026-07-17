@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import FrontCard from './FrontCard.jsx'
@@ -8,26 +8,71 @@ import { BUSINESS } from '../data/siteData.js'
 // One fixed height shared by both faces so the flip never jumps or clips.
 const CARD_HEIGHT = 780
 
+// A horizontal drag past this many pixels counts as a swipe (either
+// direction flips the card — left-to-right and right-to-left both work).
+const SWIPE_THRESHOLD = 48
+
 export default function FlipCard({ onInstall, installed }) {
   const [flipped, setFlipped] = useState(false)
   const [logoOpen, setLogoOpen] = useState(false)
+  const dragRef = useRef({ down: false, startX: 0, startY: 0, moved: false, swiped: false })
+
+  const onPointerDown = (e) => {
+    // ignore multi-touch (pinch-zoom etc.) — only track the first contact point
+    if (e.pointerType === 'touch' && e.isPrimary === false) return
+    dragRef.current = {
+      down: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      moved: false,
+      swiped: false,
+      pointerId: e.pointerId,
+    }
+  }
+
+  const onPointerMove = (e) => {
+    const d = dragRef.current
+    if (!d.down || e.pointerId !== d.pointerId) return
+    const dx = e.clientX - d.startX
+    const dy = e.clientY - d.startY
+    if (!d.moved && Math.hypot(dx, dy) > 6) d.moved = true
+    // horizontal drag clearly dominant over vertical scroll intent
+    if (!d.swiped && Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+      d.swiped = true
+      setFlipped((f) => !f)
+    }
+  }
+
+  const onPointerUp = () => {
+    dragRef.current.down = false
+  }
 
   return (
     <>
-      <div className="perspective-card mx-auto w-full max-w-[25.5rem]">
+      <div
+        className="perspective-card mx-auto w-full max-w-[25.5rem] touch-pan-y"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      >
         <div
           className={`flip-inner ${flipped ? 'is-flipped' : ''}`}
           style={{ height: CARD_HEIGHT }}
         >
           <div className="flip-face front">
             <FrontCard
-              onFlip={() => setFlipped(true)}
+              onFlip={() => {
+                if (!dragRef.current.swiped) setFlipped(true)
+              }}
               onLogoClick={() => setLogoOpen(true)}
             />
           </div>
           <div className="flip-face back">
             <BackCard
-              onFlip={() => setFlipped(false)}
+              onFlip={() => {
+                if (!dragRef.current.swiped) setFlipped(false)
+              }}
               onLogoClick={() => setLogoOpen(true)}
               onInstall={onInstall}
               installed={installed}

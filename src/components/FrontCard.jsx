@@ -23,6 +23,7 @@ import {
   BUSINESS,
   CONTACT,
   SERVICES,
+  THERAPIES,
   TRUST_TITLE,
   TRUST_LINES,
   buildVCard,
@@ -37,6 +38,7 @@ const SERVICE_ICONS = {
   sparkles: Sparkles,
   truck: Truck,
   leaf: Leaf,
+  stethoscope: Stethoscope,
 }
 
 export default function FrontCard({ onFlip, onLogoClick }) {
@@ -122,8 +124,13 @@ export default function FrontCard({ onFlip, onLogoClick }) {
         </p>
       </header>
 
+      {/* ---------- THERAPY SYSTEMS ---------- */}
+      <p className="rise relative mt-3.5 text-center text-[10.5px] font-bold uppercase tracking-[0.14em] text-emerald-100" style={{ animationDelay: '0.11s' }}>
+        {THERAPIES.join(' • ')}
+      </p>
+
       {/* ---------- SERVICES ---------- */}
-      <section className="section-surface rise relative mt-4" style={{ animationDelay: '0.16s' }}>
+      <section className="section-surface rise relative mt-3" style={{ animationDelay: '0.16s' }}>
         <SectionDivider icon={Stethoscope}>Our Services</SectionDivider>
         <div className="mt-2.5 grid grid-cols-2 gap-2">
           {SERVICES.map((s) => {

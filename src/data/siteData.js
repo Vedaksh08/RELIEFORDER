@@ -53,8 +53,11 @@ export const SERVICES = [
   { icon: 'heart', label: 'Healthcare Products' },
   { icon: 'baby', label: 'Baby Care' },
   { icon: 'sparkles', label: 'Cosmetics' },
-  { icon: 'leaf', label: 'Ayurvedic & Allopathy' },
+  { icon: 'stethoscope', label: 'Surgical & Wellness' },
 ]
+
+// Therapy systems highlighted as a plain text strip above "Our Services"
+export const THERAPIES = ['Ayurvedic', 'Allopathy', 'Homeopathy']
 
 // ------------------------------------------------------------
 //  BRANDS (back-side auto-scrolling logo carousel)

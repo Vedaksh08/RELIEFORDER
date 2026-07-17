@@ -105,7 +105,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
 
         {/* email */}
         <div className="mt-2.5">
-          <ContactChip href={CONTACT.mailto} icon={Mail} label="Email" value="Write to us" />
+          <ContactChip href={CONTACT.mailto} icon={Mail} label="Email" value={CONTACT.email} />
         </div>
 
         {/* address + maps */}
@@ -221,7 +221,7 @@ function BottomActions({ shareUrl, onInstall, installed }) {
   return (
     <>
       <div
-        className={`rise relative mt-auto grid gap-3 pt-4 ${UPI_QR ? 'grid-cols-3' : installed ? 'grid-cols-1' : 'grid-cols-2'}`}
+        className={`rise relative mt-auto grid gap-3 pt-4 ${UPI_QR ? 'grid-cols-3' : 'grid-cols-2'}`}
         style={{ animationDelay: '0.36s' }}
       >
         {UPI_QR && (
