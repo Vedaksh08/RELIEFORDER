@@ -1,4 +1,3 @@
-import { QRCodeSVG } from 'qrcode.react'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
@@ -314,14 +313,7 @@ function SharePopup({ shareUrl, onClose }) {
         <div className="relative">
           <div className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-[#2E3192] via-[#0A66D6] to-[#22C55E] opacity-55 blur-md" />
           <div className="glass logo-surface relative rounded-3xl p-4 shadow-2xl">
-            <QRCodeSVG
-              value={shareUrl}
-              size={200}
-              level="M"
-              fgColor="#232B6E"
-              bgColor="#ffffff"
-              imageSettings={{ src: BUSINESS.logo, height: 42, width: 42, excavate: true }}
-            />
+            <img src="/qr/share-card.png" alt="Scan to open this card" width={200} height={200} className="h-[200px] w-[200px] object-contain" />
           </div>
         </div>
         <p className="text-sm font-semibold text-white drop-shadow">Scan to open this card</p>
