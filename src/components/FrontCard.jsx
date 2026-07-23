@@ -106,12 +106,9 @@ export default function FrontCard({ onFlip, onLogoClick }) {
         >
           {BUSINESS.name}
         </h1>
-        <p className="font-display mt-0.5 text-[15px] font-semibold tracking-wide text-cyan-100">
-          {BUSINESS.nameSuffix}
-        </p>
 
         {/* elegant divider + tagline */}
-        <div className="mt-2.5 flex items-center gap-2.5">
+        <div className="mt-3 flex items-center gap-2.5">
           <span className="h-px w-9 bg-gradient-to-r from-transparent to-white/70" />
           <span className="whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.16em] text-emerald-100">
             {BUSINESS.tagline}

@@ -74,17 +74,15 @@ const ogBg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" h
     d="M23 42 C10 31 0 22 0 12 C0 4 6 0 12 0 C17 0 21 3 23 7 C25 3 29 0 34 0 C40 0 46 4 46 12 C46 22 36 31 23 42 Z"/>
 
   <!-- title with a soft drop shadow -->
-  <text x="602" y="316" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+  <text x="602" y="338" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
     font-size="104" font-weight="bold" fill="#043D27" opacity="0.55">Relief Medical</text>
-  <text x="598" y="312" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+  <text x="598" y="334" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
     font-size="104" font-weight="bold" fill="#FFFFFF">Relief Medical</text>
-  <text x="600" y="372" text-anchor="middle" font-family="Arial, sans-serif"
-    font-size="38" font-weight="600" fill="#CFF5E2">&amp; General Store</text>
 
   <!-- trade strip -->
   <rect x="270" y="424" width="660" height="62" rx="31" fill="#FFFFFF"/>
   <text x="600" y="465" text-anchor="middle" font-family="Arial, sans-serif"
-    font-size="25" font-weight="bold" letter-spacing="4" fill="#0A6B45">CHEMIST • DRUGGIST • GENERAL STORE</text>
+    font-size="25" font-weight="bold" letter-spacing="4" fill="#0A6B45">CHEMIST • DRUGGIST</text>
 
   <!-- footer line -->
   <text x="600" y="560" text-anchor="middle" font-family="Arial, sans-serif"

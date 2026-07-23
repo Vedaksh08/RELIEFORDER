@@ -1,13 +1,12 @@
 // ============================================================
-//  RELIEF MEDICAL & GENERAL STORE — SITE DATA
+//  RELIEF MEDICAL — SITE DATA
 //  Edit everything here. Nothing is hardcoded elsewhere.
 // ============================================================
 
 export const BUSINESS = {
   name: 'Relief Medical',
-  nameSuffix: '& General Store',
-  fullName: 'Relief Medical & General Store',
-  tagline: 'Chemist • Druggist • General Store',
+  fullName: 'Relief Medical',
+  tagline: 'Chemist • Druggist',
   blurb:
     'Your trusted neighbourhood pharmacy in Nigdi — genuine medicines, healthcare essentials and free home delivery.',
   logo: '/logo.svg', // drop a client HD logo into /public and update this path
@@ -41,7 +40,7 @@ export const LOCATION = {
   short: 'Nigdi, Pune 411044',
   mapsUrl:
     'https://www.google.com/maps/search/?api=1&query=' +
-    encodeURIComponent('Relief Medical & General Store, Nigdi, Pune'),
+    encodeURIComponent('Relief Medical, Nigdi, Pune'),
 }
 
 

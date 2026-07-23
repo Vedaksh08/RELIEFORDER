@@ -1,7 +1,7 @@
-# Relief Medical & General Store — Digital Business Card
+# Relief Medical — Digital Business Card
 
-Premium flip-style digital business card (PWA) for **Relief Medical & General Store**, Nigdi, Pune.
-Owner: **Ganesh H. Sirvi** · Chemist • Druggist • General Store
+Premium flip-style digital business card (PWA) for **Relief Medical**, Nigdi, Pune.
+Owner: **Ganesh H. Sirvi** · Chemist • Druggist
 
 ## Stack
 

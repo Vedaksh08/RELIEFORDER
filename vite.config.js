@@ -15,10 +15,10 @@ export default defineConfig({
         'icons/favicon-48.png',
       ],
       manifest: {
-        name: 'Relief Medical & General Store — Digital Card',
+        name: 'Relief Medical — Digital Card',
         short_name: 'Relief Medical',
         description:
-          'Relief Medical & General Store, Nigdi Pune — trusted chemist, druggist & general store. Genuine medicines, healthcare products and free home delivery.',
+          'Relief Medical, Nigdi Pune — trusted chemist & druggist. Genuine medicines, healthcare products and free home delivery.',
         id: '/',
         start_url: '/',
         scope: '/',
