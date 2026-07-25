@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.reliefmedicalbusinesscard.com/sitemap.xml
+Sitemap: https://reliefmedicalbusinesscard.com/sitemap.xml
