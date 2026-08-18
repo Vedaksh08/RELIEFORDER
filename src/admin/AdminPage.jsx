@@ -18,6 +18,7 @@ import OrderQueue from './OrderQueue.jsx'
 import WhatsAppPanel from './WhatsAppPanel.jsx'
 import AdsPanel from './AdsPanel.jsx'
 import UsersPanel from './UsersPanel.jsx'
+import SearchPanel from './SearchPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
 function Stat({ icon: Icon, label, value, tone = 'primary', onClick, active }) {
@@ -206,6 +207,7 @@ export default function AdminPage() {
             ['inventory', 'Inventory'],
             ['whatsapp', 'WhatsApp'],
             ['users', 'Users'],
+            ['search', 'Search'],
             ['ads', 'Ads'],
           ].map(([k, label]) => (
             <button
@@ -233,6 +235,7 @@ export default function AdminPage() {
         )}
         {tab === 'whatsapp' && <WhatsAppPanel />}
         {tab === 'users' && <UsersPanel />}
+        {tab === 'search' && <SearchPanel />}
         {tab === 'ads' && <AdsPanel />}
       </main>
     </div>
