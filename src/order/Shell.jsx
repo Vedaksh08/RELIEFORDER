@@ -99,17 +99,77 @@ export function Empty({ icon: Icon = Package, title, children }) {
 const STATUS = {
   placed: 'bg-amber-100 text-amber-700',
   accepted: 'bg-blue-100 text-blue-700',
+  dispatched: 'bg-indigo-100 text-indigo-700',
   rejected: 'bg-red-100 text-red-700',
   delivered: 'bg-green-100 text-green-700',
 }
 
-export function StatusBadge({ status }) {
+// Customer-facing wording — "accepted" reads as "confirmed" to a shopper.
+const STATUS_LABEL = {
+  placed: 'Order placed',
+  accepted: 'Confirmed',
+  dispatched: 'Out for delivery',
+  delivered: 'Delivered',
+  rejected: 'Rejected',
+}
+
+export const statusLabel = (s) => STATUS_LABEL[s] ?? s
+
+export function StatusBadge({ status, label = false }) {
   return (
     <span
       className={`rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${STATUS[status] ?? 'bg-gray-100 text-gray-600'}`}
     >
-      {status}
+      {label ? statusLabel(status) : status}
     </span>
+  )
+}
+
+/** Horizontal progress rail: placed -> confirmed -> out for delivery -> delivered. */
+export function StatusTimeline({ status }) {
+  const steps = ['placed', 'accepted', 'dispatched', 'delivered']
+
+  if (status === 'rejected') {
+    return (
+      <div className="rounded-btn bg-red-50 px-3 py-2 text-xs font-medium text-red-600">
+        This order was rejected. Please contact Relief Medical for help.
+      </div>
+    )
+  }
+
+  const at = steps.indexOf(status)
+  return (
+    <div className="flex items-center">
+      {steps.map((st, i) => {
+        const doneStep = i <= at
+        return (
+          <div key={st} className="flex min-w-0 flex-1 items-center last:flex-none">
+            <div className="flex min-w-0 flex-col items-center gap-1">
+              <span
+                className={`size-2.5 shrink-0 rounded-full transition ${
+                  doneStep ? 'bg-accent' : 'bg-black/15'
+                }`}
+              />
+              <span
+                className={`truncate text-[10px] leading-tight ${
+                  doneStep ? 'font-semibold text-ink' : 'text-ink-soft'
+                }`}
+              >
+                {statusLabel(st)}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <span
+                className={`mx-1 h-0.5 min-w-3 flex-1 rounded-full transition ${
+                  i < at ? 'bg-accent' : 'bg-black/10'
+                }`}
+                style={{ marginBottom: '14px' }}
+              />
+            )}
+          </div>
+        )
+      })}
+    </div>
   )
 }
 

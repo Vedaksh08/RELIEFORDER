@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Lock, ShieldAlert } from 'lucide-react'
+import { primeAudio } from '../lib/sound.js'
 
 // Front-door gate for /ADMIN. This is a convenience lock, NOT security:
 // anything checked in the browser is readable in the bundle. Real enforcement
@@ -18,6 +19,7 @@ export default function AdminGate({ onPass }) {
   const submit = (e) => {
     e.preventDefault()
     if (u.trim().toUpperCase() === USER && p.trim().toUpperCase() === PASS) {
+      primeAudio() // this click is our chance to unlock audio for later chimes
       sessionStorage.setItem(KEY, '1') // cleared when the tab closes
       onPass()
     } else {

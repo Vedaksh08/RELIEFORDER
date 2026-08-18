@@ -48,7 +48,7 @@ create index if not exists medicines_name_idx on medicines (lower(name));
 
 -- ---------- ORDERS ----------
 do $blk$ begin
-  create type order_status as enum ('placed','accepted','rejected','delivered');
+  create type order_status as enum ('placed','accepted','dispatched','rejected','delivered');
 exception when duplicate_object then null; end $blk$;
 
 create table if not exists orders (
@@ -60,8 +60,13 @@ create table if not exists orders (
   mobile       text,
   address      text,
   note         text,
-  created_at   timestamptz not null default now(),
-  accepted_at  timestamptz
+  created_at    timestamptz not null default now(),
+  accepted_at   timestamptz,
+  dispatched_at timestamptz,
+  delivered_at  timestamptz,
+  -- FK to profiles (not just auth.users) so PostgREST can embed the customer
+  constraint orders_profile_fk foreign key (user_id)
+    references profiles(id) on delete cascade
 );
 create index if not exists orders_user_idx on orders (user_id, created_at desc);
 create index if not exists orders_status_idx on orders (status, created_at desc);
@@ -186,4 +191,9 @@ create policy order_items_insert on order_items for insert
                        where o.id = order_id and o.user_id = auth.uid()));
 
 -- realtime for the admin order queue
-alter publication supabase_realtime add table orders;
+do $blk$ begin
+  alter publication supabase_realtime add table orders;
+exception when duplicate_object then null; end $blk$;
+do $blk$ begin
+  alter publication supabase_realtime add table order_items;
+exception when duplicate_object then null; end $blk$;

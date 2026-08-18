@@ -44,21 +44,42 @@ export async function fetchMyOrders(userId) {
 }
 
 export async function fetchAllOrders() {
+  // profiles is fetched separately rather than embedded: orders.user_id points at
+  // auth.users, so PostgREST can only embed profiles once the extra FK in
+  // schema.sql exists. Two queries work either way.
   const { data, error } = await supabase
     .from('orders')
-    .select('*, order_items(*), profiles(full_name, email)')
+    .select('*, order_items(*)')
     .order('created_at', { ascending: false })
   if (error) throw error
-  return data
+
+  const ids = [...new Set((data ?? []).map((o) => o.user_id))]
+  if (ids.length === 0) return data
+
+  const { data: people } = await supabase
+    .from('profiles')
+    .select('id, full_name, email, mobile')
+    .in('id', ids)
+
+  const byId = new Map((people ?? []).map((p) => [p.id, p]))
+  return (data ?? []).map((o) => ({ ...o, profiles: byId.get(o.user_id) ?? null }))
 }
 
 export const acceptOrder = (id) => supabase.rpc('accept_order', { p_order_id: id })
 export const rejectOrder = (id) => supabase.rpc('reject_order', { p_order_id: id })
 
+export async function dispatchOrder(id) {
+  const { error } = await supabase
+    .from('orders')
+    .update({ status: 'dispatched', dispatched_at: new Date().toISOString() })
+    .eq('id', id)
+  if (error) throw error
+}
+
 export async function markDelivered(id) {
   const { error } = await supabase
     .from('orders')
-    .update({ status: 'delivered' })
+    .update({ status: 'delivered', delivered_at: new Date().toISOString() })
     .eq('id', id)
   if (error) throw error
 }

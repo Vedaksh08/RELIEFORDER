@@ -37,7 +37,7 @@ export default defineConfig({
       },
       workbox: {
         // Precache the built app shell (hashed JS/CSS/HTML) + icons/images.
-        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg,webmanifest,woff2}'],
+        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg,webmanifest,woff2,mp3}'],
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
         clientsClaim: true,

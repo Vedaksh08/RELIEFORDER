@@ -7,6 +7,8 @@ import { placeOrder, saveProfileDetails } from '../lib/orders.js'
 import { supabaseReady } from '../lib/supabase.js'
 import { Shell, Spinner, Empty, inr } from './Shell.jsx'
 import { SignInGate } from './OrderPage.jsx'
+import ConfirmOrderModal from './ConfirmOrderModal.jsx'
+import { playChime, playError, primeAudio } from '../lib/sound.js'
 
 export default function CartPage() {
   const { user, profile, loading, refreshProfile } = useAuth()
@@ -19,6 +21,7 @@ export default function CartPage() {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
   const [done, setDone] = useState(false)
+  const [confirming, setConfirming] = useState(false)
 
   // Pre-fill from the saved profile so repeat orders are one tap.
   useEffect(() => {
@@ -88,9 +91,13 @@ export default function CartPage() {
       await saveProfileDetails(user.id, { mobile: mobile.trim(), address: address.trim() })
       refreshProfile()
       clear()
+      setConfirming(false)
       setDone(true)
+      playChime()
     } catch (e) {
       setErr(e.message ?? 'Could not place the order. Please try again.')
+      setConfirming(false)
+      playError()
     } finally {
       setBusy(false)
     }
@@ -198,16 +205,32 @@ export default function CartPage() {
 
             <button
               disabled={!valid || busy}
-              onClick={submit}
+              onClick={() => {
+                primeAudio() // unlock audio within this user gesture
+                setConfirming(true)
+              }}
               className="w-full rounded-btn bg-primary px-4 py-3 font-semibold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:shadow-none"
             >
-              {busy ? 'Placing order…' : 'Place order'}
+              Review &amp; place order
             </button>
             <p className="mt-2 text-center text-[11px] text-ink-soft">
               Pay on delivery. Stock is confirmed when Relief Medical accepts.
             </p>
           </div>
         </div>
+      )}
+
+      {confirming && (
+        <ConfirmOrderModal
+          items={items}
+          total={total}
+          mobile={mobile.trim()}
+          address={address.trim()}
+          note={note.trim()}
+          busy={busy}
+          onConfirm={submit}
+          onCancel={() => setConfirming(false)}
+        />
       )}
     </Shell>
   )

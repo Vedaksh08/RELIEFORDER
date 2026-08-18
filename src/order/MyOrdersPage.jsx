@@ -3,7 +3,8 @@ import { Package } from 'lucide-react'
 import { useAuth } from '../lib/AuthContext.jsx'
 import { fetchMyOrders } from '../lib/orders.js'
 import { supabase, supabaseReady } from '../lib/supabase.js'
-import { Shell, Spinner, Empty, StatusBadge, inr } from './Shell.jsx'
+import { Shell, Spinner, Empty, StatusBadge, StatusTimeline, inr } from './Shell.jsx'
+import { playConfirm } from '../lib/sound.js'
 import { SignInGate } from './OrderPage.jsx'
 
 export default function MyOrdersPage() {
@@ -26,7 +27,12 @@ export default function MyOrdersPage() {
         { event: 'UPDATE', schema: 'public', table: 'orders', filter: `user_id=eq.${user.id}` },
         (p) =>
           setOrders((cur) =>
-            cur.map((o) => (o.id === p.new.id ? { ...o, ...p.new } : o)),
+            cur.map((o) => {
+              if (o.id !== p.new.id) return o
+              // ring only when the status actually moves
+              if (o.status !== p.new.status) playConfirm()
+              return { ...o, ...p.new }
+            }),
           ),
       )
       .subscribe()
@@ -66,7 +72,7 @@ export default function MyOrdersPage() {
                 <span className="font-display text-sm font-semibold text-ink">
                   #{o.id.slice(0, 8)}
                 </span>
-                <StatusBadge status={o.status} />
+                <StatusBadge status={o.status} label />
                 <span className="ml-auto text-xs text-ink-soft">
                   {new Date(o.created_at).toLocaleString('en-IN', {
                     dateStyle: 'medium',
@@ -92,9 +98,17 @@ export default function MyOrdersPage() {
                 ))}
               </ul>
 
-              <div className="flex items-center justify-between border-t border-hairline pt-3">
-                <span className="text-xs text-ink-soft">{o.address}</span>
-                <span className="font-display font-bold text-primary">{inr(o.total)}</span>
+              <div className="mb-3 flex items-center justify-between border-t border-hairline pt-3">
+                <span className="min-w-0 flex-1 truncate pr-3 text-xs text-ink-soft">
+                  {o.address}
+                </span>
+                <span className="font-display shrink-0 font-bold text-primary">
+                  {inr(o.total)}
+                </span>
+              </div>
+
+              <div className="border-t border-hairline pt-3">
+                <StatusTimeline status={o.status} />
               </div>
             </div>
           ))}

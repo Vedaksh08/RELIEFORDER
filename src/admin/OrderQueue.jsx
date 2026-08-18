@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react'
-import { Check, X, Truck, Phone, MapPin, Inbox } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Check, X, Truck, PackageCheck, Phone, MapPin, Inbox, Volume2, VolumeX } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
-import { fetchAllOrders, acceptOrder, rejectOrder, markDelivered } from '../lib/orders.js'
+import {
+  fetchAllOrders,
+  acceptOrder,
+  rejectOrder,
+  dispatchOrder,
+  markDelivered,
+} from '../lib/orders.js'
 import { Spinner, Empty, StatusBadge, inr } from '../order/Shell.jsx'
+import { playChime, playConfirm, playError, primeAudio } from '../lib/sound.js'
 
-const TABS = ['placed', 'accepted', 'delivered', 'rejected']
+const TABS = ['placed', 'accepted', 'dispatched', 'delivered', 'rejected']
 
 export default function OrderQueue({ onStockChanged }) {
   const [orders, setOrders] = useState([])
@@ -12,18 +19,39 @@ export default function OrderQueue({ onStockChanged }) {
   const [tab, setTab] = useState('placed')
   const [busyId, setBusyId] = useState(null)
   const [err, setErr] = useState('')
+  const [muted, setMuted] = useState(
+    () => localStorage.getItem('relief_admin_muted') === '1',
+  )
+  const mutedRef = useRef(muted)
+  mutedRef.current = muted
 
   const load = () =>
     fetchAllOrders()
-      .then(setOrders)
+      .then((d) => {
+        setOrders(d)
+        return d
+      })
+      .catch((e) => setErr(e.message ?? 'Could not load orders'))
       .finally(() => setLoading(false))
 
   useEffect(() => {
     load()
-    // new orders appear without a refresh
+    // new orders appear without a refresh — and ring the bell
     const ch = supabase
       .channel('admin-orders')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, load)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'orders' },
+        () => {
+          if (!mutedRef.current) playChime()
+          load()
+        },
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders' },
+        load,
+      )
       .subscribe()
     return () => supabase.removeChannel(ch)
   }, [])
@@ -31,11 +59,26 @@ export default function OrderQueue({ onStockChanged }) {
   const act = async (id, fn) => {
     setErr('')
     setBusyId(id)
-    const { error } = (await fn(id)) ?? {}
-    if (error) setErr(error.message)
-    else onStockChanged?.()
-    setBusyId(null)
-    load()
+    try {
+      const { error } = (await fn(id)) ?? {}
+      if (error) throw error
+      if (!muted) playConfirm()
+      onStockChanged?.()
+    } catch (e) {
+      setErr(e.message ?? 'Action failed')
+      if (!muted) playError()
+    } finally {
+      setBusyId(null)
+      load()
+    }
+  }
+
+  const toggleMute = () => {
+    primeAudio()
+    setMuted((m) => {
+      localStorage.setItem('relief_admin_muted', m ? '0' : '1')
+      return !m
+    })
   }
 
   const shown = orders.filter((o) => o.status === tab)
@@ -64,6 +107,17 @@ export default function OrderQueue({ onStockChanged }) {
             </button>
           )
         })}
+
+        <button
+          onClick={toggleMute}
+          title={muted ? 'Sound off' : 'Sound on'}
+          aria-label={muted ? 'Unmute new-order sound' : 'Mute new-order sound'}
+          className={`ml-auto grid size-9 shrink-0 place-items-center rounded-full transition ${
+            muted ? 'bg-white text-ink-soft' : 'bg-accent/15 text-accent'
+          }`}
+        >
+          {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        </button>
       </div>
 
       {err && (
@@ -93,15 +147,21 @@ export default function OrderQueue({ onStockChanged }) {
                 </span>
               </div>
 
-              <p className="mb-1 text-sm font-medium">
-                {o.profiles?.full_name ?? o.profiles?.email ?? 'Customer'}
-              </p>
-              <p className="mb-1 flex items-center gap-1.5 text-xs text-ink-soft">
-                <Phone size={12} /> {o.mobile || '—'}
-              </p>
-              <p className="mb-3 flex items-start gap-1.5 text-xs text-ink-soft">
-                <MapPin size={12} className="mt-0.5 shrink-0" /> {o.address || '—'}
-              </p>
+              <div className="mb-3 rounded-btn bg-black/[.03] p-3">
+                <p className="mb-1.5 truncate text-sm font-semibold text-ink">
+                  {o.profiles?.full_name ?? o.profiles?.email ?? 'Customer'}
+                </p>
+                <a
+                  href={o.mobile ? `tel:${o.mobile}` : undefined}
+                  className="mb-1 flex items-center gap-1.5 text-xs font-medium text-primary"
+                >
+                  <Phone size={12} className="shrink-0" /> {o.mobile || '—'}
+                </a>
+                <p className="flex items-start gap-1.5 text-xs leading-relaxed text-ink-soft">
+                  <MapPin size={12} className="mt-0.5 shrink-0" />
+                  <span>{o.address || '—'}</span>
+                </p>
+              </div>
               {o.note && (
                 <p className="mb-3 rounded-btn bg-amber-50 p-2 text-xs text-amber-800">
                   {o.note}
@@ -109,55 +169,79 @@ export default function OrderQueue({ onStockChanged }) {
               )}
 
               <ul className="mb-3 flex flex-col gap-1 border-t border-hairline pt-3">
+                {(o.order_items ?? []).length === 0 && (
+                  <li className="text-xs italic text-ink-soft">No line items found.</li>
+                )}
                 {o.order_items?.map((it) => (
                   <li key={it.id} className="flex items-center gap-2 text-sm">
-                    <span className="min-w-0 flex-1 truncate">
-                      {it.name}
-                      {it.brand && <span className="text-ink-soft"> · {it.brand}</span>}
+                    <span className="grid size-6 shrink-0 place-items-center rounded-md bg-primary/10 text-xs font-bold text-primary">
+                      {it.qty}
                     </span>
-                    <span className="font-semibold text-primary">×{it.qty}</span>
-                    <span className="w-20 text-right">{inr(it.price * it.qty)}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium">{it.name}</span>
+                      {it.brand && (
+                        <span className="block truncate text-xs text-ink-soft">
+                          {it.brand}
+                        </span>
+                      )}
+                    </span>
+                    <span className="shrink-0 text-right font-semibold">
+                      {inr(it.price * it.qty)}
+                    </span>
                   </li>
                 ))}
               </ul>
 
               <div className="flex items-center justify-between border-t border-hairline pt-3">
-                <span className="font-display font-bold text-primary">{inr(o.total)}</span>
-
-                <div className="flex gap-2">
-                  {o.status === 'placed' && (
-                    <>
-                      <button
-                        disabled={busyId === o.id}
-                        onClick={() => act(o.id, rejectOrder)}
-                        className="inline-flex items-center gap-1 rounded-btn bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-50"
-                      >
-                        <X size={15} /> Reject
-                      </button>
-                      <button
-                        disabled={busyId === o.id}
-                        onClick={() => act(o.id, acceptOrder)}
-                        className="inline-flex items-center gap-1 rounded-btn bg-accent px-3 py-2 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
-                      >
-                        <Check size={15} />
-                        {busyId === o.id ? 'Accepting…' : 'Accept'}
-                      </button>
-                    </>
-                  )}
-                  {o.status === 'accepted' && (
-                    <button
-                      disabled={busyId === o.id}
-                      onClick={() => act(o.id, markDelivered)}
-                      className="inline-flex items-center gap-1 rounded-btn bg-primary px-3 py-2 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
-                    >
-                      <Truck size={15} /> Mark delivered
-                    </button>
-                  )}
-                </div>
+                <span className="text-xs text-ink-soft">Total</span>
+                <span className="font-display text-lg font-bold text-primary">
+                  {inr(o.total)}
+                </span>
               </div>
 
               {o.status === 'placed' && (
-                <p className="mt-2 text-[11px] text-ink-soft">
+                <div className="mt-3 flex gap-2">
+                  <button
+                    disabled={busyId === o.id}
+                    onClick={() => act(o.id, rejectOrder)}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-50"
+                  >
+                    <X size={15} /> Reject
+                  </button>
+                  <button
+                    disabled={busyId === o.id}
+                    onClick={() => act(o.id, acceptOrder)}
+                    className="flex flex-[1.5] items-center justify-center gap-1.5 rounded-btn bg-accent px-3 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
+                  >
+                    <Check size={15} />
+                    {busyId === o.id ? 'Accepting…' : 'Accept order'}
+                  </button>
+                </div>
+              )}
+
+              {o.status === 'accepted' && (
+                <button
+                  disabled={busyId === o.id}
+                  onClick={() => act(o.id, dispatchOrder)}
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-btn bg-primary px-3 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
+                >
+                  <Truck size={15} />
+                  {busyId === o.id ? 'Dispatching…' : 'Order dispatched'}
+                </button>
+              )}
+
+              {o.status === 'dispatched' && (
+                <button
+                  disabled={busyId === o.id}
+                  onClick={() => act(o.id, markDelivered)}
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-btn bg-green-600 px-3 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
+                >
+                  <PackageCheck size={15} /> Mark delivered
+                </button>
+              )}
+
+              {o.status === 'placed' && (
+                <p className="mt-2 text-center text-[11px] text-ink-soft">
                   Accepting deducts these quantities from stock automatically.
                 </p>
               )}
