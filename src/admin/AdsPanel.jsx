@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import {
   ImagePlus,
   Trash2,
-  Eye,
-  EyeOff,
+  RotateCw,
   Plus,
   X,
   Megaphone,
@@ -13,7 +12,7 @@ import {
   fetchAllAds,
   createAd,
   deleteAd,
-  toggleAd,
+  rerunAd,
   uploadPoster,
 } from '../lib/ads.js'
 import { Spinner, Empty } from '../order/Shell.jsx'
@@ -183,9 +182,12 @@ export default function AdsPanel() {
 
       {/* ---------- existing ---------- */}
       <div className="rounded-card bg-white p-4 shadow-sm sm:p-5">
-        <h2 className="font-display mb-3 font-semibold text-primary">
+        <h2 className="font-display mb-1 font-semibold text-primary">
           Live advertisements
         </h2>
+        <p className="mb-3 text-xs text-ink-soft">
+          Run again re-shows an ad to everyone, including people who closed it.
+        </p>
 
         {loading ? (
           <Spinner label="Loading ads…" />
@@ -198,9 +200,7 @@ export default function AdsPanel() {
             {ads.map((a) => (
               <div
                 key={a.id}
-                className={`flex gap-3 rounded-card border border-hairline p-3 transition ${
-                  a.is_active ? '' : 'opacity-55'
-                }`}
+                className="flex gap-3 rounded-card border border-hairline p-3 transition"
               >
                 {a.poster_url ? (
                   <img
@@ -222,7 +222,7 @@ export default function AdsPanel() {
                     <p className="line-clamp-2 text-xs text-ink-soft">{a.body}</p>
                   )}
                   <p className="mt-1 text-[11px] text-ink-soft">
-                    {a.is_active ? 'Showing on card' : 'Paused'} ·{' '}
+                    Published{' '}
                     {new Date(a.created_at).toLocaleDateString('en-IN', {
                       day: 'numeric',
                       month: 'short',
@@ -233,14 +233,28 @@ export default function AdsPanel() {
                 <div className="flex shrink-0 flex-col gap-1">
                   <button
                     onClick={async () => {
-                      await toggleAd(a.id, !a.is_active)
-                      load()
+                      if (
+                        !confirm(
+                          'Run this ad again? Everyone sees it once more, including people who closed it before.',
+                        )
+                      )
+                        return
+                      setBusy(true)
+                      try {
+                        await rerunAd(a)
+                        load()
+                      } catch (e) {
+                        setErr(e.message ?? 'Could not re-run the ad.')
+                      } finally {
+                        setBusy(false)
+                      }
                     }}
-                    className="grid size-8 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
-                    aria-label={a.is_active ? 'Pause this ad' : 'Show this ad'}
-                    title={a.is_active ? 'Pause' : 'Show'}
+                    disabled={busy}
+                    className="grid size-8 place-items-center rounded-full text-primary transition hover:bg-primary/10 disabled:opacity-40"
+                    aria-label="Run this ad again"
+                    title="Run again"
                   >
-                    {a.is_active ? <Eye size={16} /> : <EyeOff size={16} />}
+                    <RotateCw size={15} />
                   </button>
                   <button
                     onClick={async () => {

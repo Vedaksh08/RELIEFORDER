@@ -71,8 +71,35 @@ export async function updateAd(id, patch) {
 export async function deleteAd(ad) {
   const { error } = await supabase.from('ads').delete().eq('id', ad.id)
   if (error) throw error
-  // drop the image too, so the bucket does not fill with orphans
-  await removePoster(ad.poster_url).catch(() => {})
+
+  // Re-run copies share the original's poster URL, so the image can only be
+  // deleted once no other ad still points at it — otherwise deleting one
+  // re-run would blank out the poster on all its siblings.
+  if (ad.poster_url) {
+    const { count } = await supabase
+      .from('ads')
+      .select('id', { count: 'exact', head: true })
+      .eq('poster_url', ad.poster_url)
+    if (!count) await removePoster(ad.poster_url).catch(() => {})
+  }
 }
 
-export const toggleAd = (id, isActive) => updateAd(id, { is_active: isActive })
+/**
+ * Re-runs an ad by inserting a fresh copy. A new row means a new id, and
+ * dismissals are tracked per id — so everyone sees it again, including the
+ * people who closed the original. Toggling a flag on the old row could never
+ * do this, because its id has already been dismissed.
+ */
+export async function rerunAd(ad) {
+  const { data, error } = await supabase
+    .from('ads')
+    .insert({
+      heading: ad.heading,
+      body: ad.body,
+      poster_url: ad.poster_url, // same image, no re-upload needed
+    })
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
