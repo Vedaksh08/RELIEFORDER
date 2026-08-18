@@ -54,7 +54,7 @@ https://<your-project-ref>.supabase.co/auth/v1/callback
 Then in **Supabase → Authentication → URL Configuration**, add both:
 
 ```
-http://localhost:5173
+http://localhost:3000
 https://relieforder.vercel.app
 ```
 

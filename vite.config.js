@@ -79,6 +79,15 @@ export default defineConfig({
   ],
   server: {
     host: true,
-    port: 5173,
+    port: 3000,
+    // Fail loudly instead of silently hopping to 3001 — the port is
+    // registered in Google OAuth origins and Supabase redirect URLs, so a
+    // different one breaks sign-in in a confusing way.
+    strictPort: true,
+  },
+  preview: {
+    host: true,
+    port: 3000,
+    strictPort: true,
   },
 })
