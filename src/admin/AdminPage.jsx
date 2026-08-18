@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ArrowLeft, ShieldAlert, Package, Boxes, IndianRupee, AlertTriangle } from 'lucide-react'
+import {
+  ArrowLeft,
+  ShieldAlert,
+  Package,
+  Boxes,
+  IndianRupee,
+  AlertTriangle,
+  Users,
+} from 'lucide-react'
 import { supabase, supabaseReady } from '../lib/supabase.js'
 import { useAuth } from '../lib/AuthContext.jsx'
 import { Spinner, inr } from '../order/Shell.jsx'
@@ -9,6 +17,7 @@ import Inventory from './Inventory.jsx'
 import OrderQueue from './OrderQueue.jsx'
 import WhatsAppPanel from './WhatsAppPanel.jsx'
 import AdsPanel from './AdsPanel.jsx'
+import UsersPanel from './UsersPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
 function Stat({ icon: Icon, label, value, tone = 'primary', onClick, active }) {
@@ -47,23 +56,43 @@ export default function AdminPage() {
   const [passed, setPassed] = useState(gatePassed)
 
   const loadStats = useCallback(async () => {
-    const [{ data: meds }, { data: ords }] = await Promise.all([
+    const [{ data: meds }, { data: ords }, { count: users }] = await Promise.all([
       supabase.from('medicines').select('price, stock, is_active'),
       supabase.from('orders').select('status, total'),
+      supabase.from('profiles').select('id', { count: 'exact', head: true }),
     ])
     const active = (meds ?? []).filter((m) => m.is_active)
+    // 'dispatched' is confirmed revenue too — leaving it out made the total
+    // dip while an order was out for delivery, then jump back on delivery.
+    const earned = new Set(['accepted', 'dispatched', 'delivered'])
     setStats({
       pending: (ords ?? []).filter((o) => o.status === 'placed').length,
       revenue: (ords ?? [])
-        .filter((o) => o.status === 'accepted' || o.status === 'delivered')
+        .filter((o) => earned.has(o.status))
         .reduce((n, o) => n + Number(o.total), 0),
       skus: active.length,
       low: active.filter((m) => m.stock <= 10).length,
+      users: users ?? 0,
     })
   }, [])
 
   useEffect(() => {
-    if (isAdmin) loadStats()
+    if (!isAdmin) return
+    loadStats()
+
+    // Stats used to load once on mount, so accepting an order left "Pending"
+    // showing the old number until the page was reloaded by hand.
+    const ch = supabase
+      .channel('admin-stats')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, loadStats)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'medicines' },
+        loadStats,
+      )
+      .subscribe()
+
+    return () => supabase.removeChannel(ch)
   }, [isAdmin, loadStats])
 
   // front door: SYSTEM / SYSTEM
@@ -123,7 +152,7 @@ export default function AdminPage() {
         className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-5"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
       >
-        <div className="mb-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
+        <div className="mb-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-5">
           <Stat
             icon={Package}
             label="Pending orders"
@@ -160,6 +189,15 @@ export default function AdminPage() {
               setTab('inventory')
             }}
           />
+          <Stat
+            icon={Users}
+            label="Signed-in users"
+            value={stats?.users ?? '—'}
+            onClick={() => {
+              setLowOnly(false)
+              setTab('users')
+            }}
+          />
         </div>
 
         <div className="mb-4 flex gap-2">
@@ -167,6 +205,7 @@ export default function AdminPage() {
             ['orders', 'Orders'],
             ['inventory', 'Inventory'],
             ['whatsapp', 'WhatsApp'],
+            ['users', 'Users'],
             ['ads', 'Ads'],
           ].map(([k, label]) => (
             <button
@@ -193,6 +232,7 @@ export default function AdminPage() {
           />
         )}
         {tab === 'whatsapp' && <WhatsAppPanel />}
+        {tab === 'users' && <UsersPanel />}
         {tab === 'ads' && <AdsPanel />}
       </main>
     </div>

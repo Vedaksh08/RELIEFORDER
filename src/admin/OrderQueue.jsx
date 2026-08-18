@@ -21,6 +21,7 @@ import {
   markDelivered,
 } from '../lib/orders.js'
 import { Spinner, Empty, StatusBadge, inr } from '../order/Shell.jsx'
+import OrderFilters, { applyFilters, EMPTY_FILTERS, isFiltered } from './OrderFilters.jsx'
 import { playChime, playConfirm, playError, primeAudio } from '../lib/sound.js'
 import { notifyOrder } from '../lib/botApi.js'
 import {
@@ -46,6 +47,7 @@ export default function OrderQueue({ onStockChanged }) {
   const mutedRef = useRef(muted)
   mutedRef.current = muted
 
+  const [filters, setFilters] = useState(EMPTY_FILTERS)
   const [alerts, setAlerts] = useState(alertsEnabled)
   const [alertMsg, setAlertMsg] = useState('')
   const alertsRef = useRef(alerts)
@@ -186,13 +188,23 @@ export default function OrderQueue({ onStockChanged }) {
     })
   }
 
-  const shown = orders.filter((o) => o.status === tab)
+  // Filters apply first, so the tab counters describe what is actually
+  // reachable rather than the unfiltered totals.
+  const filtered = applyFilters(orders, filters)
+  const shown = filtered.filter((o) => o.status === tab)
 
   return (
     <div>
+      <OrderFilters
+        orders={orders}
+        filters={filters}
+        setFilters={setFilters}
+        resultCount={filtered.length}
+      />
+
       <div className="mb-4 flex flex-wrap items-center gap-2 pb-1">
         {TABS.map((t) => {
-          const n = orders.filter((o) => o.status === t).length
+          const n = filtered.filter((o) => o.status === t).length
           return (
             <button
               key={t}
@@ -253,7 +265,11 @@ export default function OrderQueue({ onStockChanged }) {
         <Spinner label="Loading orders…" />
       ) : shown.length === 0 ? (
         <Empty icon={Inbox} title={`No ${tab} orders`}>
-          {tab === 'placed' ? 'New orders will appear here the moment they are placed.' : null}
+          {isFiltered(filters)
+            ? 'No orders match the current filters. Try clearing them.'
+            : tab === 'placed'
+              ? 'New orders will appear here the moment they are placed.'
+              : null}
         </Empty>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
