@@ -22,30 +22,26 @@ import { LOW_STOCK } from './Inventory.jsx'
 import SearchPanel from './SearchPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
-function Stat({ icon: Icon, label, value, tone = 'primary', onClick, active }) {
-  const tones = {
-    primary: 'bg-primary/10 text-primary',
-    amber: 'bg-amber-100 text-amber-700',
-    green: 'bg-green-100 text-green-700',
-    red: 'bg-red-100 text-red-600',
-  }
+function Stat({ icon: Icon, label, value, tone = 'blue', onClick, active }) {
   const Tag = onClick ? 'button' : 'div'
   return (
     <Tag
       onClick={onClick}
-      className={`flex items-center gap-2.5 rounded-card bg-white p-3 text-left shadow-sm transition sm:gap-3 sm:p-4 ${
-        onClick ? 'cursor-pointer hover:shadow-md active:scale-[.99]' : ''
-      } ${active ? 'ring-2 ring-primary/40' : ''}`}
+      className={`stat-tile stat-${tone} ${onClick ? 'is-clickable' : ''} ${
+        active ? 'is-active' : ''
+      }`}
     >
-      <div
-        className={`grid size-9 shrink-0 place-items-center rounded-xl sm:size-10 ${tones[tone]}`}
-      >
-        <Icon size={18} />
-      </div>
-      <div className="min-w-0">
-        <p className="truncate text-[11px] leading-tight text-ink-soft sm:text-xs">{label}</p>
-        <p className="font-display truncate text-base font-bold text-ink sm:text-lg">{value}</p>
-      </div>
+      <span className={`stat-icon ic-${tone}`}>
+        <Icon size={18} strokeWidth={2.4} />
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-[11px] font-medium leading-tight text-ink-soft">
+          {label}
+        </span>
+        <span className="font-display block truncate text-lg font-extrabold text-ink">
+          {value}
+        </span>
+      </span>
     </Tag>
   )
 }
@@ -172,7 +168,7 @@ export default function AdminPage() {
         className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-5"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
       >
-        <div className="mb-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-5">
+        <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
           <Stat
             icon={Package}
             label="Pending orders"
@@ -193,6 +189,7 @@ export default function AdminPage() {
             icon={Boxes}
             label="Active medicines"
             value={stats?.skus ?? '—'}
+            tone="blue"
             onClick={() => {
               setLowOnly(false)
               setTab('inventory')
@@ -213,6 +210,7 @@ export default function AdminPage() {
             icon={Users}
             label="Signed-in users"
             value={stats?.users ?? '—'}
+            tone="violet"
             onClick={() => {
               setLowOnly(false)
               setTab('users')
@@ -220,7 +218,7 @@ export default function AdminPage() {
           />
         </div>
 
-        <div className="mb-4 flex gap-2">
+        <div className="tab-rail mb-4">
           {[
             ['orders', 'Orders'],
             ['inventory', 'Inventory'],
@@ -235,11 +233,18 @@ export default function AdminPage() {
                 setTab(k)
                 if (k !== 'inventory') setLowOnly(false)
               }}
-              className={`rounded-btn px-4 py-2 text-sm font-semibold transition ${
-                tab === k ? 'bg-primary text-white shadow-sm' : 'bg-white text-ink-soft'
-              }`}
+              className={`tab-chip ${tab === k ? 'is-on' : ''}`}
             >
               {label}
+              {k === 'orders' && stats?.pending > 0 && (
+                <span
+                  className={`ml-1.5 rounded-full px-1.5 text-[11px] font-bold ${
+                    tab === k ? 'bg-white/25' : 'bg-amber-100 text-amber-700'
+                  }`}
+                >
+                  {stats.pending}
+                </span>
+              )}
             </button>
           ))}
         </div>

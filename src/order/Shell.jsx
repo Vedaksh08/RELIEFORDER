@@ -4,7 +4,7 @@ import { useAuth } from '../lib/AuthContext.jsx'
 import { useCart } from '../lib/CartContext.jsx'
 import { signOut } from '../lib/supabase.js'
 
-export function Shell({ title, children, back = '/' }) {
+export function Shell({ title, children, back = '/', padForCartBar = false }) {
   const { user, isAdmin } = useAuth()
   const { count } = useCart()
   const navigate = useNavigate()
@@ -76,7 +76,9 @@ export function Shell({ title, children, back = '/' }) {
       </header>
 
       <main
-        className="mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-5"
+        className={`mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-5 ${
+          padForCartBar ? 'has-cart-bar' : ''
+        }`}
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
       >
         {children}

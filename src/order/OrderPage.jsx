@@ -4,6 +4,7 @@ import { supabase, supabaseReady, signInWithGoogle } from '../lib/supabase.js'
 import { useAuth } from '../lib/AuthContext.jsx'
 import { useCart } from '../lib/CartContext.jsx'
 import { Shell, Spinner, Empty, inr } from './Shell.jsx'
+import CartBar from './CartBar.jsx'
 
 function SetupNotice() {
   return (
@@ -46,29 +47,30 @@ function QtyStepper({ item, med, add, setQty }) {
       <button
         disabled={med.stock <= 0}
         onClick={() => add(med, 1)}
-        className="rounded-btn bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-300"
+        className="btn-add"
+        aria-label={`Add ${med.name} to cart`}
       >
-        {med.stock > 0 ? 'Add' : 'Out of stock'}
+        {med.stock > 0 ? 'ADD' : 'Out'}
       </button>
     )
   }
+  const atMax = item.qty >= med.stock
   return (
-    <div className="flex items-center gap-1 rounded-btn bg-primary/10 p-1">
+    <div className="stepper">
       <button
         onClick={() => setQty(med.id, item.qty - 1)}
-        className="grid size-8 place-items-center rounded-lg bg-white text-primary shadow-sm active:scale-95"
-        aria-label="Decrease"
+        aria-label={`Reduce ${med.name}`}
       >
-        <Minus size={15} />
+        <Minus size={14} strokeWidth={3} />
       </button>
-      <span className="w-7 text-center text-sm font-bold text-primary">{item.qty}</span>
+      <span>{item.qty}</span>
       <button
-        disabled={item.qty >= med.stock}
+        disabled={atMax}
         onClick={() => setQty(med.id, item.qty + 1)}
-        className="grid size-8 place-items-center rounded-lg bg-white text-primary shadow-sm active:scale-95 disabled:opacity-40"
-        aria-label="Increase"
+        aria-label={atMax ? 'No more stock' : `Add another ${med.name}`}
+        title={atMax ? 'That is all the stock we have' : undefined}
       >
-        <Plus size={15} />
+        <Plus size={14} strokeWidth={3} />
       </button>
     </div>
   )
@@ -131,7 +133,7 @@ export default function OrderPage() {
     )
 
   return (
-    <Shell title="Order Medicines">
+    <Shell title="Order Medicines" padForCartBar>
       <div className="mb-4 flex flex-col gap-3">
         <div className="relative">
           <Search
@@ -174,41 +176,45 @@ export default function OrderPage() {
             : 'Try a different search or category.'}
         </Empty>
       ) : (
-        <div className="grid gap-2.5 min-[560px]:grid-cols-2 sm:gap-3">
+        <div className="grid grid-cols-2 gap-2.5 min-[520px]:grid-cols-3 lg:grid-cols-4 lg:gap-3">
           {shown.map((m) => {
             const item = items.find((i) => i.id === m.id)
             const low = m.stock > 0 && m.stock <= 10
+            const out = m.stock <= 0
             return (
-              <div
-                key={m.id}
-                className="flex items-center gap-2.5 rounded-card bg-white p-3 shadow-sm transition hover:shadow-md sm:gap-3 sm:p-4"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="font-display truncate font-semibold text-ink">{m.name}</p>
-                  {m.brand && <p className="truncate text-xs text-ink-soft">{m.brand}</p>}
-                  <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                    <span className="font-display font-bold text-primary">
+              <div key={m.id} className={`prod-card ${out ? 'is-out' : ''}`}>
+                <div className="prod-thumb">{m.name.charAt(0).toUpperCase()}</div>
+
+                <div className="flex flex-1 flex-col p-2.5">
+                  <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-ink">
+                    {m.name}
+                  </p>
+                  {m.brand && (
+                    <p className="mt-0.5 truncate text-[11px] text-ink-soft">{m.brand}</p>
+                  )}
+
+                  <span
+                    className={`pill mt-1.5 w-fit ${
+                      out ? 'pill-out' : low ? 'pill-low' : 'pill-ok'
+                    }`}
+                  >
+                    {out ? 'Out of stock' : low ? `Only ${m.stock} left` : 'In stock'}
+                  </span>
+
+                  <div className="mt-auto flex items-end justify-between gap-2 pt-2.5">
+                    <span className="font-display text-[15px] font-extrabold text-ink">
                       {inr(m.price)}
                     </span>
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                        m.stock <= 0
-                          ? 'bg-red-100 text-red-600'
-                          : low
-                            ? 'bg-amber-100 text-amber-700'
-                            : 'bg-green-100 text-green-700'
-                      }`}
-                    >
-                      {m.stock <= 0 ? 'Out of stock' : `${m.stock} in stock`}
-                    </span>
+                    <QtyStepper item={item} med={m} add={add} setQty={setQty} />
                   </div>
                 </div>
-                <QtyStepper item={item} med={m} add={add} setQty={setQty} />
               </div>
             )
           })}
         </div>
       )}
+
+      <CartBar />
     </Shell>
   )
 }

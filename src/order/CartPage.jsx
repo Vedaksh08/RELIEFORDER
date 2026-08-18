@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { Trash2, Plus, Minus, ShoppingCart, CheckCircle2 } from 'lucide-react'
+import {
+  Trash2,
+  Plus,
+  Minus,
+  ShoppingCart,
+  CheckCircle2,
+  ChevronRight,
+} from 'lucide-react'
 import { useAuth } from '../lib/AuthContext.jsx'
 import { useCart } from '../lib/CartContext.jsx'
 import { placeOrder, saveProfileDetails } from '../lib/orders.js'
@@ -12,7 +19,7 @@ import { playChime, playError, primeAudio } from '../lib/sound.js'
 
 export default function CartPage() {
   const { user, profile, loading, refreshProfile } = useAuth()
-  const { items, total, setQty, remove, clear } = useCart()
+  const { items, count, total, setQty, remove, clear } = useCart()
   const navigate = useNavigate()
 
   const [mobile, setMobile] = useState('')
@@ -76,6 +83,11 @@ export default function CartPage() {
 
   const valid = items.length > 0 && /^[0-9]{10}$/.test(mobile.trim()) && address.trim().length > 8
 
+  const openConfirm = () => {
+    primeAudio() // unlock audio inside this user gesture
+    setConfirming(true)
+  }
+
   const submit = async () => {
     setErr('')
     setBusy(true)
@@ -109,7 +121,7 @@ export default function CartPage() {
   }
 
   return (
-    <Shell title="Cart" back="/order">
+    <Shell title="Cart" back="/order" padForCartBar>
       {items.length === 0 ? (
         <Empty icon={ShoppingCart} title="Your cart is empty">
           Browse the catalogue and add the medicines you need.
@@ -122,30 +134,32 @@ export default function CartPage() {
                 key={i.id}
                 className="flex items-center gap-2.5 rounded-card bg-white p-3 shadow-sm sm:gap-3 sm:p-4"
               >
-                <div className="min-w-0 flex-1">
-                  <p className="font-display truncate font-semibold">{i.name}</p>
-                  {i.brand && <p className="truncate text-xs text-ink-soft">{i.brand}</p>}
-                  <p className="mt-1 text-sm font-bold text-primary">{inr(i.price)}</p>
+                <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-indigo-50 via-cyan-50 to-emerald-50 font-display text-base font-bold text-primary">
+                  {i.name.charAt(0).toUpperCase()}
                 </div>
 
-                <div className="flex items-center gap-1 rounded-btn bg-primary/10 p-1">
-                  <button
-                    onClick={() => setQty(i.id, i.qty - 1)}
-                    className="grid size-8 place-items-center rounded-lg bg-white text-primary shadow-sm active:scale-95"
-                    aria-label="Decrease"
-                  >
-                    <Minus size={15} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-ink">{i.name}</p>
+                  {i.brand && (
+                    <p className="truncate text-[11px] text-ink-soft">{i.brand}</p>
+                  )}
+                  <p className="mt-0.5 text-xs text-ink-soft">
+                    {inr(i.price)} × {i.qty} ={' '}
+                    <span className="font-bold text-ink">{inr(i.price * i.qty)}</span>
+                  </p>
+                </div>
+
+                <div className="stepper shrink-0">
+                  <button onClick={() => setQty(i.id, i.qty - 1)} aria-label="Decrease">
+                    <Minus size={14} strokeWidth={3} />
                   </button>
-                  <span className="w-7 text-center text-sm font-bold text-primary">
-                    {i.qty}
-                  </span>
+                  <span>{i.qty}</span>
                   <button
                     disabled={i.qty >= i.stock}
                     onClick={() => setQty(i.id, i.qty + 1)}
-                    className="grid size-8 place-items-center rounded-lg bg-white text-primary shadow-sm active:scale-95 disabled:opacity-40"
                     aria-label="Increase"
                   >
-                    <Plus size={15} />
+                    <Plus size={14} strokeWidth={3} />
                   </button>
                 </div>
 
@@ -210,17 +224,39 @@ export default function CartPage() {
 
             <button
               disabled={!valid || busy}
-              onClick={() => {
-                primeAudio() // unlock audio within this user gesture
-                setConfirming(true)
-              }}
-              className="w-full rounded-btn bg-primary px-4 py-3 font-semibold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:shadow-none"
+              onClick={openConfirm}
+              className="hidden w-full rounded-btn bg-primary px-4 py-3 font-semibold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:shadow-none lg:block"
             >
               Review &amp; place order
             </button>
             <p className="mt-2 text-center text-[11px] text-ink-soft">
               Pay on delivery. Stock is confirmed when Relief Medical accepts.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* mobile checkout bar — mirrors the shop's cart bar so the primary
+          action is always in reach without scrolling the form */}
+      {items.length > 0 && (
+        <div className="cart-bar lg:hidden">
+          <div className="cart-bar-inner" style={{ cursor: 'default' }}>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-white/75">
+                {count} item{count > 1 ? 's' : ''} · pay on delivery
+              </span>
+              <span className="font-display block truncate text-[15px] font-bold text-white">
+                {inr(total)}
+              </span>
+            </span>
+            <button
+              disabled={!valid || busy}
+              onClick={openConfirm}
+              className="cart-bar-cta disabled:opacity-55"
+            >
+              {busy ? 'Placing…' : valid ? 'Place order' : 'Add details'}
+              {!busy && valid && <ChevronRight size={16} strokeWidth={2.8} />}
+            </button>
           </div>
         </div>
       )}
