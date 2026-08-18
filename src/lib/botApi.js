@@ -43,8 +43,20 @@ export const sendTest = (to, body) =>
  * WhatsApp is a nice-to-have, the order status change is what matters.
  */
 export function notifyOrder(status, order) {
-  if (!botConfigured) return
-  call('/notify', { method: 'POST', body: { status, order } }).catch((e) =>
-    console.warn('[bot] notify failed:', e.message),
-  )
+  if (!botConfigured) {
+    // Loud on purpose: this used to fail silently, which looked exactly like
+    // "the bot is broken" when really the page was serving stale env values.
+    console.warn(
+      '[bot] NOT configured — no WhatsApp sent.',
+      'VITE_BOT_URL=' + (import.meta.env.VITE_BOT_URL ?? '(empty)'),
+      'secret set:', Boolean(import.meta.env.VITE_BOT_SECRET),
+      'If these look empty, the page is running cached JS: unregister the',
+      'service worker in DevTools > Application, then hard-reload.',
+    )
+    return
+  }
+  console.info('[bot] notify ->', status, order?.id)
+  call('/notify', { method: 'POST', body: { status, order } })
+    .then((r) => console.info('[bot] notify ok:', r))
+    .catch((e) => console.error('[bot] notify FAILED:', e.message))
 }
