@@ -5,8 +5,9 @@ import FrontCard from './FrontCard.jsx'
 import BackCard from './BackCard.jsx'
 import { BUSINESS } from '../data/siteData.js'
 
-// One fixed height shared by both faces so the flip never jumps or clips.
-const CARD_HEIGHT = 780
+// No fixed height: .flip-face in index.css keeps whichever face is showing
+// in normal flow, so the container grows with its content and the card can
+// never clip when either side gains a row.
 
 // A horizontal drag past this many pixels counts as a swipe (either
 // direction flips the card — left-to-right and right-to-left both work).
@@ -56,10 +57,7 @@ export default function FlipCard({ onInstall, installed }) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
-        <div
-          className={`flip-inner ${flipped ? 'is-flipped' : ''}`}
-          style={{ height: CARD_HEIGHT }}
-        >
+        <div className={`flip-inner ${flipped ? 'is-flipped' : ''}`}>
           <div className="flip-face front">
             <FrontCard
               onFlip={() => {

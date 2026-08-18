@@ -147,7 +147,7 @@ export default function OrderPage() {
         </div>
 
         {categories.length > 1 && (
-          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+          <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 sm:-mx-4 sm:px-4">
             {categories.map((c) => (
               <button
                 key={c}
@@ -174,14 +174,14 @@ export default function OrderPage() {
             : 'Try a different search or category.'}
         </Empty>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2.5 min-[560px]:grid-cols-2 sm:gap-3">
           {shown.map((m) => {
             const item = items.find((i) => i.id === m.id)
             const low = m.stock > 0 && m.stock <= 10
             return (
               <div
                 key={m.id}
-                className="flex items-center gap-3 rounded-card bg-white p-4 shadow-sm transition hover:shadow-md"
+                className="flex items-center gap-2.5 rounded-card bg-white p-3 shadow-sm transition hover:shadow-md sm:gap-3 sm:p-4"
               >
                 <div className="min-w-0 flex-1">
                   <p className="font-display truncate font-semibold text-ink">{m.name}</p>

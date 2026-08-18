@@ -294,13 +294,32 @@ body {
   transition: transform 0.94s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .flip-inner.is-flipped { transform: rotateY(180deg); }
+/* The front face stays in normal flow so it dictates the container height;
+   the back is overlaid on top of it. Both faces then size to their own
+   content and .flip-inner grows naturally — no fixed pixel height, so
+   adding content to either side can never clip. */
 .flip-face {
-  position: absolute;
-  inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-.flip-face.back { transform: rotateY(180deg); }
+.flip-face.front {
+  position: relative;
+  z-index: 1;
+}
+.flip-face.back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+/* When flipped, the BACK becomes the one that must define the height. */
+.flip-inner.is-flipped .flip-face.front {
+  position: absolute;
+  inset: 0;
+}
+.flip-inner.is-flipped .flip-face.back {
+  position: relative;
+  inset: auto;
+}
 
 /* ---- logo glow ring ---------------------------------------- */
 .logo-glow::before {
@@ -669,4 +688,77 @@ body {
   .rise {
     animation: none !important;
   }
+}
+
+/* ============================================================
+   ORDER MEDICINES ONLINE — the card's primary call to action.
+   Deliberately unlike .btn-accent / .btn-blue: deeper royal gradient,
+   a sweeping shine, and a soft outer glow so it reads as "the" action.
+   ============================================================ */
+.btn-order {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background:
+    linear-gradient(115deg, #2e3192 0%, #0a66d6 46%, #12b981 100%);
+  background-size: 180% 100%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 10px 26px rgba(10, 60, 140, 0.34),
+    0 2px 0 rgba(255, 255, 255, 0.22) inset,
+    0 0 0 0 rgba(34, 197, 94, 0.5);
+  animation: order-pan 7s ease-in-out infinite;
+}
+
+/* sweeping highlight */
+.btn-order::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.38) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  animation: order-shine 4.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.btn-order:hover {
+  box-shadow:
+    0 14px 32px rgba(10, 60, 140, 0.42),
+    0 2px 0 rgba(255, 255, 255, 0.26) inset,
+    0 0 0 4px rgba(34, 197, 94, 0.16);
+}
+
+.btn-order:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+/* the small icon puck inside the button */
+.order-orb {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+@keyframes order-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+@keyframes order-shine {
+  0%   { left: -60%; }
+  55%  { left: 130%; }
+  100% { left: 130%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-order { animation: none; }
+  .btn-order::after { animation: none; opacity: 0; }
 }

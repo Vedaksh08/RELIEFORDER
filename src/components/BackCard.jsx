@@ -18,6 +18,7 @@ import {
   X,
   IndianRupee,
   ShoppingBag,
+  ArrowRight,
 } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import RippleButton from './RippleButton.jsx'
@@ -39,7 +40,7 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
   return (
     <div
       onClick={onFlip}
-      className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6 text-white"
+      className="glass-strong relative flex h-full min-h-[40rem] cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6 text-white"
     >
       <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-200/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-emerald-300/20 blur-3xl" />
@@ -128,14 +129,24 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
           </RippleButton>
         </div>
 
-        {/* order medicines online -> /order */}
+        {/* order medicines online -> /order — deliberately the loudest
+            control on the card: its own gradient, shimmer and arrow */}
         <RippleButton
           as={Link}
           to="/order"
           aria-label="Order medicines online"
-          className="btn-accent mt-2.5 flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-[12.5px] font-extrabold tracking-tight"
+          className="btn-order mt-3 flex w-full items-center justify-center gap-2.5 rounded-2xl px-4 py-3.5 text-[13px] font-extrabold tracking-tight"
         >
-          <ShoppingBag size={15} /> Order Medicines Online
+          <span className="order-orb grid h-7 w-7 shrink-0 place-items-center rounded-full">
+            <ShoppingBag size={14} strokeWidth={2.6} />
+          </span>
+          <span className="flex flex-col items-start leading-none">
+            <span>Order Medicines Online</span>
+            <span className="mt-0.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] opacity-80">
+              Home delivery · Pay on delivery
+            </span>
+          </span>
+          <ArrowRight size={16} strokeWidth={2.8} className="ml-auto shrink-0" />
         </RippleButton>
       </section>
 

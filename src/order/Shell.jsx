@@ -10,26 +10,29 @@ export function Shell({ title, children, back = '/' }) {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-[#e2f7f2]">
-      <header className="sticky top-0 z-30 border-b border-hairline bg-white/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
+    <div className="min-h-[100dvh] bg-[#e2f7f2]">
+      <header
+        className="sticky top-0 z-30 border-b border-hairline bg-white/85 backdrop-blur-xl"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+      >
+        <div className="mx-auto flex max-w-5xl items-center gap-1.5 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
           <Link
             to={back}
-            className="grid size-9 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
+            className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
             aria-label="Back"
           >
             <ArrowLeft size={18} />
           </Link>
 
-          <h1 className="font-display truncate text-lg font-semibold text-primary">
+          <h1 className="font-display min-w-0 flex-1 truncate text-base font-semibold text-primary sm:text-lg">
             {title}
           </h1>
 
-          <div className="ml-auto flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
             {isAdmin && (
               <Link
                 to="/admin"
-                className="grid size-9 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
+                className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
                 aria-label="Admin panel"
               >
                 <LayoutDashboard size={18} />
@@ -38,7 +41,7 @@ export function Shell({ title, children, back = '/' }) {
             {user && (
               <Link
                 to="/orders"
-                className="grid size-9 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
+                className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
                 aria-label="My orders"
               >
                 <Package size={18} />
@@ -46,7 +49,7 @@ export function Shell({ title, children, back = '/' }) {
             )}
             <Link
               to="/cart"
-              className="relative grid size-9 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
+              className="relative grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
               aria-label={`Cart, ${count} items`}
             >
               <ShoppingCart size={18} />
@@ -62,7 +65,7 @@ export function Shell({ title, children, back = '/' }) {
                   await signOut()
                   navigate({ to: '/order' })
                 }}
-                className="grid size-9 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
+                className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
                 aria-label="Sign out"
               >
                 <LogOut size={18} />
@@ -72,7 +75,12 @@ export function Shell({ title, children, back = '/' }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 py-5">{children}</main>
+      <main
+        className="mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-5"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
+      >
+        {children}
+      </main>
     </div>
   )
 }

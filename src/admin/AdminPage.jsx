@@ -9,23 +9,31 @@ import Inventory from './Inventory.jsx'
 import OrderQueue from './OrderQueue.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
-function Stat({ icon: Icon, label, value, tone = 'primary' }) {
+function Stat({ icon: Icon, label, value, tone = 'primary', onClick, active }) {
   const tones = {
     primary: 'bg-primary/10 text-primary',
     amber: 'bg-amber-100 text-amber-700',
     green: 'bg-green-100 text-green-700',
     red: 'bg-red-100 text-red-600',
   }
+  const Tag = onClick ? 'button' : 'div'
   return (
-    <div className="flex items-center gap-3 rounded-card bg-white p-4 shadow-sm">
-      <div className={`grid size-10 shrink-0 place-items-center rounded-xl ${tones[tone]}`}>
-        <Icon size={19} />
+    <Tag
+      onClick={onClick}
+      className={`flex items-center gap-2.5 rounded-card bg-white p-3 text-left shadow-sm transition sm:gap-3 sm:p-4 ${
+        onClick ? 'cursor-pointer hover:shadow-md active:scale-[.99]' : ''
+      } ${active ? 'ring-2 ring-primary/40' : ''}`}
+    >
+      <div
+        className={`grid size-9 shrink-0 place-items-center rounded-xl sm:size-10 ${tones[tone]}`}
+      >
+        <Icon size={18} />
       </div>
       <div className="min-w-0">
-        <p className="truncate text-xs text-ink-soft">{label}</p>
-        <p className="font-display truncate text-lg font-bold text-ink">{value}</p>
+        <p className="truncate text-[11px] leading-tight text-ink-soft sm:text-xs">{label}</p>
+        <p className="font-display truncate text-base font-bold text-ink sm:text-lg">{value}</p>
       </div>
-    </div>
+    </Tag>
   )
 }
 
@@ -33,6 +41,7 @@ export default function AdminPage() {
   const { user, loading, isAdmin } = useAuth()
   const [tab, setTab] = useState('orders')
   const [stats, setStats] = useState(null)
+  const [lowOnly, setLowOnly] = useState(false)
   const [passed, setPassed] = useState(gatePassed)
 
   const loadStats = useCallback(async () => {
@@ -88,9 +97,12 @@ export default function AdminPage() {
     )
 
   return (
-    <div className="min-h-screen bg-[#e2f7f2]">
-      <header className="sticky top-0 z-30 border-b border-hairline bg-white/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+    <div className="min-h-[100dvh] bg-[#e2f7f2]">
+      <header
+        className="sticky top-0 z-30 border-b border-hairline bg-white/85 backdrop-blur-xl"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+      >
+        <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
           <Link
             to="/order"
             className="grid size-9 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
@@ -105,13 +117,20 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-5">
-        <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <main
+        className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-5"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
+      >
+        <div className="mb-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
           <Stat
             icon={Package}
             label="Pending orders"
             value={stats?.pending ?? '—'}
             tone="amber"
+            onClick={() => {
+              setLowOnly(false)
+              setTab('orders')
+            }}
           />
           <Stat
             icon={IndianRupee}
@@ -119,12 +138,25 @@ export default function AdminPage() {
             value={stats ? inr(stats.revenue) : '—'}
             tone="green"
           />
-          <Stat icon={Boxes} label="Active medicines" value={stats?.skus ?? '—'} />
+          <Stat
+            icon={Boxes}
+            label="Active medicines"
+            value={stats?.skus ?? '—'}
+            onClick={() => {
+              setLowOnly(false)
+              setTab('inventory')
+            }}
+          />
           <Stat
             icon={AlertTriangle}
             label="Low stock (≤10)"
             value={stats?.low ?? '—'}
             tone="red"
+            active={lowOnly}
+            onClick={() => {
+              setLowOnly(true)
+              setTab('inventory')
+            }}
           />
         </div>
 
@@ -135,7 +167,10 @@ export default function AdminPage() {
           ].map(([k, label]) => (
             <button
               key={k}
-              onClick={() => setTab(k)}
+              onClick={() => {
+                setTab(k)
+                if (k !== 'inventory') setLowOnly(false)
+              }}
               className={`rounded-btn px-4 py-2 text-sm font-semibold transition ${
                 tab === k ? 'bg-primary text-white shadow-sm' : 'bg-white text-ink-soft'
               }`}
@@ -145,7 +180,15 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {tab === 'orders' ? <OrderQueue onStockChanged={loadStats} /> : <Inventory />}
+        {tab === 'orders' ? (
+          <OrderQueue onStockChanged={loadStats} />
+        ) : (
+          <Inventory
+            lowOnly={lowOnly}
+            onClearLow={() => setLowOnly(false)}
+            onStockSaved={loadStats}
+          />
+        )}
       </main>
     </div>
   )

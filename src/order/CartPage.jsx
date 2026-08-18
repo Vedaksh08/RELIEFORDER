@@ -110,12 +110,12 @@ export default function CartPage() {
           Browse the catalogue and add the medicines you need.
         </Empty>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
+        <div className="grid gap-3 lg:grid-cols-[1fr_360px] lg:gap-4">
           <div className="flex flex-col gap-3">
             {items.map((i) => (
               <div
                 key={i.id}
-                className="flex items-center gap-3 rounded-card bg-white p-4 shadow-sm"
+                className="flex items-center gap-2.5 rounded-card bg-white p-3 shadow-sm sm:gap-3 sm:p-4"
               >
                 <div className="min-w-0 flex-1">
                   <p className="font-display truncate font-semibold">{i.name}</p>
@@ -155,7 +155,7 @@ export default function CartPage() {
             ))}
           </div>
 
-          <div className="h-fit rounded-card bg-white p-5 shadow-md lg:sticky lg:top-20">
+          <div className="h-fit rounded-card bg-white p-4 shadow-md sm:p-5 lg:sticky lg:top-24">
             <h2 className="font-display mb-4 font-semibold text-primary">
               Delivery details
             </h2>

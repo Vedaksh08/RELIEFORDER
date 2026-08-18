@@ -1,12 +1,25 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Plus, Trash2, Upload, Download, Search, Check, X, AlertTriangle } from 'lucide-react'
+import {
+  Plus,
+  Minus,
+  Trash2,
+  Upload,
+  Download,
+  Search,
+  Check,
+  X,
+  AlertTriangle,
+} from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import { inr, Spinner, Empty } from '../order/Shell.jsx'
 import { toCSV, parseCSV, diffImport } from './csv.js'
 
 const BLANK = { name: '', brand: '', category: '', price: '', stock: '' }
 
-export default function Inventory() {
+// Matches the dashboard's "Low stock" tile.
+export const LOW_STOCK = 10
+
+export default function Inventory({ lowOnly = false, onClearLow, onStockSaved }) {
   const [meds, setMeds] = useState([])
   const [loading, setLoading] = useState(true)
   const [q, setQ] = useState('')
@@ -27,13 +40,15 @@ export default function Inventory() {
 
   const shown = useMemo(() => {
     const t = q.trim().toLowerCase()
-    return meds.filter(
-      (m) =>
+    return meds.filter((m) => {
+      if (lowOnly && !(m.is_active && m.stock <= LOW_STOCK)) return false
+      return (
         !t ||
         m.name.toLowerCase().includes(t) ||
-        (m.brand ?? '').toLowerCase().includes(t),
-    )
-  }, [meds, q])
+        (m.brand ?? '').toLowerCase().includes(t)
+      )
+    })
+  }, [meds, q, lowOnly])
 
   const saveEdit = async () => {
     const { id, ...patch } = draft
@@ -66,6 +81,30 @@ export default function Inventory() {
     setAdding(null)
     setBusy(false)
     load()
+  }
+
+  // Restocking is the common case, so it gets a one-tap path that does not
+  // require entering the full inline editor.
+  const bumpStock = async (m, delta) => {
+    const next = Math.max(0, (m.stock ?? 0) + delta)
+    setMeds((cur) => cur.map((x) => (x.id === m.id ? { ...x, stock: next } : x)))
+    const { error } = await supabase
+      .from('medicines')
+      .update({ stock: next, updated_at: new Date().toISOString() })
+      .eq('id', m.id)
+    if (error) load() // reconcile if the write failed
+    else onStockSaved?.()
+  }
+
+  const setStockTo = async (m, value) => {
+    const next = Math.max(0, parseInt(value, 10) || 0)
+    setMeds((cur) => cur.map((x) => (x.id === m.id ? { ...x, stock: next } : x)))
+    const { error } = await supabase
+      .from('medicines')
+      .update({ stock: next, updated_at: new Date().toISOString() })
+      .eq('id', m.id)
+    if (error) load()
+    else onStockSaved?.()
   }
 
   const del = async (m) => {
@@ -109,6 +148,22 @@ export default function Inventory() {
 
   return (
     <div>
+      {lowOnly && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-card border border-amber-200 bg-amber-50 p-3">
+          <AlertTriangle size={16} className="shrink-0 text-amber-600" />
+          <p className="min-w-0 flex-1 text-sm font-medium text-amber-900">
+            Showing {shown.length} medicine{shown.length === 1 ? '' : 's'} at or below{' '}
+            {LOW_STOCK} in stock. Adjust the counts below.
+          </p>
+          <button
+            onClick={onClearLow}
+            className="shrink-0 rounded-btn bg-white px-3 py-1.5 text-xs font-semibold text-ink shadow-sm transition hover:bg-black/5"
+          >
+            Show all
+          </button>
+        </div>
+      )}
+
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <div className="relative min-w-48 flex-1">
           <Search
@@ -154,7 +209,7 @@ export default function Inventory() {
       {adding && (
         <div className="mb-3 rounded-card bg-white p-4 shadow-md">
           <p className="font-display mb-3 font-semibold text-primary">New medicine</p>
-          <div className="grid gap-2 sm:grid-cols-5">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
             {['name', 'brand', 'category', 'price', 'stock'].map((f) => (
               <input
                 key={f}
@@ -162,7 +217,9 @@ export default function Inventory() {
                 onChange={(e) => setAdding({ ...adding, [f]: e.target.value })}
                 placeholder={f[0].toUpperCase() + f.slice(1)}
                 type={f === 'price' || f === 'stock' ? 'number' : 'text'}
-                className="rounded-btn border border-hairline px-3 py-2 text-sm outline-none focus:border-primary"
+                className={`rounded-btn border border-hairline px-3 py-2 text-sm outline-none focus:border-primary ${
+                  f === 'name' ? 'col-span-2 sm:col-span-1' : ''
+                }`}
               />
             ))}
           </div>
@@ -185,8 +242,10 @@ export default function Inventory() {
       )}
 
       {shown.length === 0 ? (
-        <Empty title="No medicines yet">
-          Add one above, or import a CSV with columns: name, brand, category, price, stock.
+        <Empty title={lowOnly ? 'Nothing is running low' : 'No medicines yet'}>
+          {lowOnly
+            ? `Every active medicine has more than ${LOW_STOCK} in stock.`
+            : 'Add one above, or import a CSV with columns: name, brand, category, price, stock.'}
         </Empty>
       ) : (
         <div className="overflow-x-auto rounded-card bg-white shadow-sm">
@@ -227,21 +286,51 @@ export default function Inventory() {
                     <td className="p-3 text-right font-semibold">
                       {cell('price', 'number') ?? inr(m.price)}
                     </td>
-                    <td className="p-3 text-right">
+                    <td className="p-3">
                       {editing ? (
-                        cell('stock', 'number')
+                        <div className="text-right">{cell('stock', 'number')}</div>
                       ) : (
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                            m.stock <= 0
-                              ? 'bg-red-100 text-red-600'
-                              : m.stock <= 10
-                                ? 'bg-amber-100 text-amber-700'
-                                : 'bg-green-100 text-green-700'
-                          }`}
-                        >
-                          {m.stock}
-                        </span>
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => bumpStock(m, -1)}
+                            disabled={m.stock <= 0}
+                            className="grid size-7 place-items-center rounded-lg bg-black/5 text-ink transition hover:bg-black/10 active:scale-95 disabled:opacity-35"
+                            aria-label={`Reduce stock of ${m.name}`}
+                          >
+                            <Minus size={13} />
+                          </button>
+
+                          <input
+                            type="number"
+                            min="0"
+                            defaultValue={m.stock}
+                            key={`${m.id}-${m.stock}`}
+                            onFocus={(e) => e.target.select()}
+                            onBlur={(e) => {
+                              if (Number(e.target.value) !== m.stock)
+                                setStockTo(m, e.target.value)
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') e.currentTarget.blur()
+                            }}
+                            className={`w-14 rounded-lg px-2 py-1 text-center text-xs font-bold outline-none transition focus:ring-2 focus:ring-primary/40 ${
+                              m.stock <= 0
+                                ? 'bg-red-100 text-red-600'
+                                : m.stock <= LOW_STOCK
+                                  ? 'bg-amber-100 text-amber-700'
+                                  : 'bg-green-100 text-green-700'
+                            }`}
+                            aria-label={`Stock for ${m.name}`}
+                          />
+
+                          <button
+                            onClick={() => bumpStock(m, 1)}
+                            className="grid size-7 place-items-center rounded-lg bg-black/5 text-ink transition hover:bg-black/10 active:scale-95"
+                            aria-label={`Increase stock of ${m.name}`}
+                          >
+                            <Plus size={13} />
+                          </button>
+                        </div>
                       )}
                     </td>
                     <td className="p-3">

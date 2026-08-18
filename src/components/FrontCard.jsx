@@ -71,7 +71,7 @@ export default function FrontCard({ onFlip, onLogoClick }) {
   return (
     <div
       onClick={onFlip}
-      className="glass-strong relative flex h-full cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6"
+      className="glass-strong relative flex h-full min-h-[40rem] cursor-pointer select-none flex-col overflow-hidden rounded-[2rem] px-6 pb-5 pt-6"
     >
       {/* soft brand glows */}
       <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-200/20 blur-3xl" />

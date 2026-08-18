@@ -1,5 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { Check, X, Truck, PackageCheck, Phone, MapPin, Inbox, Volume2, VolumeX } from 'lucide-react'
+import {
+  Check,
+  X,
+  Truck,
+  PackageCheck,
+  Phone,
+  MapPin,
+  Inbox,
+  Volume2,
+  VolumeX,
+  Bell,
+  BellOff,
+} from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import {
   fetchAllOrders,
@@ -10,6 +22,14 @@ import {
 } from '../lib/orders.js'
 import { Spinner, Empty, StatusBadge, inr } from '../order/Shell.jsx'
 import { playChime, playConfirm, playError, primeAudio } from '../lib/sound.js'
+import {
+  notify,
+  alertsEnabled,
+  setAlertsEnabled,
+  requestPermission,
+  permission,
+  notificationsSupported,
+} from '../lib/notify.js'
 
 const TABS = ['placed', 'accepted', 'dispatched', 'delivered', 'rejected']
 
@@ -24,6 +44,11 @@ export default function OrderQueue({ onStockChanged }) {
   )
   const mutedRef = useRef(muted)
   mutedRef.current = muted
+
+  const [alerts, setAlerts] = useState(alertsEnabled)
+  const [alertMsg, setAlertMsg] = useState('')
+  const alertsRef = useRef(alerts)
+  alertsRef.current = alerts
 
   const load = () =>
     fetchAllOrders()
@@ -42,8 +67,16 @@ export default function OrderQueue({ onStockChanged }) {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'orders' },
-        () => {
+        async (payload) => {
           if (!mutedRef.current) playChime()
+          if (alertsRef.current) {
+            const o = payload.new
+            notify('New order received', {
+              body: `${o.mobile ?? 'Customer'} · ₹${Number(o.total).toFixed(2)}`,
+              tag: `order-${o.id}`,
+              onClick: () => setTab('placed'),
+            })
+          }
           load()
         },
       )
@@ -73,6 +106,39 @@ export default function OrderQueue({ onStockChanged }) {
     }
   }
 
+  const toggleAlerts = async () => {
+    primeAudio()
+    if (alerts) {
+      setAlertsEnabled(false)
+      setAlerts(false)
+      setAlertMsg('')
+      return
+    }
+
+    if (!notificationsSupported()) {
+      setAlertMsg('This browser does not support notifications.')
+      return
+    }
+
+    // must run inside this click for the browser to show the prompt
+    const res = await requestPermission()
+    if (res === 'granted') {
+      setAlertsEnabled(true)
+      setAlerts(true)
+      setAlertMsg('')
+      notify('Alerts are on', {
+        body: 'You will be notified here when a new order arrives.',
+        tag: 'alerts-on',
+      })
+    } else if (res === 'denied') {
+      setAlertMsg(
+        'Notifications are blocked for this site. Enable them in your browser’s site settings, then try again.',
+      )
+    } else {
+      setAlertMsg('Notification permission was dismissed.')
+    }
+  }
+
   const toggleMute = () => {
     primeAudio()
     setMuted((m) => {
@@ -85,7 +151,7 @@ export default function OrderQueue({ onStockChanged }) {
 
   return (
     <div>
-      <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
+      <div className="mb-4 flex flex-wrap items-center gap-2 pb-1">
         {TABS.map((t) => {
           const n = orders.filter((o) => o.status === t).length
           return (
@@ -108,17 +174,37 @@ export default function OrderQueue({ onStockChanged }) {
           )
         })}
 
-        <button
-          onClick={toggleMute}
-          title={muted ? 'Sound off' : 'Sound on'}
-          aria-label={muted ? 'Unmute new-order sound' : 'Mute new-order sound'}
-          className={`ml-auto grid size-9 shrink-0 place-items-center rounded-full transition ${
-            muted ? 'bg-white text-ink-soft' : 'bg-accent/15 text-accent'
-          }`}
-        >
-          {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-        </button>
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          <button
+            onClick={toggleAlerts}
+            title={alerts ? 'Alerts on' : 'Turn on alerts'}
+            aria-pressed={alerts}
+            className={`flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition ${
+              alerts ? 'bg-primary text-white' : 'bg-white text-ink-soft hover:bg-white/70'
+            }`}
+          >
+            {alerts ? <Bell size={14} /> : <BellOff size={14} />}
+            <span className="hidden sm:inline">
+              {alerts ? 'Alerts on' : 'Turn on alerts'}
+            </span>
+          </button>
+
+          <button
+            onClick={toggleMute}
+            title={muted ? 'Sound off' : 'Sound on'}
+            aria-label={muted ? 'Unmute new-order sound' : 'Mute new-order sound'}
+            className={`grid size-9 shrink-0 place-items-center rounded-full transition ${
+              muted ? 'bg-white text-ink-soft' : 'bg-accent/15 text-accent'
+            }`}
+          >
+            {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          </button>
+        </div>
       </div>
+
+      {alertMsg && (
+        <p className="mb-3 rounded-btn bg-amber-50 p-3 text-xs text-amber-800">{alertMsg}</p>
+      )}
 
       {err && (
         <p className="mb-3 rounded-btn bg-red-50 p-3 text-sm text-red-600">{err}</p>

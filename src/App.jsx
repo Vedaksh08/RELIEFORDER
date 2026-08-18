@@ -63,7 +63,7 @@ function AppInner() {
         </button>
       )}
 
-      <main className="relative mx-auto flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-y-auto px-4 pb-6 pt-14 sm:pb-8 [@media(max-height:880px)]:justify-start">
+      <main className="relative mx-auto flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-y-auto px-4 pt-14 sm:px-6 [@media(max-height:940px)]:justify-start" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' }}>
         {phase === 'splash' && <SplashScreen onDone={finishSplash} />}
 
         {phase === 'card' && (

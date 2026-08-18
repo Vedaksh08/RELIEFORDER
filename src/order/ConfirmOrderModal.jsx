@@ -72,7 +72,10 @@ export default function ConfirmOrderModal({
           </div>
         </div>
 
-        <div className="border-t border-hairline px-5 py-4">
+        <div
+          className="border-t border-hairline px-5 py-4"
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}
+        >
           <div className="mb-3 flex items-center justify-between">
             <span className="text-sm text-ink-soft">Total payable</span>
             <span className="font-display text-xl font-bold text-primary">
