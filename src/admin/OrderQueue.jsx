@@ -70,14 +70,41 @@ export default function OrderQueue({ onStockChanged }) {
         { event: 'INSERT', schema: 'public', table: 'orders' },
         async (payload) => {
           if (!mutedRef.current) playChime()
+          const o = payload.new
+
           if (alertsRef.current) {
-            const o = payload.new
             notify('New order received', {
               body: `${o.mobile ?? 'Customer'} · ₹${Number(o.total).toFixed(2)}`,
               tag: `order-${o.id}`,
               onClick: () => setTab('placed'),
             })
           }
+
+          // WhatsApp for a new order is sent from here, not from the
+          // customer's browser: only the admin device can reach the bot.
+          // The line items arrive in a separate insert, so read them back
+          // rather than trusting the orders-row payload alone.
+          try {
+            const { data: full } = await supabase
+              .from('orders')
+              .select('*, order_items(*)')
+              .eq('id', o.id)
+              .maybeSingle()
+
+            const { data: who } = await supabase
+              .from('profiles')
+              .select('full_name, email')
+              .eq('id', o.user_id)
+              .maybeSingle()
+
+            notifyOrder('placed', {
+              ...(full ?? o),
+              customer_name: who?.full_name ?? who?.email ?? null,
+            })
+          } catch (e) {
+            console.warn('[bot] could not send new-order WhatsApp:', e.message)
+          }
+
           load()
         },
       )

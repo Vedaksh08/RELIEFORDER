@@ -9,7 +9,6 @@ import { Shell, Spinner, Empty, inr } from './Shell.jsx'
 import { SignInGate } from './OrderPage.jsx'
 import ConfirmOrderModal from './ConfirmOrderModal.jsx'
 import { playChime, playError, primeAudio } from '../lib/sound.js'
-import { notifyOrder } from '../lib/botApi.js'
 
 export default function CartPage() {
   const { user, profile, loading, refreshProfile } = useAuth()
@@ -89,12 +88,10 @@ export default function CartPage() {
         note: note.trim(),
       })
 
-      // fire-and-forget: confirms to the customer and alerts the admin
-      notifyOrder('placed', {
-        ...placed,
-        customer_name: profile?.full_name ?? user.email ?? null,
-        order_items: items.map((i) => ({ name: i.name, brand: i.brand, qty: i.qty })),
-      })
+      // NOTE: the "order placed" WhatsApp is deliberately NOT sent from here.
+      // This runs on the customer's device, which cannot reach the bot host
+      // (VITE_BOT_URL is private to the shop). The admin panel picks the new
+      // order up over realtime and sends both messages from there.
       // remember details for next time
       await saveProfileDetails(user.id, { mobile: mobile.trim(), address: address.trim() })
       refreshProfile()
