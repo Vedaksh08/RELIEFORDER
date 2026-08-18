@@ -29,6 +29,17 @@ Open **Supabase → SQL Editor → New query**, paste all of
 - Row Level Security policies
 - a trigger that creates a profile row on first Google sign-in
 
+### Already have a database from before?
+
+Run `supabase/migration-02-dispatch.sql` as well. It is additive and safe on
+live data: it adds the `dispatched` status, the lifecycle timestamps, and the
+`orders -> profiles` foreign key.
+
+That FK is the fix for **"1 pending order" showing above an empty list** — the
+admin query embedded `profiles`, but `orders.user_id` pointed at `auth.users`,
+so there was no relationship to embed through and the query failed silently
+while the stat (which does no join) kept counting.
+
 ## 3. Google sign-in
 
 **Supabase → Authentication → Providers → Google** → enable, and paste the
@@ -73,7 +84,18 @@ CSV columns: `name, brand, category, price, stock`
 (rows are matched to existing medicines by name + brand).
 
 **Orders tab** — live queue, updates without refresh.
-Accept / Reject a pending order; mark accepted orders delivered.
+
+The lifecycle is **Placed -> Accept order -> Order dispatched -> Mark
+delivered**, with Reject available while an order is still pending. Customers
+see the same progress on a timeline under My Orders, updating live.
+
+`public/notification.mp3` plays when an order is placed, when a new order
+reaches the admin queue, and on each status change. The speaker icon beside
+the status tabs mutes it, remembered per device.
+
+> Browsers block sound until you interact with the page. Logging in at
+> `/ADMIN` counts as that interaction, so leave the tab open and new orders
+> will chime.
 
 ## How the stock math works
 
