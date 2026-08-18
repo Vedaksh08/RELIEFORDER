@@ -15,10 +15,10 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
         className="sticky top-0 z-30 border-b border-hairline bg-white/85 backdrop-blur-xl"
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
-        <div className="mx-auto flex max-w-5xl items-center gap-1.5 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
+        <div className="mx-auto flex w-full max-w-5xl items-center gap-1 overflow-hidden px-2 py-2.5 sm:gap-2 sm:px-4 sm:py-3">
           <Link
             to={back}
-            className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
+            className="grid size-9 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10 sm:size-10"
             aria-label="Back"
           >
             <ArrowLeft size={20} strokeWidth={2.4} />
@@ -32,7 +32,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
             {isAdmin && (
               <Link
                 to="/admin"
-                className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
+                className="grid size-9 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10 sm:size-10"
                 aria-label="Admin panel"
               >
                 <LayoutDashboard size={20} strokeWidth={2.2} />
@@ -41,7 +41,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
             {user && (
               <Link
                 to="/orders"
-                className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
+                className="grid size-9 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10 sm:size-10"
                 aria-label="My orders"
               >
                 <Package size={20} strokeWidth={2.2} />
@@ -49,7 +49,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
             )}
             <Link
               to="/cart"
-              className="relative grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
+              className="relative grid size-9 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10 sm:size-10"
               aria-label={`Cart, ${count} items`}
             >
               <ShoppingCart size={20} strokeWidth={2.2} />
@@ -65,7 +65,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
                   await signOut()
                   navigate({ to: '/order' })
                 }}
-                className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
+                className="grid size-9 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10 sm:size-10"
                 aria-label="Sign out"
               >
                 <LogOut size={20} strokeWidth={2.2} />

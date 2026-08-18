@@ -196,7 +196,7 @@ export default function OrderPage() {
 
   return (
     <Shell title="Order Medicines" padForCartBar>
-      <div className="mb-4 flex flex-col gap-3">
+      <div className="mb-4 flex w-full max-w-full flex-col gap-3">
         <div className="relative">
           <Search
             size={17}
@@ -254,32 +254,38 @@ export default function OrderPage() {
             return (
               <div
                 key={m.id}
-                className={`flex items-center gap-3 rounded-card bg-white p-3 shadow-sm transition hover:shadow-md sm:p-3.5 ${
+                className={`flex w-full items-center gap-2.5 overflow-hidden rounded-card bg-white p-2.5 shadow-sm transition hover:shadow-md sm:gap-3 sm:p-3.5 ${
                   out ? 'opacity-60' : ''
                 }`}
               >
-                <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-indigo-50 via-cyan-50 to-emerald-50 font-display text-base font-bold text-primary">
+                <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-indigo-50 via-cyan-50 to-emerald-50 font-display text-sm font-bold text-primary sm:size-11 sm:text-base">
                   {m.name.charAt(0).toUpperCase()}
                 </div>
 
+                {/* min-w-0 lets this column shrink so the control on the right
+                    always keeps its space instead of being pushed off-screen */}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-ink">{m.name}</p>
+                  <p className="truncate text-[13px] font-semibold leading-snug text-ink sm:text-sm">
+                    {m.name}
+                  </p>
                   {m.brand && (
                     <p className="truncate text-[11px] text-ink-soft">{m.brand}</p>
                   )}
-                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                    <span className="font-display text-[15px] font-extrabold text-ink">
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                    <span className="font-display text-sm font-extrabold text-ink sm:text-[15px]">
                       {inr(m.price)}
                     </span>
                     <span
                       className={`pill ${out ? 'pill-out' : low ? 'pill-low' : 'pill-ok'}`}
                     >
-                      {out ? 'Out of stock' : low ? `Only ${m.stock} left` : 'In stock'}
+                      {out ? 'Out' : low ? `Only ${m.stock} left` : 'In stock'}
                     </span>
                   </div>
                 </div>
 
-                <QtyStepper item={item} med={m} add={add} setQty={setQty} />
+                <div className="shrink-0">
+                  <QtyStepper item={item} med={m} add={add} setQty={setQty} />
+                </div>
               </div>
             )
           })}
