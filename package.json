@@ -10,6 +10,7 @@
     "icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.3",
     "@tanstack/react-router": "^1.95.0",
     "lucide-react": "^0.469.0",
     "qrcode.react": "^4.2.0",

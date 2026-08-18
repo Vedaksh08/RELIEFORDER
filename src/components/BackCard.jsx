@@ -17,7 +17,9 @@ import {
   Check,
   X,
   IndianRupee,
+  ShoppingBag,
 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import RippleButton from './RippleButton.jsx'
 import SectionDivider from './SectionDivider.jsx'
 import BrandMarquee from './BrandMarquee.jsx'
@@ -125,6 +127,16 @@ export default function BackCard({ onFlip, onLogoClick, onInstall, installed }) 
             <Navigation size={12} /> Maps
           </RippleButton>
         </div>
+
+        {/* order medicines online -> /order */}
+        <RippleButton
+          as={Link}
+          to="/order"
+          aria-label="Order medicines online"
+          className="btn-accent mt-2.5 flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-[12.5px] font-extrabold tracking-tight"
+        >
+          <ShoppingBag size={15} /> Order Medicines Online
+        </RippleButton>
       </section>
 
       {/* ---------- 2 · BRAND CAROUSEL ---------- */}
