@@ -762,3 +762,111 @@ body {
   .btn-order { animation: none; }
   .btn-order::after { animation: none; opacity: 0; }
 }
+
+/* ============================================================
+   ADVERTISEMENT — shown over the card, dismissible per ad.
+   ============================================================ */
+.ad-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.25rem);
+  background: rgba(8, 34, 46, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.28s ease,
+    background 0.28s ease,
+    backdrop-filter 0.28s ease;
+}
+.ad-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  background: rgba(8, 34, 46, 0.42);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.ad-card {
+  position: relative;
+  width: 100%;
+  max-width: 21rem;
+  max-height: 86vh;
+  overflow-y: auto;
+  border-radius: 1.6rem;
+  background: #fff;
+  box-shadow: 0 28px 70px rgba(6, 40, 55, 0.4);
+  transform: translateY(18px) scale(0.96);
+  opacity: 0;
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+}
+.ad-overlay.is-open .ad-card {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.ad-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 9999px;
+  color: #123040;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 14px rgba(6, 40, 55, 0.28);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.ad-close:hover {
+  background: #fff;
+  transform: scale(1.06);
+}
+.ad-close:active {
+  transform: scale(0.94);
+}
+
+.ad-poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+  object-fit: cover;
+}
+
+.ad-body {
+  padding: 1rem 1.15rem 1.25rem;
+}
+
+.ad-heading {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #2e3192;
+}
+
+.ad-text {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: rgba(18, 48, 64, 0.78);
+  white-space: pre-line; /* keep the admin's line breaks */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-overlay,
+  .ad-card {
+    transition: none;
+  }
+}

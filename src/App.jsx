@@ -4,6 +4,7 @@ import Background from './components/Background.jsx'
 import SplashScreen from './components/SplashScreen.jsx'
 import FlipCard from './components/FlipCard.jsx'
 import InstallModal from './components/InstallModal.jsx'
+import AdBanner from './components/AdBanner.jsx'
 import { ToastProvider, useToast } from './components/Toast.jsx'
 import usePWA from './hooks/usePWA.js'
 import { BUSINESS } from './data/siteData.js'
@@ -78,6 +79,9 @@ function AppInner() {
           </div>
         )}
       </main>
+
+      {/* live advertisement, dismissible per ad */}
+      {phase === 'card' && <AdBanner />}
 
       {/* First-visit / iOS install modal — never shown once installed */}
       {pwa.showModal && !pwa.installed && (

@@ -8,6 +8,7 @@ import { SignInGate } from '../order/OrderPage.jsx'
 import Inventory from './Inventory.jsx'
 import OrderQueue from './OrderQueue.jsx'
 import WhatsAppPanel from './WhatsAppPanel.jsx'
+import AdsPanel from './AdsPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
 function Stat({ icon: Icon, label, value, tone = 'primary', onClick, active }) {
@@ -166,6 +167,7 @@ export default function AdminPage() {
             ['orders', 'Orders'],
             ['inventory', 'Inventory'],
             ['whatsapp', 'WhatsApp'],
+            ['ads', 'Ads'],
           ].map(([k, label]) => (
             <button
               key={k}
@@ -191,6 +193,7 @@ export default function AdminPage() {
           />
         )}
         {tab === 'whatsapp' && <WhatsAppPanel />}
+        {tab === 'ads' && <AdsPanel />}
       </main>
     </div>
   )
