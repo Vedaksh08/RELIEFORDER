@@ -43,8 +43,13 @@ export function initClient() {
         '--disable-dev-shm-usage',
         '--disable-gpu',
         '--no-first-run',
-        '--single-process',
+        // NOTE: --single-process is deliberately absent. It saves memory on
+        // small containers but makes Chromium drop frames mid-navigation on
+        // Windows ("Navigating frame was detached"), so WhatsApp Web never
+        // finishes loading and no QR is ever produced.
       ],
+      // WhatsApp Web can be slow on first load; the 30s default aborts it.
+      timeout: 120000,
     },
   })
 
