@@ -9,6 +9,8 @@ import {
   Check,
   X,
   AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import { inr, Spinner, Empty } from '../order/Shell.jsx'
@@ -19,27 +21,59 @@ const BLANK = { name: '', brand: '', category: '', price: '', stock: '' }
 // Matches the dashboard's "Low stock" tile.
 export const LOW_STOCK = 10
 
+// Rows rendered at once. The DOM cost of 1000+ table rows is what made
+// the inventory tab feel frozen while scrolling and editing.
+const PER_PAGE = 50
+
 export default function Inventory({ lowOnly = false, onClearLow, onStockSaved }) {
   const [meds, setMeds] = useState([])
   const [loading, setLoading] = useState(true)
   const [q, setQ] = useState('')
+  const [debouncedQ, setDebouncedQ] = useState('')
+  const [page, setPage] = useState(0)
   const [draft, setDraft] = useState(null) // inline edit buffer
   const [adding, setAdding] = useState(null)
   const [preview, setPreview] = useState(null) // CSV import preview
   const [busy, setBusy] = useState(false)
   const fileRef = useRef(null)
 
+  // PostgREST returns at most 1000 rows per request, so a catalogue larger
+  // than that has to be paged or medicines simply go missing from the table.
   const load = async () => {
-    const { data } = await supabase.from('medicines').select('*').order('name')
-    setMeds(data ?? [])
+    const PAGE = 1000
+    const all = []
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await supabase
+        .from('medicines')
+        .select('*')
+        .order('name')
+        .range(from, from + PAGE - 1)
+      if (error) break
+      all.push(...(data ?? []))
+      if (!data || data.length < PAGE) break
+    }
+    setMeds(all)
     setLoading(false)
   }
   useEffect(() => {
     load()
   }, [])
 
+  // Typing stays responsive because the expensive filter runs once the user
+  // pauses, not on every keystroke across a 1000-row catalogue.
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQ(q), 200)
+    return () => clearTimeout(t)
+  }, [q])
+
+  // Any change to what is being shown sends you back to the first page,
+  // otherwise you can be stranded on page 9 of a 2-page result.
+  useEffect(() => {
+    setPage(0)
+  }, [debouncedQ, lowOnly])
+
   const shown = useMemo(() => {
-    const t = q.trim().toLowerCase()
+    const t = debouncedQ.trim().toLowerCase()
     return meds.filter((m) => {
       if (lowOnly && !(m.is_active && m.stock <= LOW_STOCK)) return false
       return (
@@ -48,25 +82,30 @@ export default function Inventory({ lowOnly = false, onClearLow, onStockSaved })
         (m.brand ?? '').toLowerCase().includes(t)
       )
     })
-  }, [meds, q, lowOnly])
+  }, [meds, debouncedQ, lowOnly])
 
   const saveEdit = async () => {
     const { id, ...patch } = draft
+    const next = {
+      name: patch.name,
+      brand: patch.brand || null,
+      category: patch.category || null,
+      price: Number(patch.price) || 0,
+      stock: parseInt(patch.stock, 10) || 0,
+      updated_at: new Date().toISOString(),
+    }
     setBusy(true)
-    await supabase
-      .from('medicines')
-      .update({
-        name: patch.name,
-        brand: patch.brand || null,
-        category: patch.category || null,
-        price: Number(patch.price) || 0,
-        stock: parseInt(patch.stock, 10) || 0,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-    setDraft(null)
+    const { error } = await supabase.from('medicines').update(next).eq('id', id)
     setBusy(false)
-    load()
+    setDraft(null)
+
+    // Patch the row in place. Re-fetching the whole catalogue after every
+    // edit is what made the table freeze for a second on each save.
+    if (error) load()
+    else {
+      setMeds((cur) => cur.map((m) => (m.id === id ? { ...m, ...next } : m)))
+      onStockSaved?.()
+    }
   }
 
   const addNew = async () => {
@@ -143,6 +182,10 @@ export default function Inventory({ lowOnly = false, onClearLow, onStockSaved })
     setBusy(false)
     load()
   }
+
+  const pageCount = Math.max(1, Math.ceil(shown.length / PER_PAGE))
+  const safePage = Math.min(page, pageCount - 1)
+  const visible = shown.slice(safePage * PER_PAGE, safePage * PER_PAGE + PER_PAGE)
 
   if (loading) return <Spinner label="Loading inventory…" />
 
@@ -261,7 +304,7 @@ export default function Inventory({ lowOnly = false, onClearLow, onStockSaved })
               </tr>
             </thead>
             <tbody>
-              {shown.map((m) => {
+              {visible.map((m) => {
                 const editing = draft?.id === m.id
                 const cell = (f, type = 'text') =>
                   editing ? (
@@ -377,6 +420,40 @@ export default function Inventory({ lowOnly = false, onClearLow, onStockSaved })
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {shown.length > 0 && (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <p className="text-xs text-ink-soft">
+            Showing {safePage * PER_PAGE + 1}–
+            {Math.min((safePage + 1) * PER_PAGE, shown.length)} of {shown.length}
+            {shown.length !== meds.length && ` (filtered from ${meds.length})`}
+          </p>
+
+          {pageCount > 1 && (
+            <div className="ml-auto flex items-center gap-1">
+              <button
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={safePage === 0}
+                className="grid size-8 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 disabled:opacity-30"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <span className="px-1 text-xs font-semibold text-ink">
+                {safePage + 1} / {pageCount}
+              </span>
+              <button
+                onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                disabled={safePage >= pageCount - 1}
+                className="grid size-8 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 disabled:opacity-30"
+                aria-label="Next page"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

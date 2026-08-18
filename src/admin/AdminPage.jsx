@@ -18,6 +18,7 @@ import OrderQueue from './OrderQueue.jsx'
 import WhatsAppPanel from './WhatsAppPanel.jsx'
 import AdsPanel from './AdsPanel.jsx'
 import UsersPanel from './UsersPanel.jsx'
+import { LOW_STOCK } from './Inventory.jsx'
 import SearchPanel from './SearchPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
@@ -57,23 +58,33 @@ export default function AdminPage() {
   const [passed, setPassed] = useState(gatePassed)
 
   const loadStats = useCallback(async () => {
-    const [{ data: meds }, { data: ords }, { count: users }] = await Promise.all([
-      supabase.from('medicines').select('price, stock, is_active'),
-      supabase.from('orders').select('status, total'),
-      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+    // Counts are done in the database, not by fetching rows: PostgREST caps
+    // a select at 1000 rows, so counting client-side silently under-reported
+    // as soon as the catalogue passed 1000 medicines.
+    const countOf = (table, build) => {
+      let q = supabase.from(table).select('id', { count: 'exact', head: true })
+      return build ? build(q) : q
+    }
+
+    const [skus, low, pending, users, revenueRows] = await Promise.all([
+      countOf('medicines', (q) => q.eq('is_active', true)),
+      countOf('medicines', (q) => q.eq('is_active', true).lte('stock', LOW_STOCK)),
+      countOf('orders', (q) => q.eq('status', 'placed')),
+      countOf('profiles'),
+      // Revenue needs the actual totals, but only for orders that count -
+      // far fewer rows than the whole table.
+      supabase
+        .from('orders')
+        .select('total')
+        .in('status', ['accepted', 'dispatched', 'delivered']),
     ])
-    const active = (meds ?? []).filter((m) => m.is_active)
-    // 'dispatched' is confirmed revenue too — leaving it out made the total
-    // dip while an order was out for delivery, then jump back on delivery.
-    const earned = new Set(['accepted', 'dispatched', 'delivered'])
+
     setStats({
-      pending: (ords ?? []).filter((o) => o.status === 'placed').length,
-      revenue: (ords ?? [])
-        .filter((o) => earned.has(o.status))
-        .reduce((n, o) => n + Number(o.total), 0),
-      skus: active.length,
-      low: active.filter((m) => m.stock <= 10).length,
-      users: users ?? 0,
+      pending: pending.count ?? 0,
+      revenue: (revenueRows.data ?? []).reduce((n, o) => n + Number(o.total), 0),
+      skus: skus.count ?? 0,
+      low: low.count ?? 0,
+      users: users.count ?? 0,
     })
   }, [])
 
