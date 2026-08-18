@@ -94,6 +94,64 @@ export function initClient() {
   return client
 }
 
+// Liveness probe: getState() throws if the page is gone. Without this the
+// bot reports ready:true after a silent crash and only reveals the problem
+// when a real order fails to send.
+setInterval(async () => {
+  if (!state.ready || restarting) return
+  try {
+    await client.getState()
+  } catch (e) {
+    if (isDeadSession(e)) restartClient('liveness probe failed')
+  }
+}, 60_000)
+
+/**
+ * Puppeteer errors that mean the underlying browser/page is gone. When these
+ * happen whatsapp-web.js does NOT emit 'disconnected', so state.ready stays
+ * true and every later send fails with the same message until the process is
+ * restarted by hand.
+ */
+function isDeadSession(e) {
+  const m = String(e?.message ?? e)
+  return (
+    m.includes('detached Frame') ||
+    m.includes('Session closed') ||
+    m.includes('Target closed') ||
+    m.includes('Protocol error') ||
+    m.includes('Execution context was destroyed') ||
+    m.includes('Navigating frame was detached')
+  )
+}
+
+let restarting = false
+
+/** Rebuild the client in place. The saved session means no new QR scan. */
+async function restartClient(reason) {
+  if (restarting) return
+  restarting = true
+  state.ready = false
+  state.lastError = `recovering: ${reason}`
+  console.warn(`[wa] session died (${reason}) — restarting client`)
+
+  try {
+    await client?.destroy()
+  } catch {
+    // already gone; nothing to clean up
+  }
+
+  await sleep(2000)
+  try {
+    initClient() // re-creates `client` and re-attaches every handler
+    console.log('[wa] client re-initialised')
+  } catch (e) {
+    state.lastError = `restart failed: ${e.message}`
+    console.error('[wa] restart failed', e)
+  } finally {
+    restarting = false
+  }
+}
+
 function underHourlyCap() {
   const cutoff = Date.now() - 3600_000
   state.sentTimestamps = state.sentTimestamps.filter((t) => t > cutoff)
@@ -135,6 +193,18 @@ async function drain() {
     } catch (e) {
       console.error('[wa] send failed', e)
       state.lastError = String(e)
+
+      if (isDeadSession(e)) {
+        // Not this message's fault — the browser died. Put it back at the
+        // front and rebuild the client; the loop pauses on !state.ready
+        // until the session is live again.
+        queue.unshift(job)
+        state.queueLength = queue.length
+        restartClient(e.message ?? 'unknown')
+        await sleep(8000)
+        continue
+      }
+
       job.reject?.(e)
     }
 
