@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Search, Plus, Minus, LogIn, AlertTriangle } from 'lucide-react'
 import { supabase, supabaseReady, signInWithGoogle } from '../lib/supabase.js'
 import { useAuth } from '../lib/AuthContext.jsx'
@@ -76,42 +76,89 @@ function QtyStepper({ item, med, add, setQty }) {
   )
 }
 
+const PAGE_SIZE = 60
+
 export default function OrderPage() {
   const { user, loading: authLoading } = useAuth()
   const { items, add, setQty } = useCart()
   const [meds, setMeds] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(0)
   const [q, setQ] = useState('')
+  const [debouncedQ, setDebouncedQ] = useState('')
   const [cat, setCat] = useState('All')
+  const [categories, setCategories] = useState(['All'])
 
+  // typing stays smooth because we only hit the database once you pause
   useEffect(() => {
-    if (!supabaseReady) return setLoading(false)
+    const t = setTimeout(() => setDebouncedQ(q.trim()), 300)
+    return () => clearTimeout(t)
+  }, [q])
+
+  // categories come from a tiny dedicated query, not from the page of rows
+  // currently on screen, so the filter list is complete from the start
+  useEffect(() => {
+    if (!supabaseReady) return
     supabase
       .from('medicines')
-      .select('*')
+      .select('category')
       .eq('is_active', true)
-      .order('name')
+      .not('category', 'is', null)
       .then(({ data }) => {
-        setMeds(data ?? [])
-        setLoading(false)
+        const set = new Set((data ?? []).map((r) => r.category).filter(Boolean))
+        setCategories(['All', ...[...set].sort((a, b) => a.localeCompare(b))])
       })
   }, [])
 
-  const categories = useMemo(
-    () => ['All', ...new Set(meds.map((m) => m.category).filter(Boolean))],
-    [meds],
-  )
+  const buildQuery = useCallback(() => {
+    let query = supabase
+      .from('medicines')
+      .select('*', { count: 'exact' })
+      .eq('is_active', true)
+    if (cat !== 'All') query = query.eq('category', cat)
+    if (debouncedQ) {
+      // match either the medicine or its brand
+      const safe = debouncedQ.replace(/[%,()]/g, ' ')
+      query = query.or(`name.ilike.%${safe}%,brand.ilike.%${safe}%`)
+    }
+    // in-stock items first so customers see what they can actually buy
+    return query.order('stock', { ascending: false }).order('name')
+  }, [cat, debouncedQ])
 
-  const shown = useMemo(() => {
-    const term = q.trim().toLowerCase()
-    return meds.filter(
-      (m) =>
-        (cat === 'All' || m.category === cat) &&
-        (!term ||
-          m.name.toLowerCase().includes(term) ||
-          (m.brand ?? '').toLowerCase().includes(term)),
+  // first page whenever the search or category changes
+  useEffect(() => {
+    if (!supabaseReady) return setLoading(false)
+    let active = true
+    setLoading(true)
+    setPage(0)
+    buildQuery()
+      .range(0, PAGE_SIZE - 1)
+      .then(({ data, count }) => {
+        if (!active) return
+        setMeds(data ?? [])
+        setTotal(count ?? 0)
+        setLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [buildQuery])
+
+  const loadMore = async () => {
+    setLoadingMore(true)
+    const next = page + 1
+    const { data } = await buildQuery().range(
+      next * PAGE_SIZE,
+      next * PAGE_SIZE + PAGE_SIZE - 1,
     )
-  }, [meds, q, cat])
+    setMeds((cur) => [...cur, ...(data ?? [])])
+    setPage(next)
+    setLoadingMore(false)
+  }
+
+  const shown = meds
 
   if (!supabaseReady)
     return (
@@ -167,13 +214,21 @@ export default function OrderPage() {
         )}
       </div>
 
+      {!loading && total > 0 && (
+        <p className="mb-2.5 text-xs text-ink-soft">
+          {total.toLocaleString('en-IN')} medicine{total === 1 ? '' : 's'}
+          {debouncedQ && ` matching “${debouncedQ}”`}
+          {cat !== 'All' && ` in ${cat}`}
+        </p>
+      )}
+
       {loading ? (
         <Spinner label="Loading medicines…" />
       ) : shown.length === 0 ? (
         <Empty icon={Search} title="No medicines found">
-          {meds.length === 0
-            ? 'The catalogue is empty. Add medicines from the admin panel.'
-            : 'Try a different search or category.'}
+          {debouncedQ || cat !== 'All'
+            ? 'Try a different search or category.'
+            : 'The catalogue is empty. Add medicines from the admin panel.'}
         </Empty>
       ) : (
         <div className="grid grid-cols-2 gap-2.5 min-[520px]:grid-cols-3 lg:grid-cols-4 lg:gap-3">
@@ -212,6 +267,18 @@ export default function OrderPage() {
             )
           })}
         </div>
+      )}
+
+      {!loading && meds.length < total && (
+        <button
+          onClick={loadMore}
+          disabled={loadingMore}
+          className="mx-auto mt-4 block rounded-btn bg-white px-6 py-3 text-sm font-semibold text-primary shadow-sm transition hover:shadow-md active:scale-[.98] disabled:opacity-60"
+        >
+          {loadingMore
+            ? 'Loading…'
+            : `Show more (${(total - meds.length).toLocaleString('en-IN')} left)`}
+        </button>
       )}
 
       <CartBar />

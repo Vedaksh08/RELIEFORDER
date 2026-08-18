@@ -1059,59 +1059,6 @@ body {
 /* ============================================================
    ADMIN — colourful tiles + scrollable tab rail
    ============================================================ */
-.stat-tile {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  overflow: hidden;
-  padding: 0.85rem;
-  border-radius: 1.1rem;
-  background: #fff;
-  border: 1px solid rgba(18, 48, 64, 0.07);
-  box-shadow: 0 2px 10px rgba(10, 80, 100, 0.06);
-  text-align: left;
-  transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-/* colour wash so each metric is recognisable at a glance */
-.stat-tile::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.5;
-  pointer-events: none;
-}
-.stat-tile > * { position: relative; z-index: 1; }
-
-.stat-amber::before  { background: linear-gradient(135deg, #fffbeb 0%, #fff 65%); }
-.stat-green::before  { background: linear-gradient(135deg, #ecfdf5 0%, #fff 65%); }
-.stat-blue::before   { background: linear-gradient(135deg, #eff6ff 0%, #fff 65%); }
-.stat-red::before    { background: linear-gradient(135deg, #fef2f2 0%, #fff 65%); }
-.stat-violet::before { background: linear-gradient(135deg, #f5f3ff 0%, #fff 65%); }
-
-.stat-tile.is-clickable { cursor: pointer; }
-.stat-tile.is-clickable:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(10, 80, 100, 0.13);
-}
-.stat-tile.is-clickable:active { transform: translateY(0) scale(0.99); }
-.stat-tile.is-active { border-color: rgba(46, 49, 146, 0.45); }
-
-.stat-icon {
-  display: grid;
-  place-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
-  flex-shrink: 0;
-  border-radius: 0.8rem;
-  color: #fff;
-}
-.ic-amber  { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.ic-green  { background: linear-gradient(135deg, #22c55e, #15803d); }
-.ic-blue   { background: linear-gradient(135deg, #0a66d6, #2e3192); }
-.ic-red    { background: linear-gradient(135deg, #ef4444, #b91c1c); }
-.ic-violet { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-
 /* horizontal tab rail — many tabs must stay reachable on a phone */
 .tab-rail {
   display: flex;
@@ -1145,5 +1092,5 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stat-tile.is-clickable:hover { transform: none; }
+  .tab-chip:active { transform: none; }
 }

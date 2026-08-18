@@ -23,25 +23,34 @@ import SearchPanel from './SearchPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
 function Stat({ icon: Icon, label, value, tone = 'blue', onClick, active }) {
+  const tones = {
+    blue: 'bg-primary/10 text-primary',
+    amber: 'bg-amber-100 text-amber-700',
+    green: 'bg-green-100 text-green-700',
+    red: 'bg-red-100 text-red-600',
+    violet: 'bg-violet-100 text-violet-700',
+  }
   const Tag = onClick ? 'button' : 'div'
   return (
     <Tag
       onClick={onClick}
-      className={`stat-tile stat-${tone} ${onClick ? 'is-clickable' : ''} ${
-        active ? 'is-active' : ''
-      }`}
+      className={`flex items-center gap-2.5 rounded-card bg-white p-3 text-left shadow-sm transition sm:gap-3 sm:p-4 ${
+        onClick ? 'cursor-pointer hover:shadow-md active:scale-[.99]' : ''
+      } ${active ? 'ring-2 ring-primary/40' : ''}`}
     >
-      <span className={`stat-icon ic-${tone}`}>
-        <Icon size={18} strokeWidth={2.4} />
-      </span>
-      <span className="min-w-0">
-        <span className="block truncate text-[11px] font-medium leading-tight text-ink-soft">
+      <div
+        className={`grid size-9 shrink-0 place-items-center rounded-xl sm:size-10 ${tones[tone] ?? tones.blue}`}
+      >
+        <Icon size={18} />
+      </div>
+      <div className="min-w-0">
+        <p className="truncate text-[11px] leading-tight text-ink-soft sm:text-xs">
           {label}
-        </span>
-        <span className="font-display block truncate text-lg font-extrabold text-ink">
+        </p>
+        <p className="font-display truncate text-base font-bold text-ink sm:text-lg">
           {value}
-        </span>
-      </span>
+        </p>
+      </div>
     </Tag>
   )
 }
