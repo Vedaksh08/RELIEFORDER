@@ -36,7 +36,7 @@ import {
 
 const TABS = ['placed', 'accepted', 'dispatched', 'delivered', 'rejected']
 
-export default function OrderQueue({ onStockChanged }) {
+export default function OrderQueue({ onStockChanged, onOrdersLoaded }) {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState('placed')
@@ -58,6 +58,8 @@ export default function OrderQueue({ onStockChanged }) {
     fetchAllOrders()
       .then((d) => {
         setOrders(d)
+        // keep the dashboard tiles in step with what this tab is showing
+        onOrdersLoaded?.(d)
         return d
       })
       .catch((e) => setErr(e.message ?? 'Could not load orders'))

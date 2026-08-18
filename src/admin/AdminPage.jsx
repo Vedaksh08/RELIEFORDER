@@ -66,22 +66,30 @@ export default function AdminPage() {
       return build ? build(q) : q
     }
 
-    const [skus, low, pending, users, revenueRows] = await Promise.all([
+    const [skus, low, users, orderRows] = await Promise.all([
       countOf('medicines', (q) => q.eq('is_active', true)),
       countOf('medicines', (q) => q.eq('is_active', true).lte('stock', LOW_STOCK)),
-      countOf('orders', (q) => q.eq('status', 'placed')),
       countOf('profiles'),
-      // Revenue needs the actual totals, but only for orders that count -
-      // far fewer rows than the whole table.
-      supabase
-        .from('orders')
-        .select('total')
-        .in('status', ['accepted', 'dispatched', 'delivered']),
+      // Orders are fetched rather than counted per status: a shop has orders
+      // in the hundreds, not the tens of thousands, so one small query gives
+      // both the pending count and the revenue total without a second round
+      // trip - and without depending on head-only count requests, which were
+      // returning 0 here even though the rows were plainly visible.
+      supabase.from('orders').select('status, total'),
     ])
 
+    if (orderRows.error) {
+      console.error('[admin] could not load orders for stats:', orderRows.error)
+    }
+
+    const orders = orderRows.data ?? []
+    const earned = new Set(['accepted', 'dispatched', 'delivered'])
+
     setStats({
-      pending: pending.count ?? 0,
-      revenue: (revenueRows.data ?? []).reduce((n, o) => n + Number(o.total), 0),
+      pending: orders.filter((o) => o.status === 'placed').length,
+      revenue: orders
+        .filter((o) => earned.has(o.status))
+        .reduce((n, o) => n + Number(o.total), 0),
       skus: skus.count ?? 0,
       low: low.count ?? 0,
       users: users.count ?? 0,
@@ -236,7 +244,21 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {tab === 'orders' && <OrderQueue onStockChanged={loadStats} />}
+        {tab === 'orders' && (
+          <OrderQueue
+            onStockChanged={loadStats}
+            onOrdersLoaded={(orders) => {
+              const earned = new Set(['accepted', 'dispatched', 'delivered'])
+              setStats((cur) => ({
+                ...(cur ?? {}),
+                pending: orders.filter((o) => o.status === 'placed').length,
+                revenue: orders
+                  .filter((o) => earned.has(o.status))
+                  .reduce((n, o) => n + Number(o.total), 0),
+              }))
+            }}
+          />
+        )}
         {tab === 'inventory' && (
           <Inventory
             lowOnly={lowOnly}
