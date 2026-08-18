@@ -107,8 +107,21 @@ export default function OrderPage() {
       .eq('is_active', true)
       .not('category', 'is', null)
       .then(({ data }) => {
-        const set = new Set((data ?? []).map((r) => r.category).filter(Boolean))
-        setCategories(['All', ...[...set].sort((a, b) => a.localeCompare(b))])
+        // "medicine" and "Medicine" are the same shelf to a customer, so the
+        // chips are de-duplicated case-insensitively and shown in Title Case.
+        const seen = new Map()
+        for (const r of data ?? []) {
+          const raw = (r.category ?? '').trim()
+          if (!raw) continue
+          const key = raw.toLowerCase()
+          if (!seen.has(key)) {
+            seen.set(key, raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase())
+          }
+        }
+        setCategories([
+          'All',
+          ...[...seen.values()].sort((a, b) => a.localeCompare(b)),
+        ])
       })
   }, [])
 
@@ -117,7 +130,9 @@ export default function OrderPage() {
       .from('medicines')
       .select('*', { count: 'exact' })
       .eq('is_active', true)
-    if (cat !== 'All') query = query.eq('category', cat)
+    // ilike, because the chip label is normalised but the stored values
+    // still vary in case
+    if (cat !== 'All') query = query.ilike('category', cat)
     if (debouncedQ) {
       // match either the medicine or its brand
       const safe = debouncedQ.replace(/[%,()]/g, ' ')
@@ -231,38 +246,40 @@ export default function OrderPage() {
             : 'The catalogue is empty. Add medicines from the admin panel.'}
         </Empty>
       ) : (
-        <div className="grid grid-cols-2 gap-2.5 min-[520px]:grid-cols-3 lg:grid-cols-4 lg:gap-3">
+        <div className="grid gap-2.5 min-[620px]:grid-cols-2 sm:gap-3">
           {shown.map((m) => {
             const item = items.find((i) => i.id === m.id)
             const low = m.stock > 0 && m.stock <= 10
             const out = m.stock <= 0
             return (
-              <div key={m.id} className={`prod-card ${out ? 'is-out' : ''}`}>
-                <div className="prod-thumb">{m.name.charAt(0).toUpperCase()}</div>
+              <div
+                key={m.id}
+                className={`flex items-center gap-3 rounded-card bg-white p-3 shadow-sm transition hover:shadow-md sm:p-3.5 ${
+                  out ? 'opacity-60' : ''
+                }`}
+              >
+                <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-indigo-50 via-cyan-50 to-emerald-50 font-display text-base font-bold text-primary">
+                  {m.name.charAt(0).toUpperCase()}
+                </div>
 
-                <div className="flex flex-1 flex-col p-2.5">
-                  <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-ink">
-                    {m.name}
-                  </p>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-ink">{m.name}</p>
                   {m.brand && (
-                    <p className="mt-0.5 truncate text-[11px] text-ink-soft">{m.brand}</p>
+                    <p className="truncate text-[11px] text-ink-soft">{m.brand}</p>
                   )}
-
-                  <span
-                    className={`pill mt-1.5 w-fit ${
-                      out ? 'pill-out' : low ? 'pill-low' : 'pill-ok'
-                    }`}
-                  >
-                    {out ? 'Out of stock' : low ? `Only ${m.stock} left` : 'In stock'}
-                  </span>
-
-                  <div className="mt-auto flex items-end justify-between gap-2 pt-2.5">
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
                     <span className="font-display text-[15px] font-extrabold text-ink">
                       {inr(m.price)}
                     </span>
-                    <QtyStepper item={item} med={m} add={add} setQty={setQty} />
+                    <span
+                      className={`pill ${out ? 'pill-out' : low ? 'pill-low' : 'pill-ok'}`}
+                    >
+                      {out ? 'Out of stock' : low ? `Only ${m.stock} left` : 'In stock'}
+                    </span>
                   </div>
                 </div>
+
+                <QtyStepper item={item} med={m} add={add} setQty={setQty} />
               </div>
             )
           })}

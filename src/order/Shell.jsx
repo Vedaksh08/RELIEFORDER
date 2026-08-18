@@ -21,7 +21,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
             className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
             aria-label="Back"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={20} strokeWidth={2.4} />
           </Link>
 
           <h1 className="font-display min-w-0 flex-1 truncate text-base font-semibold text-primary sm:text-lg">
@@ -35,7 +35,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
                 className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
                 aria-label="Admin panel"
               >
-                <LayoutDashboard size={18} />
+                <LayoutDashboard size={20} strokeWidth={2.2} />
               </Link>
             )}
             {user && (
@@ -44,7 +44,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
                 className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
                 aria-label="My orders"
               >
-                <Package size={18} />
+                <Package size={20} strokeWidth={2.2} />
               </Link>
             )}
             <Link
@@ -52,9 +52,9 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
               className="relative grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
               aria-label={`Cart, ${count} items`}
             >
-              <ShoppingCart size={18} />
+              <ShoppingCart size={20} strokeWidth={2.2} />
               {count > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 grid min-w-5 place-items-center rounded-full bg-accent px-1 text-[11px] font-bold text-white">
+                <span className="absolute right-0 top-0.5 grid min-w-[1.15rem] place-items-center rounded-full bg-accent px-1 text-[11px] font-bold leading-[1.15rem] text-white ring-2 ring-white">
                   {count}
                 </span>
               )}
@@ -68,7 +68,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
                 className="grid size-10 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5 active:bg-black/10"
                 aria-label="Sign out"
               >
-                <LogOut size={18} />
+                <LogOut size={20} strokeWidth={2.2} />
               </button>
             )}
           </div>

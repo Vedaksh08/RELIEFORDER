@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X, Phone, MapPin, ShieldCheck } from 'lucide-react'
 import { inr } from './Shell.jsx'
@@ -12,9 +13,15 @@ export default function ConfirmOrderModal({
   onConfirm,
   onCancel,
 }) {
+  // Hides the sticky cart bar and stops the page scrolling behind the sheet.
+  useEffect(() => {
+    document.body.classList.add('modal-open')
+    return () => document.body.classList.remove('modal-open')
+  }, [])
+
   return createPortal(
     <div
-      className="fixed inset-0 z-50 grid place-items-end bg-black/45 p-0 backdrop-blur-sm sm:place-items-center sm:p-4"
+      className="fixed inset-0 z-[70] grid place-items-end bg-black/45 p-0 backdrop-blur-sm sm:place-items-center sm:p-4"
       onClick={onCancel}
       role="dialog"
       aria-modal="true"
