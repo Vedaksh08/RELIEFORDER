@@ -7,6 +7,7 @@ import { Spinner, inr } from '../order/Shell.jsx'
 import { SignInGate } from '../order/OrderPage.jsx'
 import Inventory from './Inventory.jsx'
 import OrderQueue from './OrderQueue.jsx'
+import WhatsAppPanel from './WhatsAppPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
 function Stat({ icon: Icon, label, value, tone = 'primary', onClick, active }) {
@@ -164,6 +165,7 @@ export default function AdminPage() {
           {[
             ['orders', 'Orders'],
             ['inventory', 'Inventory'],
+            ['whatsapp', 'WhatsApp'],
           ].map(([k, label]) => (
             <button
               key={k}
@@ -180,15 +182,15 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {tab === 'orders' ? (
-          <OrderQueue onStockChanged={loadStats} />
-        ) : (
+        {tab === 'orders' && <OrderQueue onStockChanged={loadStats} />}
+        {tab === 'inventory' && (
           <Inventory
             lowOnly={lowOnly}
             onClearLow={() => setLowOnly(false)}
             onStockSaved={loadStats}
           />
         )}
+        {tab === 'whatsapp' && <WhatsAppPanel />}
       </main>
     </div>
   )

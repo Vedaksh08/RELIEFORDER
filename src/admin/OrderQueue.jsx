@@ -22,6 +22,7 @@ import {
 } from '../lib/orders.js'
 import { Spinner, Empty, StatusBadge, inr } from '../order/Shell.jsx'
 import { playChime, playConfirm, playError, primeAudio } from '../lib/sound.js'
+import { notifyOrder } from '../lib/botApi.js'
 import {
   notify,
   alertsEnabled,
@@ -89,7 +90,7 @@ export default function OrderQueue({ onStockChanged }) {
     return () => supabase.removeChannel(ch)
   }, [])
 
-  const act = async (id, fn) => {
+  const act = async (id, fn, nextStatus) => {
     setErr('')
     setBusyId(id)
     try {
@@ -97,6 +98,17 @@ export default function OrderQueue({ onStockChanged }) {
       if (error) throw error
       if (!muted) playConfirm()
       onStockChanged?.()
+
+      // WhatsApp is best-effort: never let it block or fail the status change
+      if (nextStatus) {
+        const o = orders.find((x) => x.id === id)
+        if (o) {
+          notifyOrder(nextStatus, {
+            ...o,
+            customer_name: o.profiles?.full_name ?? o.profiles?.email ?? null,
+          })
+        }
+      }
     } catch (e) {
       setErr(e.message ?? 'Action failed')
       if (!muted) playError()
@@ -289,14 +301,14 @@ export default function OrderQueue({ onStockChanged }) {
                 <div className="mt-3 flex gap-2">
                   <button
                     disabled={busyId === o.id}
-                    onClick={() => act(o.id, rejectOrder)}
+                    onClick={() => act(o.id, rejectOrder, 'rejected')}
                     className="flex flex-1 items-center justify-center gap-1.5 rounded-btn bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-50"
                   >
                     <X size={15} /> Reject
                   </button>
                   <button
                     disabled={busyId === o.id}
-                    onClick={() => act(o.id, acceptOrder)}
+                    onClick={() => act(o.id, acceptOrder, 'accepted')}
                     className="flex flex-[1.5] items-center justify-center gap-1.5 rounded-btn bg-accent px-3 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
                   >
                     <Check size={15} />
@@ -308,7 +320,7 @@ export default function OrderQueue({ onStockChanged }) {
               {o.status === 'accepted' && (
                 <button
                   disabled={busyId === o.id}
-                  onClick={() => act(o.id, dispatchOrder)}
+                  onClick={() => act(o.id, dispatchOrder, 'dispatched')}
                   className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-btn bg-primary px-3 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
                 >
                   <Truck size={15} />
@@ -319,7 +331,7 @@ export default function OrderQueue({ onStockChanged }) {
               {o.status === 'dispatched' && (
                 <button
                   disabled={busyId === o.id}
-                  onClick={() => act(o.id, markDelivered)}
+                  onClick={() => act(o.id, markDelivered, 'delivered')}
                   className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-btn bg-green-600 px-3 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
                 >
                   <PackageCheck size={15} /> Mark delivered

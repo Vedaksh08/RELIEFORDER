@@ -9,6 +9,7 @@ import { Shell, Spinner, Empty, inr } from './Shell.jsx'
 import { SignInGate } from './OrderPage.jsx'
 import ConfirmOrderModal from './ConfirmOrderModal.jsx'
 import { playChime, playError, primeAudio } from '../lib/sound.js'
+import { notifyOrder } from '../lib/botApi.js'
 
 export default function CartPage() {
   const { user, profile, loading, refreshProfile } = useAuth()
@@ -80,12 +81,19 @@ export default function CartPage() {
     setErr('')
     setBusy(true)
     try {
-      await placeOrder({
+      const placed = await placeOrder({
         userId: user.id,
         items,
         mobile: mobile.trim(),
         address: address.trim(),
         note: note.trim(),
+      })
+
+      // fire-and-forget: confirms to the customer and alerts the admin
+      notifyOrder('placed', {
+        ...placed,
+        customer_name: profile?.full_name ?? user.email ?? null,
+        order_items: items.map((i) => ({ name: i.name, brand: i.brand, qty: i.qty })),
       })
       // remember details for next time
       await saveProfileDetails(user.id, { mobile: mobile.trim(), address: address.trim() })
