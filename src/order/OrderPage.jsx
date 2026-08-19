@@ -5,6 +5,7 @@ import { useAuth } from '../lib/AuthContext.jsx'
 import { useCart } from '../lib/CartContext.jsx'
 import { Shell, Spinner, Empty, inr } from './Shell.jsx'
 import CartBar from './CartBar.jsx'
+import { ProductSkeleton } from './Skeleton.jsx'
 
 function SetupNotice() {
   return (
@@ -238,7 +239,7 @@ export default function OrderPage() {
       )}
 
       {loading ? (
-        <Spinner label="Loading medicines…" />
+        <ProductSkeleton />
       ) : shown.length === 0 ? (
         <Empty icon={Search} title="No medicines found">
           {debouncedQ || cat !== 'All'

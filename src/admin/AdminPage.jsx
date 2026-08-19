@@ -25,6 +25,7 @@ import AdsPanel from './AdsPanel.jsx'
 import UsersPanel from './UsersPanel.jsx'
 import { LOW_STOCK } from './Inventory.jsx'
 import { BUSINESS } from '../data/siteData.js'
+import { TileSkeleton } from '../order/Skeleton.jsx'
 import SearchPanel from './SearchPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
@@ -194,6 +195,9 @@ export default function AdminPage() {
         className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-5"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1.5rem)' }}
       >
+        {!stats ? (
+          <TileSkeleton />
+        ) : (
         <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
           <Stat
             icon={Package}
@@ -243,6 +247,7 @@ export default function AdminPage() {
             }}
           />
         </div>
+        )}
 
         <div className="tab-rail mb-4">
           {[

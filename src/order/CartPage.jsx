@@ -7,6 +7,7 @@ import {
   ShoppingCart,
   CheckCircle2,
   ChevronRight,
+  AlertCircle,
 } from 'lucide-react'
 import { useAuth } from '../lib/AuthContext.jsx'
 import { useCart } from '../lib/CartContext.jsx'
@@ -29,6 +30,9 @@ export default function CartPage() {
   const [err, setErr] = useState('')
   const [done, setDone] = useState(false)
   const [confirming, setConfirming] = useState(false)
+  // which fields the customer has left, so errors appear on blur rather
+  // than scolding them while they are still typing
+  const [touched, setTouched] = useState({})
 
   // Pre-fill from the saved profile so repeat orders are one tap.
   useEffect(() => {
@@ -81,10 +85,29 @@ export default function CartPage() {
       </Shell>
     )
 
-  const valid = items.length > 0 && /^[0-9]{10}$/.test(mobile.trim()) && address.trim().length > 8
+  const mobileError =
+    mobile.trim() === ''
+      ? 'Enter your mobile number'
+      : !/^[6-9][0-9]{9}$/.test(mobile.trim())
+        ? 'Enter a valid 10-digit Indian mobile number'
+        : ''
+
+  const addressError =
+    address.trim() === ''
+      ? 'Enter your delivery address'
+      : address.trim().length <= 8
+        ? 'Please add a fuller address so we can find you'
+        : ''
+
+  const valid = items.length > 0 && !mobileError && !addressError
 
   const openConfirm = () => {
     primeAudio() // unlock audio inside this user gesture
+    if (!valid) {
+      // reveal what is missing rather than leaving a dead-looking button
+      setTouched({ mobile: true, address: true })
+      return
+    }
     setConfirming(true)
   }
 
@@ -185,10 +208,21 @@ export default function CartPage() {
             <input
               value={mobile}
               onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              onBlur={() => setTouched((t) => ({ ...t, mobile: true }))}
               inputMode="numeric"
+              autoComplete="tel"
               placeholder="10-digit mobile"
-              className="mb-3 w-full rounded-btn border border-hairline px-3 py-2.5 text-sm outline-none focus:border-primary"
+              aria-invalid={touched.mobile && Boolean(mobileError)}
+              aria-describedby={touched.mobile && mobileError ? 'mobile-err' : undefined}
+              className="w-full rounded-btn border border-hairline px-3 py-2.5 text-sm outline-none focus:border-primary"
             />
+            {touched.mobile && mobileError && (
+              <p id="mobile-err" className="field-error" role="alert">
+                <AlertCircle size={12} className="mt-0.5 shrink-0" />
+                {mobileError}
+              </p>
+            )}
+            <div className="mb-3" />
 
             <label className="mb-1 block text-xs font-semibold text-ink-soft">
               Delivery address
@@ -196,10 +230,23 @@ export default function CartPage() {
             <textarea
               value={address}
               onChange={(e) => setAddress(e.target.value)}
+              onBlur={() => setTouched((t) => ({ ...t, address: true }))}
               rows={3}
+              autoComplete="street-address"
               placeholder="Flat / building, street, landmark, pincode"
-              className="mb-3 w-full resize-none rounded-btn border border-hairline px-3 py-2.5 text-sm outline-none focus:border-primary"
+              aria-invalid={touched.address && Boolean(addressError)}
+              aria-describedby={
+                touched.address && addressError ? 'address-err' : undefined
+              }
+              className="w-full resize-none rounded-btn border border-hairline px-3 py-2.5 text-sm outline-none focus:border-primary"
             />
+            {touched.address && addressError && (
+              <p id="address-err" className="field-error" role="alert">
+                <AlertCircle size={12} className="mt-0.5 shrink-0" />
+                {addressError}
+              </p>
+            )}
+            <div className="mb-3" />
 
             <label className="mb-1 block text-xs font-semibold text-ink-soft">
               Note (optional)
@@ -250,9 +297,9 @@ export default function CartPage() {
               </span>
             </span>
             <button
-              disabled={!valid || busy}
+              disabled={busy}
               onClick={openConfirm}
-              className="cart-bar-cta disabled:opacity-55"
+              className={`cart-bar-cta ${!valid ? 'opacity-70' : ''}`}
             >
               {busy ? 'Placing…' : valid ? 'Place order' : 'Add details'}
               {!busy && valid && <ChevronRight size={16} strokeWidth={2.8} />}

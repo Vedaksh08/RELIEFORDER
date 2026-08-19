@@ -11,6 +11,9 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
 
   return (
     <div className="min-h-[100dvh] bg-[#e2f7f2]">
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <header
         className="sticky top-0 z-30 border-b border-hairline bg-white/85 backdrop-blur-xl"
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
@@ -76,6 +79,7 @@ export function Shell({ title, children, back = '/', padForCartBar = false }) {
       </header>
 
       <main
+        id="main"
         className={`mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-5 ${
           padForCartBar ? 'has-cart-bar' : ''
         }`}

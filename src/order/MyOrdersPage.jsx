@@ -6,6 +6,7 @@ import { supabase, supabaseReady } from '../lib/supabase.js'
 import { Shell, Spinner, Empty, StatusBadge, StatusTimeline, inr } from './Shell.jsx'
 import { playConfirm } from '../lib/sound.js'
 import { downloadInvoice } from '../lib/invoice.js'
+import { OrderSkeleton } from './Skeleton.jsx'
 import { SignInGate } from './OrderPage.jsx'
 
 export default function MyOrdersPage() {
@@ -60,7 +61,7 @@ export default function MyOrdersPage() {
   return (
     <Shell title="My Orders" back="/order">
       {loading ? (
-        <Spinner label="Loading your orders…" />
+        <OrderSkeleton />
       ) : orders.length === 0 ? (
         <Empty icon={Package} title="No orders yet">
           Your past orders will appear here once you place one.
