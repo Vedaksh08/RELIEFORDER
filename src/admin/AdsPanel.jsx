@@ -24,6 +24,7 @@ export default function AdsPanel() {
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
+  const [deletingId, setDeletingId] = useState(null)
 
   const [heading, setHeading] = useState('')
   const [body, setBody] = useState('')
@@ -186,7 +187,10 @@ export default function AdsPanel() {
           Live advertisements
         </h2>
         <p className="mb-3 text-xs text-ink-soft">
-          Run again re-shows an ad to everyone, including people who closed it.
+          <strong className="text-ink">Run again</strong> re-shows an ad to everyone,
+          including people who closed it.{' '}
+          <strong className="text-ink">Delete</strong> removes it from every device
+          straight away.
         </p>
 
         {loading ? (
@@ -257,13 +261,35 @@ export default function AdsPanel() {
                     <RotateCw size={15} />
                   </button>
                   <button
+                    disabled={deletingId === a.id}
                     onClick={async () => {
-                      if (!confirm('Delete this advertisement permanently?')) return
-                      await deleteAd(a)
-                      load()
+                      const label = a.heading || a.body || 'this advertisement'
+                      if (
+                        !confirm(
+                          `Delete "${label}"?
+
+It disappears from every device immediately, including people who are looking at it right now. This cannot be undone.`,
+                        )
+                      )
+                        return
+
+                      setDeletingId(a.id)
+                      setErr('')
+                      // optimistic: the row goes at once, and comes back if
+                      // the delete actually failed
+                      setAds((cur) => cur.filter((x) => x.id !== a.id))
+                      try {
+                        await deleteAd(a)
+                      } catch (e) {
+                        setErr(e.message ?? 'Could not delete the advertisement.')
+                        load()
+                      } finally {
+                        setDeletingId(null)
+                      }
                     }}
-                    className="grid size-8 place-items-center rounded-full text-red-500 transition hover:bg-red-50"
-                    aria-label="Delete advertisement"
+                    className="grid size-8 place-items-center rounded-full text-red-500 transition hover:bg-red-50 disabled:opacity-40"
+                    aria-label={`Delete ${a.heading || 'advertisement'}`}
+                    title="Delete everywhere"
                   >
                     <Trash2 size={15} />
                   </button>
