@@ -56,8 +56,8 @@ export default function AdBanner() {
     // the visitor reloading. DELETE events require `replica identity full`
     // on the table — see supabase/migration-04-ads-delete.sql.
     const ch = supabase
-      .channel('public-ads')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'ads' }, load)
+      .channel('public-promos')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'promos' }, load)
       .subscribe()
 
     // A phone that was asleep misses realtime entirely, so re-check whenever

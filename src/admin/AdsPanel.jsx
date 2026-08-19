@@ -296,7 +296,14 @@ It disappears from every device immediately, including people who are looking at
                       try {
                         await deleteAd(a)
                       } catch (e) {
-                        setErr(e.message ?? 'Could not delete the advertisement.')
+                        const msg = String(e?.message ?? e)
+                        setErr(
+                          msg === 'Failed to fetch'
+                            ? 'A browser shield or ad blocker cancelled the request. ' +
+                              'Turn shields off for this site (Brave: the lion icon in ' +
+                              'the address bar) and try again.'
+                            : msg || 'Could not delete the advertisement.',
+                        )
                         load()
                       } finally {
                         setDeletingId(null)

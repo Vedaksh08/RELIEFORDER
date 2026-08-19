@@ -1,11 +1,20 @@
 import { supabase } from './supabase.js'
 
-const BUCKET = 'ad-posters'
+// Renamed away from "ads"/"ad-posters": browser shields (Brave, uBlock,
+// AdGuard) block any request whose URL contains "ads", which cancelled every
+// call with ERR_BLOCKED_BY_CLIENT before it left the browser. See
+// supabase/migration-06-rename-ads.sql.
+const TABLE = 'promos'
+const BUCKET = 'promo-media'
+
+// Posters uploaded before the rename still live in the old bucket, so their
+// URLs must keep resolving.
+const LEGACY_BUCKET = 'ad-posters'
 
 /** Active ads, newest first. Used by the public card. */
 export async function fetchActiveAds() {
   const { data, error } = await supabase
-    .from('ads')
+    .from(TABLE)
     .select('*')
     .eq('is_active', true)
     .order('created_at', { ascending: false })
@@ -16,7 +25,7 @@ export async function fetchActiveAds() {
 /** Every ad including paused ones. Admin only — RLS enforces it. */
 export async function fetchAllAds() {
   const { data, error } = await supabase
-    .from('ads')
+    .from(TABLE)
     .select('*')
     .order('created_at', { ascending: false })
   if (error) throw error
@@ -38,18 +47,22 @@ export async function uploadPoster(file) {
 
 async function removePoster(url) {
   if (!url) return
-  // public URLs end with /<bucket>/<path>
-  const marker = `/${BUCKET}/`
-  const i = url.indexOf(marker)
-  if (i === -1) return
-  const path = url.slice(i + marker.length)
-  const { error } = await supabase.storage.from(BUCKET).remove([path])
-  if (error) throw error // caller decides whether this matters
+  // public URLs end with /<bucket>/<path>; posters predating the rename are
+  // still in the legacy bucket
+  for (const bucket of [BUCKET, LEGACY_BUCKET]) {
+    const marker = `/${bucket}/`
+    const i = url.indexOf(marker)
+    if (i === -1) continue
+    const path = url.slice(i + marker.length)
+    const { error } = await supabase.storage.from(bucket).remove([path])
+    if (error) throw error // caller decides whether this matters
+    return
+  }
 }
 
 export async function createAd({ heading, body, posterUrl }) {
   const { data, error } = await supabase
-    .from('ads')
+    .from(TABLE)
     .insert({
       heading: heading || null,
       body: body || null,
@@ -65,7 +78,7 @@ export async function updateAd(id, patch) {
   // same reasoning as deleteAd: a blocked update is a silent no-op unless we
   // ask for the affected rows back
   const { data, error } = await supabase
-    .from('ads')
+    .from(TABLE)
     .update({ ...patch, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select('id')
@@ -81,7 +94,7 @@ export async function deleteAd(ad) {
   // whether it deleted the row or RLS silently blocked it. Asking for the
   // deleted rows back is the only way to tell the difference.
   const { data, error } = await supabase
-    .from('ads')
+    .from(TABLE)
     .delete()
     .eq('id', ad.id)
     .select('id')
@@ -106,7 +119,7 @@ export async function deleteAd(ad) {
   try {
     if (ad.poster_url) {
       const { count } = await supabase
-        .from('ads')
+        .from(TABLE)
         .select('id', { count: 'exact', head: true })
         .eq('poster_url', ad.poster_url)
       if (!count) await removePoster(ad.poster_url)
@@ -124,7 +137,7 @@ export async function deleteAd(ad) {
  */
 export async function rerunAd(ad) {
   const { data, error } = await supabase
-    .from('ads')
+    .from(TABLE)
     .insert({
       heading: ad.heading,
       body: ad.body,
