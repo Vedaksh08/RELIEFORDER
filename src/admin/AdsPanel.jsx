@@ -16,10 +16,12 @@ import {
   uploadPoster,
 } from '../lib/ads.js'
 import { Spinner, Empty } from '../order/Shell.jsx'
+import { useAuth } from '../lib/AuthContext.jsx'
 
 const MAX_MB = 5
 
 export default function AdsPanel() {
+  const { isAdmin } = useAuth()
   const [ads, setAds] = useState([])
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState('')
@@ -87,6 +89,19 @@ export default function AdsPanel() {
 
   return (
     <div className="flex flex-col gap-3">
+      {!isAdmin && (
+        <div className="flex items-start gap-2 rounded-card bg-amber-50 p-3 text-sm text-amber-900">
+          <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+          <span className="min-w-0">
+            Your account is not flagged as an admin, so publishing and deleting
+            will silently do nothing. In Supabase run{' '}
+            <code className="rounded bg-black/5 px-1">
+              update profiles set is_admin = true where email = '…';
+            </code>
+          </span>
+        </div>
+      )}
+
       {err && (
         <div className="flex items-start gap-2 rounded-card bg-red-50 p-3 text-sm text-red-700">
           <AlertTriangle size={16} className="mt-0.5 shrink-0" />

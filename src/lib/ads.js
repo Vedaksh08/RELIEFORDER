@@ -61,16 +61,38 @@ export async function createAd({ heading, body, posterUrl }) {
 }
 
 export async function updateAd(id, patch) {
-  const { error } = await supabase
+  // same reasoning as deleteAd: a blocked update is a silent no-op unless we
+  // ask for the affected rows back
+  const { data, error } = await supabase
     .from('ads')
     .update({ ...patch, updated_at: new Date().toISOString() })
     .eq('id', id)
+    .select('id')
+
   if (error) throw error
+  if (!data || data.length === 0) {
+    throw new Error('The advertisement was not updated — admin rights may be missing.')
+  }
 }
 
 export async function deleteAd(ad) {
-  const { error } = await supabase.from('ads').delete().eq('id', ad.id)
+  // .select() matters: without it PostgREST returns 200 and an empty body
+  // whether it deleted the row or RLS silently blocked it. Asking for the
+  // deleted rows back is the only way to tell the difference.
+  const { data, error } = await supabase
+    .from('ads')
+    .delete()
+    .eq('id', ad.id)
+    .select('id')
+
   if (error) throw error
+  if (!data || data.length === 0) {
+    throw new Error(
+      'The advertisement was not deleted — your account may not have admin ' +
+        'rights. Run migration-05-ads-rls-fix.sql, then check `select is_admin();` ' +
+        'in Supabase returns true.',
+    )
+  }
 
   // Re-run copies share the original's poster URL, so the image can only be
   // deleted once no other ad still points at it — otherwise deleting one
