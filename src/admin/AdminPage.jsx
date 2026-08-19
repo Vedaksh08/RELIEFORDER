@@ -8,6 +8,11 @@ import {
   IndianRupee,
   AlertTriangle,
   Users,
+  ClipboardList,
+  Boxes as BoxesIcon,
+  MessageCircle,
+  Search as SearchIcon,
+  Megaphone,
 } from 'lucide-react'
 import { supabase, supabaseReady } from '../lib/supabase.js'
 import { useAuth } from '../lib/AuthContext.jsx'
@@ -19,6 +24,7 @@ import WhatsAppPanel from './WhatsAppPanel.jsx'
 import AdsPanel from './AdsPanel.jsx'
 import UsersPanel from './UsersPanel.jsx'
 import { LOW_STOCK } from './Inventory.jsx'
+import { BUSINESS } from '../data/siteData.js'
 import SearchPanel from './SearchPanel.jsx'
 import AdminGate, { gatePassed } from './AdminGate.jsx'
 
@@ -158,16 +164,27 @@ export default function AdminPage() {
         className="sticky top-0 z-30 border-b border-hairline bg-white/85 backdrop-blur-xl"
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
-        <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
+        <div className="mx-auto flex w-full max-w-6xl items-center gap-2 overflow-hidden px-2 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
           <Link
             to="/order"
-            className="grid size-9 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
+            className="grid size-9 shrink-0 place-items-center rounded-full text-ink-soft transition hover:bg-black/5"
             aria-label="Back to shop"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={19} strokeWidth={2.3} />
           </Link>
-          <h1 className="font-display text-lg font-semibold text-primary">Admin Panel</h1>
-          <span className="ml-auto hidden truncate text-xs text-ink-soft sm:block">
+
+          <span className="brand-mark shrink-0">RM</span>
+
+          <span className="min-w-0 flex-1">
+            <span className="font-display block truncate text-[15px] font-extrabold leading-tight text-primary sm:text-lg">
+              {BUSINESS.fullName}
+            </span>
+            <span className="block truncate text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-soft">
+              Admin panel
+            </span>
+          </span>
+
+          <span className="hidden min-w-0 shrink truncate text-xs text-ink-soft lg:block">
             {user.email}
           </span>
         </div>
@@ -229,13 +246,13 @@ export default function AdminPage() {
 
         <div className="tab-rail mb-4">
           {[
-            ['orders', 'Orders'],
-            ['inventory', 'Inventory'],
-            ['whatsapp', 'WhatsApp'],
-            ['users', 'Users'],
-            ['search', 'Search'],
-            ['ads', 'Ads'],
-          ].map(([k, label]) => (
+            ['orders', 'Orders', ClipboardList],
+            ['inventory', 'Inventory', BoxesIcon],
+            ['whatsapp', 'WhatsApp', MessageCircle],
+            ['users', 'Users', Users],
+            ['search', 'Search', SearchIcon],
+            ['ads', 'Ads', Megaphone],
+          ].map(([k, label, Icon]) => (
             <button
               key={k}
               onClick={() => {
@@ -244,13 +261,10 @@ export default function AdminPage() {
               }}
               className={`tab-chip ${tab === k ? 'is-on' : ''}`}
             >
-              {label}
+              <Icon size={15} strokeWidth={2.3} />
+              <span>{label}</span>
               {k === 'orders' && stats?.pending > 0 && (
-                <span
-                  className={`ml-1.5 rounded-full px-1.5 text-[11px] font-bold ${
-                    tab === k ? 'bg-white/25' : 'bg-amber-100 text-amber-700'
-                  }`}
-                >
+                <span className={`tab-count ${tab === k ? 'on' : ''}`}>
                   {stats.pending}
                 </span>
               )}

@@ -1118,3 +1118,70 @@ body.modal-open .cart-bar { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .tab-chip:active { transform: none; }
 }
+
+/* ============================================================
+   ADMIN POLISH — brand mark, iconed tabs, status chips
+   ============================================================ */
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 0.65rem;
+  background: linear-gradient(135deg, #2e3192 0%, #0a66d6 60%, #12b981 130%);
+  color: #fff;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  box-shadow: 0 4px 12px rgba(20, 50, 130, 0.28);
+}
+
+/* tab chips carry an icon now, so they need to lay out as a row */
+.tab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(18, 48, 64, 0.06);
+}
+.tab-chip.is-on { border-color: transparent; }
+
+.tab-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+.tab-count.on { background: rgba(255, 255, 255, 0.25); color: #fff; }
+
+/* status filter chips inside the order queue */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgba(18, 48, 64, 0.07);
+  border-radius: 999px;
+  background: #fff;
+  color: rgba(18, 48, 64, 0.66);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.12s ease;
+}
+.status-chip:active { transform: scale(0.96); }
+.status-chip.is-on {
+  border-color: transparent;
+  background: linear-gradient(120deg, #2e3192, #0a66d6);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(20, 50, 130, 0.26);
+}

@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Package } from 'lucide-react'
+import { Package, FileText } from 'lucide-react'
 import { useAuth } from '../lib/AuthContext.jsx'
 import { fetchMyOrders } from '../lib/orders.js'
 import { supabase, supabaseReady } from '../lib/supabase.js'
 import { Shell, Spinner, Empty, StatusBadge, StatusTimeline, inr } from './Shell.jsx'
 import { playConfirm } from '../lib/sound.js'
+import { downloadInvoice } from '../lib/invoice.js'
 import { SignInGate } from './OrderPage.jsx'
 
 export default function MyOrdersPage() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, profile, loading: authLoading } = useAuth()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -110,6 +111,18 @@ export default function MyOrdersPage() {
               <div className="border-t border-hairline pt-3">
                 <StatusTimeline status={o.status} />
               </div>
+
+              <button
+                onClick={() =>
+                  downloadInvoice(o, {
+                    full_name: profile?.full_name,
+                    email: profile?.email ?? user?.email,
+                  })
+                }
+                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-btn border border-hairline bg-white px-3 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/5 active:scale-[.99]"
+              >
+                <FileText size={15} /> Download invoice
+              </button>
             </div>
           ))}
         </div>

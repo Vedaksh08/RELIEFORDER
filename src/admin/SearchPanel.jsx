@@ -8,10 +8,12 @@ import {
   ShoppingBag,
   Users as UsersIcon,
   Download,
+  FileText,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import { fetchAllOrders } from '../lib/orders.js'
 import { Spinner, Empty, StatusBadge, inr } from '../order/Shell.jsx'
+import { downloadInvoice } from '../lib/invoice.js'
 import OrderFilters, {
   applyFilters,
   EMPTY_FILTERS,
@@ -244,6 +246,13 @@ export default function SearchPanel() {
                   {inr(o.total)}
                 </span>
               </div>
+
+              <button
+                onClick={() => downloadInvoice(o, o.profiles ?? {})}
+                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-btn border border-hairline bg-white px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/5"
+              >
+                <FileText size={14} /> Invoice
+              </button>
             </div>
           ))}
         </div>

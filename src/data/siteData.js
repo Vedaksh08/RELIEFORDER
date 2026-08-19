@@ -35,6 +35,13 @@ export const CONTACT = {
   mailto: 'mailto:reliefmedical27657598@gmail.com',
 }
 
+// Shown on invoices when filled in. A pharmacy bill normally carries the
+// GST number and the drug licence; leave blank to omit those lines.
+export const LEGAL = {
+  gstin: '',
+  dlNo: '',
+}
+
 export const LOCATION = {
   lines: ['Plot No. 370, Sector No. 24', 'Opp. Savali Hotel, Pradhikaran', 'Nigdi, Pune – 411044'],
   short: 'Nigdi, Pune 411044',

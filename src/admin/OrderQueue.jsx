@@ -12,6 +12,7 @@ import {
   Bell,
   BellOff,
   Search,
+  FileText,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase.js'
 import {
@@ -24,6 +25,7 @@ import {
 import { Spinner, Empty, StatusBadge, inr } from '../order/Shell.jsx'
 import { applyFilters, EMPTY_FILTERS } from './OrderFilters.jsx'
 import { playChime, playConfirm, playError, primeAudio } from '../lib/sound.js'
+import { downloadInvoice } from '../lib/invoice.js'
 import { notifyOrder } from '../lib/botApi.js'
 import {
   notify,
@@ -198,24 +200,18 @@ export default function OrderQueue({ onStockChanged, onOrdersLoaded }) {
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-center gap-2 pb-1">
+      <div className="tab-rail mb-4 items-center">
         {TABS.map((t) => {
           const n = filtered.filter((o) => o.status === t).length
           return (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${
-                tab === t ? 'bg-primary text-white' : 'bg-white text-ink-soft hover:bg-white/70'
-              }`}
+              className={`status-chip ${tab === t ? 'is-on' : ''}`}
             >
               {t}
               {n > 0 && (
-                <span
-                  className={`ml-1.5 rounded-full px-1.5 text-xs ${tab === t ? 'bg-white/25' : 'bg-black/10'}`}
-                >
-                  {n}
-                </span>
+                <span className={`tab-count ${tab === t ? 'on' : ''}`}>{n}</span>
               )}
             </button>
           )
@@ -348,6 +344,13 @@ export default function OrderQueue({ onStockChanged, onOrdersLoaded }) {
                   {inr(o.total)}
                 </span>
               </div>
+
+              <button
+                onClick={() => downloadInvoice(o, o.profiles ?? {})}
+                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-btn border border-hairline bg-white px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/5"
+              >
+                <FileText size={14} /> Invoice
+              </button>
 
               {o.status === 'placed' && (
                 <div className="mt-3 flex gap-2">
