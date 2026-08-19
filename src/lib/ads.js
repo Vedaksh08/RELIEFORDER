@@ -43,7 +43,8 @@ async function removePoster(url) {
   const i = url.indexOf(marker)
   if (i === -1) return
   const path = url.slice(i + marker.length)
-  await supabase.storage.from(BUCKET).remove([path])
+  const { error } = await supabase.storage.from(BUCKET).remove([path])
+  if (error) throw error // caller decides whether this matters
 }
 
 export async function createAd({ heading, body, posterUrl }) {
@@ -94,15 +95,24 @@ export async function deleteAd(ad) {
     )
   }
 
-  // Re-run copies share the original's poster URL, so the image can only be
-  // deleted once no other ad still points at it — otherwise deleting one
+  // The row is gone at this point and that is what matters. Poster cleanup
+  // is best-effort housekeeping: it must never throw, or a storage hiccup
+  // (offline, blocked request, missing object) would surface as "delete
+  // failed" for a delete that actually succeeded.
+  //
+  // Re-run copies share the original's poster URL, so the image is only
+  // removed once no other ad still points at it — otherwise deleting one
   // re-run would blank out the poster on all its siblings.
-  if (ad.poster_url) {
-    const { count } = await supabase
-      .from('ads')
-      .select('id', { count: 'exact', head: true })
-      .eq('poster_url', ad.poster_url)
-    if (!count) await removePoster(ad.poster_url).catch(() => {})
+  try {
+    if (ad.poster_url) {
+      const { count } = await supabase
+        .from('ads')
+        .select('id', { count: 'exact', head: true })
+        .eq('poster_url', ad.poster_url)
+      if (!count) await removePoster(ad.poster_url)
+    }
+  } catch (e) {
+    console.warn('[ads] row deleted; poster cleanup failed:', e?.message ?? e)
   }
 }
 
