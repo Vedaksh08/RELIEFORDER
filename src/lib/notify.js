@@ -50,7 +50,13 @@ export async function notify(title, { body, tag, onClick } = {}) {
     icon: '/icons/favicon-48.png',
     badge: '/icons/favicon-48.png',
     renotify: Boolean(tag),
-    requireInteraction: false,
+    // A new order should stay on screen until the shop acknowledges it,
+    // rather than auto-dismissing while nobody is looking at the tab.
+    requireInteraction: true,
+    // The OS notification sound is the reliable one in a background tab:
+    // page audio can be throttled, the system chime cannot.
+    silent: false,
+    vibrate: [200, 100, 200],
   }
 
   try {

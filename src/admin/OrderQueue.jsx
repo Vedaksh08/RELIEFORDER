@@ -121,7 +121,67 @@ export default function OrderQueue({ onStockChanged, onOrdersLoaded }) {
         load,
       )
       .subscribe()
-    return () => supabase.removeChannel(ch)
+
+    // Safety net. Realtime can drop silently — a laptop sleeping, wifi
+    // switching, a proxy killing the websocket — and the shop would not know
+    // orders had stopped arriving. Polling also catches anything that landed
+    // while the socket was down, and detects new orders by id so the chime
+    // and notification still fire.
+    const seen = new Set()
+    let primed = false
+
+    const poll = async () => {
+      if (document.visibilityState === 'hidden' && !alertsRef.current) return
+      try {
+        const fresh = await fetchAllOrders()
+        const incoming = fresh.filter(
+          (o) => o.status === 'placed' && !seen.has(o.id),
+        )
+        fresh.forEach((o) => seen.add(o.id))
+
+        // The first pass only records what already exists, so reopening the
+        // panel does not announce every historical order.
+        if (primed && incoming.length) {
+          if (!mutedRef.current) playChime()
+          if (alertsRef.current) {
+            const o = incoming[0]
+            notify(
+              incoming.length === 1
+                ? 'New order received'
+                : `${incoming.length} new orders`,
+              {
+                body: `${o.mobile ?? 'Customer'} · ₹${Number(o.total).toFixed(2)}`,
+                tag: `order-${o.id}`,
+                onClick: () => setTab('placed'),
+              },
+            )
+          }
+        }
+        primed = true
+        setOrders(fresh)
+        onOrdersLoaded?.(fresh)
+      } catch {
+        // transient failure; the next tick retries
+      }
+    }
+
+    poll()
+    const pollId = setInterval(poll, 20000)
+
+    // A sleeping tab has its timers throttled, so re-check the moment it
+    // wakes rather than waiting out the interval.
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') poll()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    window.addEventListener('online', poll)
+
+    return () => {
+      supabase.removeChannel(ch)
+      clearInterval(pollId)
+      document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('online', poll)
+    }
   }, [])
 
   const act = async (id, fn, nextStatus) => {
